@@ -122,4 +122,7 @@ write               { printf("Keyword: %s\n", yytext) }
                         printf("String: %s\n", string);
                         BEGIN(INITIAL);
                     }
-                    
+
+#[0-255]            { printf("Character constant: %s\n", char(yytext)) }
+
+%%
