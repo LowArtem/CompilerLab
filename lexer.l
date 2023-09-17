@@ -1,6 +1,11 @@
 %option noyywrap
 %option never-interactive
 
+%{
+	#include <stdio.h>
+    #include <stdlib.h>
+%}
+
 DIGIT [0-9]
 HEX_DIGIT [0-9A-Fa-f]
 OCT_DIGIT [0-7]
