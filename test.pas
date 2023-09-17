@@ -148,9 +148,22 @@ function WeakReference_QueryInterface(Data: TInternalWeakReferenceHelper.PWeakOb
 var
   Instance: TObject;
   LUnknown: IUnknown;
+
+  test: string;
+  int: Integer;
+  float: Real;
+  expon: Real;
+  ff: Integer;
 begin
   Result := E_NOINTERFACE;
   Instance := Data.FObject;
+
+  test := 'Serega"''sosi zhopu\n()\t';
+  float := 3.14;
+  expon := 3.14e23;
+  int := 2;
+  ff := $1234A;
+
   if Instance <> nil then
     if Instance.GetInterface(IUnknown, LUnknown) then
       Result := LUnknown.QueryInterface(IID, Obj);

@@ -4,6 +4,7 @@
 %{
 	#include <stdio.h>
     #include <stdlib.h>
+    #include <string.h>
 %}
 
 DIGIT [0-9]
@@ -14,12 +15,14 @@ NUMBER_ALPHA_UNDERSCORE [a-zA-Z0-9_]
 %x ML_COMMENT_1
 %x ML_COMMENT_2
 %x PRE_PROCESSOR
+%x STRING
 
 %%
 
 %{
     char comment[10000];
     char preprocessor[100];
+    char string[10000];
 %}
 
 and                 { printf("Keyword: %s\n", yytext); }
@@ -84,33 +87,33 @@ while               { printf("Keyword: %s\n", yytext); }
 with                { printf("Keyword: %s\n", yytext); }
 xor                 { printf("Keyword: %s\n", yytext); }
 
-absolute            { printf("Keyword: %s\n", yytext) }
-abstract            { printf("Keyword: %s\n", yytext) }
-assembler           { printf("Keyword: %s\n", yytext) }
-at                  { printf("Keyword: %s\n", yytext) }
-cdecl               { printf("Keyword: %s\n", yytext) }
-default             { printf("Keyword: %s\n", yytext) }
-dynamic             { printf("Keyword: %s\n", yytext) }
-export              { printf("Keyword: %s\n", yytext) }
-external            { printf("Keyword: %s\n", yytext) }
-far                 { printf("Keyword: %s\n", yytext) }
-forward             { printf("Keyword: %s\n", yytext) }
-index               { printf("Keyword: %s\n", yytext) }
-interrupt           { printf("Keyword: %s\n", yytext) }
-message             { printf("Keyword: %s\n", yytext) }
-name                { printf("Keyword: %s\n", yytext) }
-near                { printf("Keyword: %s\n", yytext) }
-nodefault           { printf("Keyword: %s\n", yytext) }
-override            { printf("Keyword: %s\n", yytext) }
-private             { printf("Keyword: %s\n", yytext) }
-protected           { printf("Keyword: %s\n", yytext) }
-public              { printf("Keyword: %s\n", yytext) }
-published           { printf("Keyword: %s\n", yytext) }
-read                { printf("Keyword: %s\n", yytext) }
-resident            { printf("Keyword: %s\n", yytext) }
-stored              { printf("Keyword: %s\n", yytext) }
-virtual             { printf("Keyword: %s\n", yytext) }
-write               { printf("Keyword: %s\n", yytext) }
+absolute            { printf("Keyword: %s\n", yytext); }
+abstract            { printf("Keyword: %s\n", yytext); }
+assembler           { printf("Keyword: %s\n", yytext); }
+at                  { printf("Keyword: %s\n", yytext); }
+cdecl               { printf("Keyword: %s\n", yytext); }
+default             { printf("Keyword: %s\n", yytext); }
+dynamic             { printf("Keyword: %s\n", yytext); }
+export              { printf("Keyword: %s\n", yytext); }
+external            { printf("Keyword: %s\n", yytext); }
+far                 { printf("Keyword: %s\n", yytext); }
+forward             { printf("Keyword: %s\n", yytext); }
+index               { printf("Keyword: %s\n", yytext); }
+interrupt           { printf("Keyword: %s\n", yytext); }
+message             { printf("Keyword: %s\n", yytext); }
+name                { printf("Keyword: %s\n", yytext); }
+near                { printf("Keyword: %s\n", yytext); }
+nodefault           { printf("Keyword: %s\n", yytext); }
+override            { printf("Keyword: %s\n", yytext); }
+private             { printf("Keyword: %s\n", yytext); }
+protected           { printf("Keyword: %s\n", yytext); }
+public              { printf("Keyword: %s\n", yytext); }
+published           { printf("Keyword: %s\n", yytext); }
+read                { printf("Keyword: %s\n", yytext); }
+resident            { printf("Keyword: %s\n", yytext); }
+stored              { printf("Keyword: %s\n", yytext); }
+virtual             { printf("Keyword: %s\n", yytext); }
+write               { printf("Keyword: %s\n", yytext); }
 
 integer             { printf("Type: %s\n", yytext); }
 real                { printf("Type: %s\n", yytext); }
@@ -129,13 +132,13 @@ file                { printf("Type: %s\n", yytext); }
 class               { printf("Type: %s\n", yytext); }
 reference           { printf("Type: %s\n", yytext); }
 
-(0|{DIGIT}*)(\.{DIGIT}+({EXPONENT})?  {
+0|{DIGIT}*\.{DIGIT}+{EXPONENT}        {
                                          double val = atof(yytext);
                                          printf("Float number: %f\n", val);
                                       }
-${HEX_DIGIT}+       { printf("Hex digit: %x\n", (int)strtol(yytext + 1, NULL, 16)) }
-{DIGIT}+"."{DIGIT}+ { printf("Real digit: %f\n", atof(yytext)) }
-{DIGIT}+            { printf("Digit: %d\n", atoi(yytext)) }
+${HEX_DIGIT}+       { printf("Hex digit: %x\n", (int)strtol(yytext + 1, NULL, 16)); }
+{DIGIT}+"."{DIGIT}+ { printf("Real digit: %f\n", atof(yytext)); }
+{DIGIT}+            { printf("Digit: %d\n", atoi(yytext)); }
 
 \'          { 
                 string[0] = 0; 
@@ -159,7 +162,7 @@ ${HEX_DIGIT}+       { printf("Hex digit: %x\n", (int)strtol(yytext + 1, NULL, 16
                         BEGIN(INITIAL);
                     }
 
-#[0-255]            { printf("Character constant: %s\n", char(yytext)) }
+#[0-255]            { printf("Character constant: %s\n", (char)yytext); }
 
 
 "+"                 { printf("Operator: %s\n", yytext); }
@@ -176,7 +179,7 @@ ${HEX_DIGIT}+       { printf("Hex digit: %x\n", (int)strtol(yytext + 1, NULL, 16
 "@"                 { printf("Operator: %s\n", yytext); }
 "^"                 { printf("Operator: %s\n", yytext); }
 
-\/\/                { printf("Single-line comment: %s\n", yytext + 2); }
+\/\/.*$                { printf("Single-line comment: %s\n", yytext + 2); }
 
 "{$"                {
                         preprocessor[0] = 0;
@@ -201,16 +204,16 @@ ${HEX_DIGIT}+       { printf("Hex digit: %x\n", (int)strtol(yytext + 1, NULL, 16
                             printf("Mmulti-line comment: %s\n", comment);
                             BEGIN(INITIAL); 
                          } 
-<ML_COMMENT_1, ML_COMMENT_2> {
+<ML_COMMENT_1><ML_COMMENT_2> {
                                 strcat(comment, yytext);
                              }
 <PRE_PROCESSOR>"}"        { 
                             strcat(preprocessor, yytext);
-                            printf("Preprocessor: %s\n", comment);
+                            printf("Preprocessor: %s\n", preprocessor);
                             BEGIN(INITIAL); 
                           }
 
-[a-zA-Z]{NUMBER_ALPHA_UNDERSCORE}* { printf("Identifier: %s\n", yytext) }
+[a-zA-Z]{NUMBER_ALPHA_UNDERSCORE}* { printf("Identifier: %s\n", yytext); }
 
 %%
 
