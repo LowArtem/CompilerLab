@@ -9,7 +9,7 @@
 DIGIT [0-9]
 HEX_DIGIT [0-9A-Fa-f]
 EXPONENT [eE][+-]?[1-9]{DIGIT}*(_{DIGIT}+)*
-NUMBER_ALPHA_UNDERSCOPE [a-zA-Z0-9_]
+NUMBER_ALPHA_UNDERSCORE [a-zA-Z0-9_]
 
 %x ML_COMMENT_1
 %x ML_COMMENT_2
@@ -198,4 +198,4 @@ ${HEX_DIGIT}+       { printf("Hex digit: %x\n", (int)strtol(yytext + 1, NULL, 16
                                 strcat(comment, yytext);
                              }
 
-[a-zA-Z]{NUMBER_ALPHA_UNDERSCOPE}* { printf("Identifier: %s\n", yytext) }
+[a-zA-Z]{NUMBER_ALPHA_UNDERSCORE}* { printf("Identifier: %s\n", yytext) }
