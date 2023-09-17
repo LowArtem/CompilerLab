@@ -3,8 +3,6 @@
 
 DIGIT [0-9]
 HEX_DIGIT [0-9A-Fa-f]
-OCT_DIGIT [0-7]
-BIN_DIGIT [01]
 EXPONENT [eE][+-]?[1-9]{DIGIT}*(_{DIGIT}+)*
 
 %%
@@ -100,6 +98,14 @@ virtual             { printf("Keyword: %s\n", yytext) }
 write               { printf("Keyword: %s\n", yytext) }
 
 "+"                 { printf("Operator: %s\n", yytext); }
+
+(0|{DIGIT}*)(\.{DIGIT}+({EXPONENT})?  {
+                                         double val = atof(yytext);
+                                         printf("Float number: %f\n", val);
+                                      }
+${HEX_DIGIT}+       { printf("Hex digit: %x\n", (int)strtol(yytext + 1, NULL, 16)) }
+{DIGIT}+"."{DIGIT}+ { printf("Real digit: %f\n", atof(yytext)) }
+{DIGIT}+            { printf("Digit: %d\n", atoi(yytext)) }
 
 \'          { 
                 string[0] = 0; 
