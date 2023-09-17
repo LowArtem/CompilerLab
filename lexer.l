@@ -8,8 +8,6 @@
 
 DIGIT [0-9]
 HEX_DIGIT [0-9A-Fa-f]
-OCT_DIGIT [0-7]
-BIN_DIGIT [01]
 EXPONENT [eE][+-]?[1-9]{DIGIT}*(_{DIGIT}+)*
 NUMBER_ALPHA_UNDERSCOPE [a-zA-Z0-9_]
 
@@ -128,6 +126,38 @@ subrange            { printf("Type: %s\n", yytext); }
 file                { printf("Type: %s\n", yytext); }
 class               { printf("Type: %s\n", yytext); }
 reference           { printf("Type: %s\n", yytext); }
+
+(0|{DIGIT}*)(\.{DIGIT}+({EXPONENT})?  {
+                                         double val = atof(yytext);
+                                         printf("Float number: %f\n", val);
+                                      }
+${HEX_DIGIT}+       { printf("Hex digit: %x\n", (int)strtol(yytext + 1, NULL, 16)) }
+{DIGIT}+"."{DIGIT}+ { printf("Real digit: %f\n", atof(yytext)) }
+{DIGIT}+            { printf("Digit: %d\n", atoi(yytext)) }
+
+\'          { 
+                string[0] = 0; 
+                BEGIN(STRING);    
+            }
+<STRING>[^\']+      { strcat(string, yytext); }
+<STRING>\"          { strcat(string, "\""); }
+<STRING>\n          { strcat(string, "\\n"); }
+<STRING>\a          { strcat(string, "\\a"); }
+<STRING>\b          { strcat(string, "\\b"); }
+<STRING>\t          { strcat(string, "\\t"); }
+<STRING>\v          { strcat(string, "\\v"); }
+<STRING>\f          { strcat(string, "\\f"); }
+<STRING>\r          { strcat(string, "\\r"); }
+<STRING>\e          { strcat(string, "\\e"); }
+<STRING>\s          { strcat(string, "\\s"); }
+<STRING>\\          { strcat(string, "\\\\"); }
+<STRING>\'\'        { strcat(string, "\'"); }
+<STRING>\'          { 
+                        printf("String: %s\n", string);
+                        BEGIN(INITIAL);
+                    }
+
+#[0-255]            { printf("Character constant: %s\n", char(yytext)) }
 
 
 "+"                 { printf("Operator: %s\n", yytext); }
