@@ -1,11 +1,24 @@
 %option noyywrap
 %option never-interactive
 
+%{
+	#include <stdio.h>
+    #include <stdlib.h>
+%}
+
 DIGIT [0-9]
 HEX_DIGIT [0-9A-Fa-f]
 EXPONENT [eE][+-]?[1-9]{DIGIT}*(_{DIGIT}+)*
+NUMBER_ALPHA_UNDERSCOPE [a-zA-Z0-9_]
+
+%x ML_COMMENT_1
+%x ML_COMMENT_2
 
 %%
+
+%{
+    char comment[10000];
+%}
 
 and                 { printf("Keyword: %s\n", yytext); }
 array               { printf("Keyword: %s\n", yytext); }
@@ -97,7 +110,22 @@ stored              { printf("Keyword: %s\n", yytext) }
 virtual             { printf("Keyword: %s\n", yytext) }
 write               { printf("Keyword: %s\n", yytext) }
 
-"+"                 { printf("Operator: %s\n", yytext); }
+integer             { printf("Type: %s\n", yytext); }
+real                { printf("Type: %s\n", yytext); }
+boolean             { printf("Type: %s\n", yytext); }
+string              { printf("Type: %s\n", yytext); }
+char                { printf("Type: %s\n", yytext); }
+array               { printf("Type: %s\n", yytext); }
+record              { printf("Type: %s\n", yytext); }
+pointer             { printf("Type: %s\n", yytext); }
+procedural          { printf("Type: %s\n", yytext); }
+variant             { printf("Type: %s\n", yytext); }
+set                 { printf("Type: %s\n", yytext); }
+enumerated          { printf("Type: %s\n", yytext); }
+subrange            { printf("Type: %s\n", yytext); }
+file                { printf("Type: %s\n", yytext); }
+class               { printf("Type: %s\n", yytext); }
+reference           { printf("Type: %s\n", yytext); }
 
 (0|{DIGIT}*)(\.{DIGIT}+({EXPONENT})?  {
                                          double val = atof(yytext);
@@ -131,4 +159,43 @@ ${HEX_DIGIT}+       { printf("Hex digit: %x\n", (int)strtol(yytext + 1, NULL, 16
 
 #[0-255]            { printf("Character constant: %s\n", char(yytext)) }
 
-%%
+
+"+"                 { printf("Operator: %s\n", yytext); }
+"-"                 { printf("Operator: %s\n", yytext); }
+"*"                 { printf("Operator: %s\n", yytext); }
+"/"                 { printf("Operator: %s\n", yytext); }
+"="                 { printf("Operator: %s\n", yytext); }
+"<>"                { printf("Operator: %s\n", yytext); }
+"<"                 { printf("Operator: %s\n", yytext); }
+">"                 { printf("Operator: %s\n", yytext); }
+"<="                { printf("Operator: %s\n", yytext); }
+">="                { printf("Operator: %s\n", yytext); }
+":="                { printf("Operator: %s\n", yytext); }
+"@"                 { printf("Operator: %s\n", yytext); }
+"^"                 { printf("Operator: %s\n", yytext); }
+
+\/\/                { printf("Single-line comment: %s\n", yytext + 2); }
+
+"{"                 { 
+                        comment[0] = 0;
+                        BEGIN(ML_COMMENT_1);
+                    }
+"(*"                {
+                        comment[0] = 0;
+                        BEGIN(ML_COMMENT_2); 
+                    }
+<ML_COMMENT_1>"}"        { 
+                            strcat(comment, yytext);
+                            printf("Multi-line comment: %s\n", comment);
+                            BEGIN(INITIAL); 
+                         }
+<ML_COMMENT_2>"*)"       { 
+                            strcat(comment, yytext);
+                            printf("Mmulti-line comment: %s\n", comment);
+                            BEGIN(INITIAL); 
+                         } 
+<ML_COMMENT_1, ML_COMMENT_2> {
+                                strcat(comment, yytext);
+                             }
+
+[a-zA-Z]{NUMBER_ALPHA_UNDERSCOPE}* { printf("Identifier: %s\n", yytext) }
