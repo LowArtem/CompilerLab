@@ -100,3 +100,15 @@ virtual             { printf("Keyword: %s\n", yytext) }
 write               { printf("Keyword: %s\n", yytext) }
 
 "+"                 { printf("Operator: %s\n", yytext); }
+"-"                 { printf("Operator: %s\n", yytext); }
+"*"                 { printf("Operator: %s\n", yytext); }
+"/"                 { printf("Operator: %s\n", yytext); }
+"="                 { printf("Operator: %s\n", yytext); }
+"<>"                { printf("Operator: %s\n", yytext); }
+"<"                 { printf("Operator: %s\n", yytext); }
+">"                 { printf("Operator: %s\n", yytext); }
+"<="                { printf("Operator: %s\n", yytext); }
+">="                { printf("Operator: %s\n", yytext); }
+":="                { printf("Operator: %s\n", yytext); }
+"@"                 { printf("Operator: %s\n", yytext); }
+"^"                 { printf("Operator: %s\n", yytext); }
