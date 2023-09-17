@@ -13,11 +13,13 @@ NUMBER_ALPHA_UNDERSCORE [a-zA-Z0-9_]
 
 %x ML_COMMENT_1
 %x ML_COMMENT_2
+%x PRE_PROCESSOR
 
 %%
 
 %{
     char comment[10000];
+    char preprocessor[100];
 %}
 
 and                 { printf("Keyword: %s\n", yytext); }
@@ -176,6 +178,11 @@ ${HEX_DIGIT}+       { printf("Hex digit: %x\n", (int)strtol(yytext + 1, NULL, 16
 
 \/\/                { printf("Single-line comment: %s\n", yytext + 2); }
 
+"{$"                {
+                        preprocessor[0] = 0;
+                        BEGIN(PRE_PROCESSOR);
+                    }
+
 "{"                 { 
                         comment[0] = 0;
                         BEGIN(ML_COMMENT_1);
@@ -197,5 +204,35 @@ ${HEX_DIGIT}+       { printf("Hex digit: %x\n", (int)strtol(yytext + 1, NULL, 16
 <ML_COMMENT_1, ML_COMMENT_2> {
                                 strcat(comment, yytext);
                              }
+<PRE_PROCESSOR>"}"        { 
+                            strcat(preprocessor, yytext);
+                            printf("Preprocessor: %s\n", comment);
+                            BEGIN(INITIAL); 
+                          }
 
 [a-zA-Z]{NUMBER_ALPHA_UNDERSCORE}* { printf("Identifier: %s\n", yytext) }
+
+%%
+
+int main(int argc, char** argv) {
+    if (argc != 2) {
+        printf("You need to specify file name");
+        return 1;
+    }
+
+    const char *filename = argv[1];
+    
+    FILE *file = fopen(filename, "r");
+    if (file == NULL) {
+        printf("File opening error");
+        return 1;
+    }
+
+    yyin = file;
+
+    while (yylex() != 0);
+
+    fclose(file);
+
+    return 0;
+}
