@@ -151,7 +151,10 @@ ${HEX_DIGIT}+       { printf("Hex digit: %x\n", (int)strtol(yytext + 1, NULL, 16
 <STRING><<EOF>>     { printf("ERROR: expected \'\n"); }
 <STRING>\\n         { printf("ERROR: \\n in string\n"); }
 
-#[0-255]            { printf("Character constant: %s\n", (char)yytext); }
+#[0-255]            { 
+                        int symbol_idx = atoi(yytext + 1);
+                        printf("Character constant: \"%c\"\n", (char)symbol_idx); 
+                    }
 
 
 "+"                 { printf("Operator: %s\n", yytext); }
