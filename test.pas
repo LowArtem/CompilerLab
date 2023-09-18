@@ -158,7 +158,7 @@ begin
   Result := E_NOINTERFACE;
   Instance := Data.FObject;
 
-  test := 'Serega"''sosi zhopu\n()\t';
+  test := 'Test"''test test\n()\t';
   float := 3.14;
   expon := 3.14e23;
   int := 2;
