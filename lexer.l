@@ -216,7 +216,7 @@ ${HEX_DIGIT}+       { printf("Hex digit: %x\n", (int)strtol(yytext + 1, NULL, 16
                         printf("Preprocessor: %s\n", string + 2);
                     }
 
-";"                 { printf("Spliterator: %s\n", yytext); }
+[;:]                { printf("Spliterator: %s\n", yytext); }
 
 \)|\(               { printf("Braces: %s\n", yytext); }
 
