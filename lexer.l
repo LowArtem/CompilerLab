@@ -1,5 +1,6 @@
 %option noyywrap
 %option never-interactive
+%option case-insensitive
 
 %{
 	#include <stdio.h>
@@ -130,12 +131,12 @@ file                { printf("Type: %s\n", yytext); }
 class               { printf("Type: %s\n", yytext); }
 reference           { printf("Type: %s\n", yytext); }
 
-0|{DIGIT}*\.{DIGIT}+{EXPONENT}        {
+{DIGIT}+"."?{DIGIT}*{EXPONENT}        {
                                          double val = atof(yytext);
                                          printf("Float number: %f\n", val);
                                       }
 ${HEX_DIGIT}+       { printf("Hex digit: %x\n", (int)strtol(yytext + 1, NULL, 16)); }
-{DIGIT}+"."{DIGIT}+ { printf("Real digit: %f\n", atof(yytext)); }
+{DIGIT}+"."{DIGIT}* { printf("Real digit: %f\n", atof(yytext)); }
 {DIGIT}+            { printf("Digit: %d\n", atoi(yytext)); }
 
 \'          { 
@@ -204,7 +205,7 @@ ${HEX_DIGIT}+       { printf("Hex digit: %x\n", (int)strtol(yytext + 1, NULL, 16
                }
 <ML_COMMENT_2>[^(*\))] {
                     strcat(comment, yytext);
-               }
+                       }
 
 
 \{\$[^\}]*\}(\s)*$  {
