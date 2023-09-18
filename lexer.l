@@ -218,6 +218,8 @@ ${HEX_DIGIT}+       { printf("Hex digit: %x\n", (int)strtol(yytext + 1, NULL, 16
 
 ";"                 { printf("Spliterator: %s\n", yytext); }
 
+\)|\(               { printf("Braces: %s\n", yytext); }
+
 [a-zA-Z]{NUMBER_ALPHA_UNDERSCORE}* { 
                                         printf("Identifier: %s\n", yytext);
                                    }
