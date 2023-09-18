@@ -14,14 +14,12 @@ NUMBER_ALPHA_UNDERSCORE [a-zA-Z0-9_]
 
 %x ML_COMMENT_1
 %x ML_COMMENT_2
-%x PRE_PROCESSOR
 %x STRING
 
 %%
 
 %{
     char comment[10000];
-    char preprocessor[100];
     char string[10000];
 %}
 
