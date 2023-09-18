@@ -148,6 +148,8 @@ ${HEX_DIGIT}+       { printf("Hex digit: %x\n", (int)strtol(yytext + 1, NULL, 16
                         printf("String: %s\n", string);
                         BEGIN(INITIAL);
                     }
+<STRING><<EOF>>     { printf("ERROR: expected \'\n"); }
+<STRING>\\n         { printf("ERROR: \\n in string\n"); }
 
 #[0-255]            { printf("Character constant: %s\n", (char)yytext); }
 
