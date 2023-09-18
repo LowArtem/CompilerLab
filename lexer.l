@@ -179,12 +179,7 @@ ${HEX_DIGIT}+       { printf("Hex digit: %x\n", (int)strtol(yytext + 1, NULL, 16
 "@"                 { printf("Operator: %s\n", yytext); }
 "^"                 { printf("Operator: %s\n", yytext); }
 
-\/\/.*$                { printf("Single-line comment: %s\n", yytext + 2); }
-
-"{$"                {
-                        preprocessor[0] = 0;
-                        BEGIN(PRE_PROCESSOR);
-                    }
+\/\/.*(\s)*$                { printf("Single-line comment: %s\n", yytext + 2); }
 
 "{"                 { 
                         comment[0] = 0;
@@ -196,24 +191,36 @@ ${HEX_DIGIT}+       { printf("Hex digit: %x\n", (int)strtol(yytext + 1, NULL, 16
                     }
 <ML_COMMENT_1>"}"        { 
                             strcat(comment, yytext);
+                            comment[strlen(comment)-1] = 0;
                             printf("Multi-line comment: %s\n", comment);
                             BEGIN(INITIAL); 
                          }
 <ML_COMMENT_2>"*)"       { 
                             strcat(comment, yytext);
+                            comment[strlen(comment)-1] = 0;
                             printf("Mmulti-line comment: %s\n", comment);
                             BEGIN(INITIAL); 
                          } 
-<ML_COMMENT_1><ML_COMMENT_2> {
-                                strcat(comment, yytext);
-                             }
-<PRE_PROCESSOR>"}"        { 
-                            strcat(preprocessor, yytext);
-                            printf("Preprocessor: %s\n", preprocessor);
-                            BEGIN(INITIAL); 
-                          }
+<ML_COMMENT_1>[^}] {
+                    strcat(comment, yytext);
+               }
+<ML_COMMENT_2>[^(*\))] {
+                    strcat(comment, yytext);
+               }
 
-[a-zA-Z]{NUMBER_ALPHA_UNDERSCORE}* { printf("Identifier: %s\n", yytext); }
+
+\{\$[^\}]*\}(\s)*$  {
+                        string[0] = 0;
+                        strcat(string, yytext);
+                        string[strlen(string)-1] = 0;
+                        printf("Preprocessor: %s\n", string + 2);
+                    }
+
+";"                 { printf("Spliterator: %s\n", yytext); }
+
+[a-zA-Z]{NUMBER_ALPHA_UNDERSCORE}* { 
+                                        printf("Identifier: %s\n", yytext);
+                                   }
 
 %%
 
