@@ -142,18 +142,7 @@ ${HEX_DIGIT}+       { printf("Hex digit: %x\n", (int)strtol(yytext + 1, NULL, 16
                 string[0] = 0; 
                 BEGIN(STRING);    
             }
-<STRING>[^\']+      { strcat(string, yytext); }
-<STRING>\"          { strcat(string, "\""); }
-<STRING>\n          { strcat(string, "\\n"); }
-<STRING>\a          { strcat(string, "\\a"); }
-<STRING>\b          { strcat(string, "\\b"); }
-<STRING>\t          { strcat(string, "\\t"); }
-<STRING>\v          { strcat(string, "\\v"); }
-<STRING>\f          { strcat(string, "\\f"); }
-<STRING>\r          { strcat(string, "\\r"); }
-<STRING>\e          { strcat(string, "\\e"); }
-<STRING>\s          { strcat(string, "\\s"); }
-<STRING>\\          { strcat(string, "\\\\"); }
+<STRING>[^']+       { strcat(string, yytext); }
 <STRING>\'\'        { strcat(string, "\'"); }
 <STRING>\'          { 
                         printf("String: %s\n", string);
