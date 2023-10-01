@@ -196,16 +196,19 @@ ${HEX_DIGIT}+       { printf("Hex digit: %x\n", (int)strtol(yytext + 1, NULL, 16
                          }
 <ML_COMMENT_2>"*)"       { 
                             strcat(comment, yytext);
-                            comment[strlen(comment)-1] = 0;
+                            comment[strlen(comment)-2] = 0;
                             printf("Mmulti-line comment: %s\n", comment);
                             BEGIN(INITIAL); 
                          } 
 <ML_COMMENT_1>[^}] {
                     strcat(comment, yytext);
                }
-<ML_COMMENT_2>[^(*\))] {
-                    strcat(comment, yytext);
-                       }
+<ML_COMMENT_2>[^*]+         {
+                                strcat(comment, yytext);
+                            }
+<ML_COMMENT_2>\*+[^)]       {
+                                strcat(comment, yytext);
+                            }
 
 
 \{\$[^\}]*\}(\s)*$  {

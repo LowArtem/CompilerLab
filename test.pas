@@ -47,6 +47,11 @@ type
   end;
 
   { Helper class that is used internally. }
+
+  (* dsfd sfdg 
+   * dfa daf dsf )) **\) (())
+   asdf adfadsf  *)
+
   TInternalWeakReferenceHelper = record
   private
     type
