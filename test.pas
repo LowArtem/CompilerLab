@@ -1,16 +1,26 @@
+// Special test cases
+s := 'hello test '#77#73#82'!'+'2'#099#99#111#255#260#000000000002;
+hex := $12af;
+normal := 4783;
 
-{$A8,B-,K-,M-,O+,P+,Q-,R-,S-,T-,W-,X+,Z1}
+
+
+
+
+
+
+
 unit WeakObjectReferences;
 
 interface
 
-{$WEAKPACKAGEUNIT}
+
 
 // The WeakReference interface supports the QueryInterface method if ALLOW_QUERYINTERFACE is defined and
 
-{$DEFINE ALLOW_QUERYINTERFACE}
 
-{$DEFINE USE_MONITOR_FIELD}
+
+
 
 type
   TWeakRefBaseObject = class(TObject)
@@ -67,25 +77,25 @@ type
       end;
 
       TWeakObjectHelper = record
-        {$IFDEF ALLOW_QUERYINTERFACE}
+        
         QueryInterface: function(Data: PWeakObjectHelperData; const IID: TGUID; out Obj): HRESULT; stdcall;
-        {$ELSE}
-          {$IFDEF USE_MONITOR_FIELD}
+        
+          
         Monitor: Pointer; // Use the QueryInterface slot
-          {$ELSE}
+          
         QueryInterface: Pointer;
-          {$ENDIF USE_MONITOR_FIELD}
-        {$ENDIF ALLOW_QUERYINTERFACE}
+          
+        
         AddRef: function(Data: PWeakObjectHelperData): Integer; stdcall;
         Release: function(Data: PWeakObjectHelperData): Integer; stdcall;
         GetTarget: function(Data: PWeakObjectHelperData): TObject;
         IsAlive: function(Data: PWeakObjectHelperData): Boolean;
 
-        {$IFDEF ALLOW_QUERYINTERFACE}
-          {$IFDEF USE_MONITOR_FIELD}
+        
+          
         Monitor: Pointer;
-          {$ENDIF USE_MONITOR_FIELD}
-        {$ENDIF ALLOW_QUERYINTERFACE}
+          
+        
         Data: TWeakObjectHelperData;
       end;
 
@@ -126,29 +136,29 @@ uses
   Windows;
 
 const
-  {$IFDEF CPUX64}
+  
   HelperDefaultSize = (SizeOf(TInternalWeakReferenceHelper.TWeakObjectHelper) + 7) and not 7; // 8 Byte alignment
-  {$ELSE}
+  
   HelperDefaultSize = (SizeOf(TInternalWeakReferenceHelper.TWeakObjectHelper) + 3) and not 3; // 4 Byte alignment
-  {$ENDIF CPUX64}
+  
 
-{$IFDEF USE_MONITOR_FIELD}
-  {$DEFINE HOOK_CLASSDESTROY}
-{$ENDIF USE_MONITOR_FIELD}
+
+  
+
 
 { TWeakRefBaseObject }
 
 destructor TWeakRefBaseObject.Destroy;
 begin
-  {$IFNDEF HOOK_CLASSDESTROY}
+  
   TInternalWeakReferenceHelper.DestroyingObject(Self);
-  {$ENDIF ~HOOK_CLASSDESTROY}
+  
   inherited Destroy;
 end;
 
 { Interface Callback function }
 
-{$IFDEF ALLOW_QUERYINTERFACE}
+
 function WeakReference_QueryInterface(Data: TInternalWeakReferenceHelper.PWeakObjectHelperData; const IID: TGUID; out Obj): HRESULT; stdcall;
 var
   Instance: TObject;
@@ -173,7 +183,7 @@ begin
     if Instance.GetInterface(IUnknown, LUnknown) then
       Result := LUnknown.QueryInterface(IID, Obj);
 end;
-{$ENDIF ALLOW_QUERYINTERFACE}
+
 
 function WeakReference_AddRef(Data: TInternalWeakReferenceHelper.PWeakObjectHelperData): Integer; stdcall;
 begin
@@ -188,15 +198,15 @@ end;
 const
   // This constant is used as the WeakReference interface if it references a nil-Object
   WeakRefNilTarget: TInternalWeakReferenceHelper.TWeakObjectHelper = (
-    {$IFDEF ALLOW_QUERYINTERFACE}
+    
     QueryInterface: WeakReference_QueryInterface;
-    {$ELSE}
-      {$IFDEF USE_MONITOR_FIELD}
+    
+      
     Monitor: nil;
-      {$ELSE}
+      
     QueryInterface: nil;
-      {$ENDIF USE_MONITOR_FIELD}
-    {$ENDIF ALLOW_QUERYINTERFACE}
+      
+    
     AddRef: WeakRefNilTarget_IgnoreRefCount;
     Release: WeakRefNilTarget_IgnoreRefCount;
     GetTarget: WeakReference_GetTarget;
@@ -213,12 +223,12 @@ const
 
 class function TInternalWeakReferenceHelper.GetWeakReferenceField(const AObject: TObject): PPWeakObjectHelper;
 begin
-  {$IFDEF USE_MONITOR_FIELD}
+  
   if System.MonitorSupport <> nil then
     Result := PPWeakObjectHelper(PByte(AObject) + AObject.InstanceSize - hfFieldSize + hfMonitorOffset)
   else
   // SysUtils isn't used => TWeakRefBaseObject must be used
-  {$ENDIF USE_MONITOR_FIELD}
+  
   if AObject is TWeakRefBaseObject then
     Result := @PWeakObjectHelper(TWeakRefBaseObject(AObject).FWeakReferences)
   else
@@ -238,7 +248,7 @@ var
 begin
   Field := GetWeakReferenceField(AObject);
   Ref := Field^;
-  if (Ref <> nil) {$IFDEF USE_MONITOR_FIELD}and (@Ref.AddRef = @WeakReference_AddRef){$ENDIF} then
+  if (Ref <> nil) 
   begin
     if TInternalWeakReferenceHelper.AdditionalDataDtors <> nil then
       for I := Length(TInternalWeakReferenceHelper.AdditionalDataDtors) - 1 downto 0 do
@@ -275,7 +285,7 @@ begin
   Result := AValue.Target;
 end;
 
-{$IFDEF USE_MONITOR_FIELD}
+
 function GetCallTargetBetween(Proc: PByte; StartP, EndP: PByte; SkipMatchingCalls: Integer = 0;
   MaxCalls: Integer = 10): PByte;
 var

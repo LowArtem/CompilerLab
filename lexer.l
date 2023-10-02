@@ -131,19 +131,21 @@ file                { printf("Type: %s\n", yytext); }
 class               { printf("Type: %s\n", yytext); }
 reference           { printf("Type: %s\n", yytext); }
 
-#DIGIT+             { 
+#{DIGIT}+           { 
                         int symbol_idx = atoi(yytext + 1);
                         if(symbol_idx > 255) {
                             printf("ERROR: no support ASCII >255\n");
                         }
-                        printf("Character constant: \"%c\"\n", (char)symbol_idx); 
+                        else {
+                            printf("Character constant: \"%c\"\n", (char)symbol_idx);
+                        }
                     }
 
 {DIGIT}+"."?{DIGIT}*{EXPONENT}        {
                                          double val = atof(yytext);
                                          printf("Exponential number: %f\n", val);
                                       }
-\${HEX_DIGIT}+       { printf("Hex digit: %x\n", (int)strtol(yytext + 1, NULL, 16)); }
+\${HEX_DIGIT}+       { printf("Hex digit: %d\n", (int)strtol(yytext + 1, NULL, 16)); }
 {DIGIT}+"."{DIGIT}* { printf("Real digit: %f\n", atof(yytext)); }
 {DIGIT}+            { printf("Digit: %d\n", atoi(yytext)); }
 
@@ -205,14 +207,6 @@ reference           { printf("Type: %s\n", yytext); }
 <ML_COMMENT_2>\*+[^)]       {
                                 strcat(comment, yytext);
                             }
-
-
-\{\$[^\}]*\}(\s)*$  {
-                        string[0] = 0;
-                        strcat(string, yytext);
-                        string[strlen(string)-1] = 0;
-                        printf("Preprocessor: %s\n", string + 2);
-                    }
 
 ";"                 { printf("Semicolon: %s\n", yytext); }
 ":"                 { printf("Colon: %s\n", yytext); }
