@@ -153,14 +153,14 @@ reference           { printf("Type: %s\n", yytext); }
                 string[0] = 0; 
                 BEGIN(STRING);    
             }
-<STRING>[^']+       { strcat(string, yytext); }
+<STRING>[^'\n]+       { strcat(string, yytext); }
 <STRING>\'\'        { strcat(string, "\'"); }
 <STRING>\'          { 
                         printf("String: %s\n", string);
                         BEGIN(INITIAL);
                     }
 <STRING><<EOF>>     { printf("ERROR: expected \'\n"); }
-<STRING>\\n         { printf("ERROR: \\n in string\n"); }
+<STRING>\n         { printf("ERROR: \\n in string\n"); }
 
 "+"                 { printf("Operator: %s\n", yytext); }
 "-"                 { printf("Operator: %s\n", yytext); }
