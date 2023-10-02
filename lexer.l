@@ -131,11 +131,16 @@ file                { printf("Type: %s\n", yytext); }
 class               { printf("Type: %s\n", yytext); }
 reference           { printf("Type: %s\n", yytext); }
 
+\#0*(1?DIGIT?DIGIT?)|(2[0-5][0-5]) { 
+                        int symbol_idx = atoi(yytext + 1);
+                        printf("Character constant: \"%c\"\n", (char)symbol_idx); 
+                    }
+
 {DIGIT}+"."?{DIGIT}*{EXPONENT}        {
                                          double val = atof(yytext);
                                          printf("Exponential number: %f\n", val);
                                       }
-${HEX_DIGIT}+       { printf("Hex digit: %x\n", (int)strtol(yytext + 1, NULL, 16)); }
+\${HEX_DIGIT}+       { printf("Hex digit: %x\n", (int)strtol(yytext + 1, NULL, 16)); }
 {DIGIT}+"."{DIGIT}* { printf("Real digit: %f\n", atof(yytext)); }
 {DIGIT}+            { printf("Digit: %d\n", atoi(yytext)); }
 
@@ -151,13 +156,6 @@ ${HEX_DIGIT}+       { printf("Hex digit: %x\n", (int)strtol(yytext + 1, NULL, 16
                     }
 <STRING><<EOF>>     { printf("ERROR: expected \'\n"); }
 <STRING>\\n         { printf("ERROR: \\n in string\n"); }
-
-#0*(1?DIGIT?DIGIT?)|(2[0-5][0-5]) 
-                    { 
-                        int symbol_idx = atoi(yytext + 1);
-                        printf("Character constant: \"%c\"\n", (char)symbol_idx); 
-                    }
-
 
 "+"                 { printf("Operator: %s\n", yytext); }
 "-"                 { printf("Operator: %s\n", yytext); }
