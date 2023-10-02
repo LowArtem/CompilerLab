@@ -143,25 +143,19 @@ ${HEX_DIGIT}+       { printf("Hex digit: %x\n", (int)strtol(yytext + 1, NULL, 16
                 string[0] = 0; 
                 BEGIN(STRING);    
             }
-<STRING>[^\']+      { strcat(string, yytext); }
-<STRING>\"          { strcat(string, "\""); }
-<STRING>\n          { strcat(string, "\\n"); }
-<STRING>\a          { strcat(string, "\\a"); }
-<STRING>\b          { strcat(string, "\\b"); }
-<STRING>\t          { strcat(string, "\\t"); }
-<STRING>\v          { strcat(string, "\\v"); }
-<STRING>\f          { strcat(string, "\\f"); }
-<STRING>\r          { strcat(string, "\\r"); }
-<STRING>\e          { strcat(string, "\\e"); }
-<STRING>\s          { strcat(string, "\\s"); }
-<STRING>\\          { strcat(string, "\\\\"); }
+<STRING>[^']+       { strcat(string, yytext); }
 <STRING>\'\'        { strcat(string, "\'"); }
 <STRING>\'          { 
                         printf("String: %s\n", string);
                         BEGIN(INITIAL);
                     }
+<STRING><<EOF>>     { printf("ERROR: expected \'\n"); }
+<STRING>\\n         { printf("ERROR: \\n in string\n"); }
 
-#[0-255]            { printf("Character constant: %s\n", (char)yytext); }
+#[0-255]            { 
+                        int symbol_idx = atoi(yytext + 1);
+                        printf("Character constant: \"%c\"\n", (char)symbol_idx); 
+                    }
 
 
 "+"                 { printf("Operator: %s\n", yytext); }
@@ -218,11 +212,14 @@ ${HEX_DIGIT}+       { printf("Hex digit: %x\n", (int)strtol(yytext + 1, NULL, 16
                         printf("Preprocessor: %s\n", string + 2);
                     }
 
-";"                { printf("Spliterator: %s\n", yytext); }
-":"                { printf("Spliterator: %s\n", yytext); }
+";"                 { printf("Semicolon: %s\n", yytext); }
+":"                 { printf("Colon: %s\n", yytext); }
+"."                 { printf("Dot: %s\n", yytext); }
 
-"\("               { printf("Braces: %s\n", yytext); }
-"\)"               { printf("Braces: %s\n", yytext); }
+"("               { printf("Braces: %s\n", yytext); }
+")"               { printf("Braces: %s\n", yytext); }
+"["               { printf("Braces: %s\n", yytext); }
+"]"               { printf("Braces: %s\n", yytext); }
 
 [a-zA-Z]{NUMBER_ALPHA_UNDERSCORE}* { 
                                         printf("Identifier: %s\n", yytext);
