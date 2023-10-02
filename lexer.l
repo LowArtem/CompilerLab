@@ -133,7 +133,7 @@ reference           { printf("Type: %s\n", yytext); }
 
 {DIGIT}+"."?{DIGIT}*{EXPONENT}        {
                                          double val = atof(yytext);
-                                         printf("Float number: %f\n", val);
+                                         printf("Exponential number: %f\n", val);
                                       }
 ${HEX_DIGIT}+       { printf("Hex digit: %x\n", (int)strtol(yytext + 1, NULL, 16)); }
 {DIGIT}+"."{DIGIT}* { printf("Real digit: %f\n", atof(yytext)); }
