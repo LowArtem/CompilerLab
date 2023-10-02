@@ -131,8 +131,11 @@ file                { printf("Type: %s\n", yytext); }
 class               { printf("Type: %s\n", yytext); }
 reference           { printf("Type: %s\n", yytext); }
 
-\#0*(1?DIGIT?DIGIT?)|(2[0-5][0-5]) { 
+#DIGIT+             { 
                         int symbol_idx = atoi(yytext + 1);
+                        if(symbol_idx > 255) {
+                            printf("ERROR: no support ASCII >255\n");
+                        }
                         printf("Character constant: \"%c\"\n", (char)symbol_idx); 
                     }
 
