@@ -215,6 +215,7 @@ ${HEX_DIGIT}+       { printf("Hex digit: %x\n", (int)strtol(yytext + 1, NULL, 16
 ";"                 { printf("Semicolon: %s\n", yytext); }
 ":"                 { printf("Colon: %s\n", yytext); }
 "."                 { printf("Dot: %s\n", yytext); }
+","                 { printf("Comma: %s\n", yytext); }
 
 "("               { printf("Braces: %s\n", yytext); }
 ")"               { printf("Braces: %s\n", yytext); }
