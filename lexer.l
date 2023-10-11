@@ -120,16 +120,9 @@ boolean             { printf("Type: %s\n", yytext); }
 string              { printf("Type: %s\n", yytext); }
 char                { printf("Type: %s\n", yytext); }
 array               { printf("Type: %s\n", yytext); }
-record              { printf("Type: %s\n", yytext); }
-pointer             { printf("Type: %s\n", yytext); }
-procedural          { printf("Type: %s\n", yytext); }
 variant             { printf("Type: %s\n", yytext); }
 set                 { printf("Type: %s\n", yytext); }
-enumerated          { printf("Type: %s\n", yytext); }
-subrange            { printf("Type: %s\n", yytext); }
 file                { printf("Type: %s\n", yytext); }
-class               { printf("Type: %s\n", yytext); }
-reference           { printf("Type: %s\n", yytext); }
 
 #{DIGIT}+           { 
                         int symbol_idx = atoi(yytext + 1);
