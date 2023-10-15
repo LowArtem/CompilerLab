@@ -10,7 +10,7 @@
 
 DIGIT [0-9]
 HEX_DIGIT [0-9A-Fa-f]
-EXPONENT [eE][+-]?[1-9]{DIGIT}*(_{DIGIT}+)*
+EXPONENT [eE][+-]?[1-9]{DIGIT}*({DIGIT}+)*
 NUMBER_ALPHA_UNDERSCORE [a-zA-Z0-9_]
 
 %x ML_COMMENT_1
@@ -176,7 +176,7 @@ reference           { printf("Type: %s\n", yytext); }
 "@"                 { printf("Operator: %s\n", yytext); }
 "^"                 { printf("Operator: %s\n", yytext); }
 
-\/\/.*$                { printf("Single-line comment: %s\n", yytext + 2); }
+\/\/.*$                {  }
 
 "{"                 { 
                         comment[0] = 0;
@@ -187,25 +187,19 @@ reference           { printf("Type: %s\n", yytext); }
                         BEGIN(ML_COMMENT_2); 
                     }
 <ML_COMMENT_1>"}"        { 
-                            strcat(comment, yytext);
-                            comment[strlen(comment)-1] = 0;
-                            printf("Multi-line comment: %s\n", comment);
                             BEGIN(INITIAL); 
                          }
 <ML_COMMENT_2>"*)"       { 
-                            strcat(comment, yytext);
-                            comment[strlen(comment)-2] = 0;
-                            printf("Mmulti-line comment: %s\n", comment);
                             BEGIN(INITIAL); 
                          } 
-<ML_COMMENT_1>[^}] {
-                    strcat(comment, yytext);
+<ML_COMMENT_1>[^}]* {
+                    
                }
 <ML_COMMENT_2>[^*]+         {
-                                strcat(comment, yytext);
+                                
                             }
 <ML_COMMENT_2>\*+[^)]       {
-                                strcat(comment, yytext);
+                                
                             }
 
 ";"                 { printf("Semicolon: %s\n", yytext); }
@@ -218,7 +212,7 @@ reference           { printf("Type: %s\n", yytext); }
 "["               { printf("Braces: %s\n", yytext); }
 "]"               { printf("Braces: %s\n", yytext); }
 
-[a-zA-Z]{NUMBER_ALPHA_UNDERSCORE}* { 
+[_a-zA-Z]{NUMBER_ALPHA_UNDERSCORE}* { 
                                         printf("Identifier: %s\n", yytext);
                                    }
 
