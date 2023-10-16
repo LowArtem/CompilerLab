@@ -1,3 +1,4 @@
+%token PROGRAM_KW
 %token INTEGER_KW
 %token REAL_KW
 %token BOOLEAN_KW
@@ -52,6 +53,9 @@
 %nonassoc '(' ')'
 
 %%
+
+start_symbol:   PROGRAM_KW ID ';' stmt_block
+                | PROGRAM_KW ID ';' var_decl_sect stmt_block
 
 simple_type:    INTEGER_KW
                 | REAL_KW
