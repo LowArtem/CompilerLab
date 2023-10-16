@@ -140,15 +140,17 @@ param_list:     var_decl_list
                 | VAR_KW var_decl_list
                 | CONST_KW var_decl_list
                 | OUT_KW var_decl_list
-                | /*empty*/
                 | param_list';'var_decl_list
                 | param_list';'VAR_KW var_decl_list
                 | param_list';'CONST_KW var_decl_list
                 | param_list';'OUT_KW var_decl_list
 
-procedure_decl: PROCEDURE_KW ID'('param_list');'var_decl_sect stmt_list_E
+param_list_E:   param_list
+                | /*empty*/
 
-function_decl:  FUNCTION_KW ID'('param_list'):'simple_type';'var_decl_sect stmt_list_E
+procedure_decl: PROCEDURE_KW ID'('param_list_E');'var_decl_sect stmt_list_E
+
+function_decl:  FUNCTION_KW ID'('param_list_E'):'simple_type';'var_decl_sect stmt_list_E
 
 // перегрузка функций (методов) на будущее
 
