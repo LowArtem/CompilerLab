@@ -129,7 +129,9 @@ stmt_list:      stmt
 stmt_list_E:    stmt_list
                 |/*empty*/
 
-stmt_block:     BEGIN_KW stmt_list_E END_KW // не понятно, чем заканчивается ; . 
+stmt_block:     BEGIN_KW stmt_list_E END_KW'.'
+                | BEGIN_KW stmt_list_E END_KW';'
+                | BEGIN_KW stmt_list_E END_KW
 
 id_list:        ID
                 | id_list','ID
