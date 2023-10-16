@@ -1,3 +1,50 @@
+%token INTEGER_KW
+%token REAL_KW
+%token BOOLEAN_KW
+%token STRING_KW
+%token CHAR_KW
+%token ARRAY_KW
+%token VARIANT_KW
+%token SET_KW
+%token FILE_KW
+%token ID
+%token INTEGER
+%token REAL
+%token BOOLEAN
+%token STRING
+%token CHAR
+%token ARRAY
+%token VARIANT
+%token SET
+%token FILE
+%token IN_KW
+%token IS_KW
+%token NOT_KW
+%token DIV_KW
+%token MOD_KW
+%token AND_KW
+%token AS_KW
+%token XOR_KW
+%token OR_KW
+%token BEGIN_KW
+%token END_KW
+%token VAR_KW
+%token CONST_KW
+%token PROCEDURE_KW
+%token FUNCTION_KW
+%token IF_KW
+%token THEN_KW
+%token ELSE_KW
+%token WHILE_KW
+%token DO_KW
+%token FOR_KW
+%token TO_KW
+%token DOWNTO_KW
+%token POINTER
+%token OUT_KW
+%token REPEAT_KW
+%token UNTIL_KW
+
 %right ':='     // right???
 %left '=' '<>' '<' '>' '<=' '>=' IN_KW IS_KW  //??IS IN
 %left '+' '-' OR_KW XOR_KW
@@ -64,7 +111,7 @@ expr:           const_expr
                 | '['expr_list_E']'
 
 expr_list:      expr
-                | expr_list, expr
+                | expr_list','expr
 
 expr_list_E:    expr_list
                 |/*empty*/
@@ -74,6 +121,7 @@ stmt:           expr':='expr';'
                 | var_decl
                 | ID';' // но если это не функция или процедура, будет ошибка
                 | stmt_block
+                | ';'
 
 stmt_list:      stmt
                 | stmt_list stmt
@@ -84,7 +132,7 @@ stmt_list_E:    stmt_list
 stmt_block:     BEGIN_KW stmt_list_E END_KW // не понятно, чем заканчивается ; . 
 
 id_list:        ID
-                | id_list, ID
+                | id_list','ID
 
 var_decl:       id_list':'simple_type';'
                 | ID':'simple_type'='expr';'
