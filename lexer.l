@@ -10,6 +10,7 @@
 
 DIGIT [0-9]
 HEX_DIGIT [0-9A-Fa-f]
+OCT_DIGIT [0-7]
 EXPONENT [eE][+-]?[1-9]{DIGIT}*({DIGIT}+)*
 NUMBER_ALPHA_UNDERSCORE [a-zA-Z0-9_]
 
@@ -138,7 +139,10 @@ file                { printf("Type: %s\n", yytext); }
                                          double val = atof(yytext);
                                          printf("Exponential number: %f\n", val);
                                       }
-\${HEX_DIGIT}+       { printf("Hex digit: %d\n", (int)strtol(yytext + 1, NULL, 16)); }
+\&[^0-7]            { printf("ERROR: expected oct digit\n"); }
+\&{OCT_DIGIT}+      { printf("Oct digit: %d\n", (int)strtol(yytext + 1, NULL, 8)); }
+\$[^0-9A-Fa-f]      { printf("ERROR: expected hex digit\n"); }                                      
+\${HEX_DIGIT}+      { printf("Hex digit: %d\n", (int)strtol(yytext + 1, NULL, 16)); }
 {DIGIT}+"."{DIGIT}* { printf("Real digit: %f\n", atof(yytext)); }
 {DIGIT}+            { printf("Digit: %d\n", atoi(yytext)); }
 
