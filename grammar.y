@@ -6,7 +6,6 @@
 %token ARRAY_KW
 %token VARIANT_KW
 %token SET_KW
-%token FILE_KW
 %token ID
 %token INTEGER
 %token REAL
@@ -16,7 +15,6 @@
 %token ARRAY
 %token VARIANT
 %token SET
-%token FILE
 %token IN_KW
 %token IS_KW
 %token NOT_KW
@@ -40,7 +38,6 @@
 %token FOR_KW
 %token TO_KW
 %token DOWNTO_KW
-%token POINTER
 %token OUT_KW
 %token REPEAT_KW
 %token UNTIL_KW
@@ -49,7 +46,7 @@
 %left '=' '<>' '<' '>' '<=' '>=' IN_KW IS_KW  //??IS IN
 %left '+' '-' OR_KW XOR_KW
 %left '*' '/' DIV_KW MOD_KW AND_KW AS_KW    //??as
-%right '@' NOT_KW
+%right NOT_KW
 %left '.' '[' ']'
 %right UMINUS   // нужен ли плюс (просто он есть)??
 %nonassoc '(' ')'
@@ -64,9 +61,7 @@ simple_type:    INTEGER_KW
                 | ARRAY_KW // объявляется по-другому
                 | VARIANT_KW //??
                 | SET_KW
-                | FILE_KW
                 | ID
-                | '^'simple_type
 
 const_expr:     INTEGER
                 | REAL
@@ -74,10 +69,8 @@ const_expr:     INTEGER
                 | STRING
                 | CHAR
                 | ARRAY // объявляется по-другому
-                | POINTER
                 | VARIANT
                 | SET
-                | FILE
 
 expr:           const_expr
                 | ID
@@ -100,7 +93,6 @@ expr:           const_expr
                 | expr IN_KW expr
                 | expr IS_KW expr
                 | NOT_KW expr
-                | '@'expr
                 | expr DIV_KW expr
                 | expr MOD_KW expr
                 | expr OR_KW expr
