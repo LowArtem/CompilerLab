@@ -42,20 +42,39 @@
 %token OUT_KW
 %token REPEAT_KW
 %token UNTIL_KW
+%token ASSIGNMENT ////УБРАТЬ НИЖЕ ВЕЗДЕ KW!!
+%token EQUALS
+%token NOT_EQUAL
+%token LESS
+%token GREATER
+%token LESS_OR_EQUAL
+%token GREATER_OR_EQUAL
+%token PLUS
+%token MINUS
+%token MULTIPLICATION
+%token DIVISION
+%token DOTE
+%token OPEN_SQUARE_BRACKET
+%token CLOSE_SQUARE_BRACKET
+%token OPEN_BRACKET
+%token CLOSE_BRACKET
+%token COMMA
+%token SEMICOLON
+%token COLON
 
-%right ':='     // right???
-%left '=' '<>' '<' '>' '<=' '>=' IN_KW IS_KW  //??IS IN
-%left '+' '-' OR_KW XOR_KW
-%left '*' '/' DIV_KW MOD_KW AND_KW AS_KW    //??as
+%right ASSIGNMENT     // right???
+%left EQUALS NOT_EQUAL LESS GREATER LESS_OR_EQUAL GREATER_OR_EQUAL IN_KW IS_KW  //??IS IN
+%left  PLUS MINUS OR_KW XOR_KW
+%left  MULTIPLICATION DIVISION DIV_KW MOD_KW AND_KW AS_KW    //??as
 %right NOT_KW
-%left '.' '[' ']'
+%left  DOTE OPEN_SQUARE_BRACKET CLOSE_SQUARE_BRACKET 
 %right UMINUS   // нужен ли плюс (просто он есть)??
-%nonassoc '(' ')'
+%nonassoc  OPEN_BRACKET CLOSE_BRACKET 
 
 %%
 
-start_symbol:   PROGRAM_KW ID ';' stmt_block
-                | PROGRAM_KW ID ';' var_decl_sect stmt_block
+start_symbol:   PROGRAM_KW ID SEMICOLON stmt_block
+                | PROGRAM_KW ID SEMICOLON var_decl_sect stmt_block
 
 simple_type:    INTEGER_KW
                 | REAL_KW
@@ -78,22 +97,22 @@ const_expr:     INTEGER
 
 expr:           const_expr
                 | ID
-                | expr'+'expr
-                | expr'-'expr
-                | expr'*'expr
-                | expr'/'expr
-                | expr'.'ID
-                | expr'.'ID'('expr_list_E')'
-                | expr'['expr']'
-                | '-'expr %prec UMINUS
-                | ID'('expr_list_E')'
-                | simple_type'('expr')'
-                | expr'<'expr
-                | expr'>'expr
-                | expr'<>'expr
-                | expr'<='expr
-                | expr'>='expr
-                | expr'='expr
+                | expr PLUS expr
+                | expr MINUS expr
+                | expr MULTIPLICATION expr
+                | expr DIVISION expr
+                | expr DOTE ID
+                | expr DOTE ID OPEN_BRACKET expr_list_E CLOSE_BRACKET 
+                | expr OPEN_SQUARE_BRACKET expr CLOSE_SQUARE_BRACKET 
+                | MINUS expr %prec UMINUS
+                | ID OPEN_BRACKET expr_list_E CLOSE_BRACKET 
+                | simple_type OPEN_BRACKET expr CLOSE_BRACKET 
+                | expr LESS expr
+                | expr GREATER expr
+                | expr NOT_EQUAL expr
+                | expr LESS_OR_EQUAL expr
+                | expr GREATER_OR_EQUAL expr
+                | expr EQUALS expr
                 | expr IN_KW expr
                 | expr IS_KW expr
                 | NOT_KW expr
@@ -103,21 +122,21 @@ expr:           const_expr
                 | expr XOR_KW expr
                 | expr AND_KW expr
                 | expr AS_KW expr
-                | '('expr')'
-                | '['expr_list_E']'
+                |  OPEN_BRACKET expr CLOSE_BRACKET 
+                |  OPEN_SQUARE_BRACKET expr_list_E CLOSE_SQUARE_BRACKET 
 
 expr_list:      expr
-                | expr_list','expr
+                | expr_list COMMA expr
 
 expr_list_E:    expr_list
                 |/*empty*/
 
-stmt:           expr':='expr';'
-                | expr';'
+stmt:           expr ASSIGNMENT expr SEMICOLON
+                | expr SEMICOLON
                 | var_decl
-                | ID';' // но если это не функция или процедура, будет ошибка
+                | ID SEMICOLON // но если это не функция или процедура, будет ошибка
                 | stmt_block
-                | ';'
+                | SEMICOLON
 
 stmt_list:      stmt
                 | stmt_list stmt
@@ -125,15 +144,15 @@ stmt_list:      stmt
 stmt_list_E:    stmt_list
                 |/*empty*/
 
-stmt_block:     BEGIN_KW stmt_list_E END_KW'.'
-                | BEGIN_KW stmt_list_E END_KW';'
+stmt_block:     BEGIN_KW stmt_list_E END_KW DOTE 
+                | BEGIN_KW stmt_list_E END_KW SEMICOLON
                 | BEGIN_KW stmt_list_E END_KW
 
 id_list:        ID
-                | id_list','ID
+                | id_list COMMA ID
 
-var_decl:       id_list':'simple_type';'
-                | ID':'simple_type'='expr';'
+var_decl:       id_list':'simple_type SEMICOLON
+                | ID':'simple_type EQUALS expr SEMICOLON
 
 var_decl_list:  var_decl
                 | var_decl_list var_decl
@@ -144,26 +163,26 @@ param_list:     var_decl_list
                 | VAR_KW var_decl_list
                 | CONST_KW var_decl_list
                 | OUT_KW var_decl_list
-                | param_list';'var_decl_list
-                | param_list';'VAR_KW var_decl_list
-                | param_list';'CONST_KW var_decl_list
-                | param_list';'OUT_KW var_decl_list
+                | param_list SEMICOLON var_decl_list
+                | param_list SEMICOLON VAR_KW var_decl_list
+                | param_list SEMICOLON CONST_KW var_decl_list
+                | param_list SEMICOLON OUT_KW var_decl_list
 
 param_list_E:   param_list
                 | /*empty*/
 
-procedure_decl: PROCEDURE_KW ID'('param_list_E');'var_decl_sect stmt_list_E
+procedure_decl: PROCEDURE_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET SEMICOLON var_decl_sect stmt_list_E
 
-function_decl:  FUNCTION_KW ID'('param_list_E'):'simple_type';'var_decl_sect stmt_list_E
+function_decl:  FUNCTION_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET COLON simple_type SEMICOLON var_decl_sect stmt_list_E
 
 // перегрузка функций (методов) на будущее
 
 if_stmt:        IF_KW expr THEN_KW stmt
                 | IF_KW expr THEN_KW stmt ELSE_KW stmt
 
-repeat_stmt:    REPEAT_KW stmt_list_E UNTIL_KW expr';'
+repeat_stmt:    REPEAT_KW stmt_list_E UNTIL_KW expr SEMICOLON
 
 while_stmt:     WHILE_KW expr DO_KW stmt
 
-for_stmt:       FOR_KW ID':='expr TO_KW expr DO_KW stmt
-                | FOR_KW ID':='expr DOWNTO_KW expr DO_KW stmt
+for_stmt:       FOR_KW ID ASSIGNMENT expr TO_KW expr DO_KW stmt
+                | FOR_KW ID ASSIGNMENT expr DOWNTO_KW expr DO_KW stmt
