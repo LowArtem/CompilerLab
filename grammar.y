@@ -1,3 +1,5 @@
+%start start_symbol
+
 %token PROGRAM_KW
 %token INTEGER_KW
 %token REAL_KW
