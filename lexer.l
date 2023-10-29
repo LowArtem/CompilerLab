@@ -42,7 +42,6 @@ else                { printf("Keyword: %s\n", yytext); }
 end                 { printf("Keyword: %s\n", yytext); }
 excep               { printf("Keyword: %s\n", yytext); }
 exports             { printf("Keyword: %s\n", yytext); }
-file                { printf("Keyword: %s\n", yytext); }
 finally             { printf("Keyword: %s\n", yytext); }
 for                 { printf("Keyword: %s\n", yytext); }
 function            { printf("Keyword: %s\n", yytext); }
@@ -123,7 +122,6 @@ char                { printf("Type: %s\n", yytext); }
 array               { printf("Type: %s\n", yytext); }
 variant             { printf("Type: %s\n", yytext); }
 set                 { printf("Type: %s\n", yytext); }
-file                { printf("Type: %s\n", yytext); }
 
 #{DIGIT}+           { 
                         int symbol_idx = atoi(yytext + 1);
