@@ -84,6 +84,8 @@ simple_type:    INTEGER_KW
                 | ARRAY_KW // объявляется по-другому
                 | VARIANT_KW //??
                 | SET_KW
+
+type:           simple_type
                 | ID
 
 const_expr:     INTEGER
@@ -151,8 +153,8 @@ stmt_block:     BEGIN_KW stmt_list_E END_KW DOTE
 id_list:        ID
                 | id_list COMMA ID
 
-var_decl:       id_list':'simple_type SEMICOLON
-                | ID':'simple_type EQUALS expr SEMICOLON
+var_decl:       id_list COLON type SEMICOLON
+                | ID COLON type EQUALS expr SEMICOLON
 
 var_decl_list:  var_decl
                 | var_decl_list var_decl
@@ -173,7 +175,7 @@ param_list_E:   param_list
 
 procedure_decl: PROCEDURE_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET SEMICOLON var_decl_sect stmt_list_E
 
-function_decl:  FUNCTION_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET COLON simple_type SEMICOLON var_decl_sect stmt_list_E
+function_decl:  FUNCTION_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET COLON type SEMICOLON var_decl_sect stmt_list_E
 
 // перегрузка функций (методов) на будущее
 
