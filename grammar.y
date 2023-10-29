@@ -30,6 +30,11 @@
 %token BEGIN_KW
 %token END_KW
 %token VAR_KW
+%token TYPE_KW
+%token CLASS_KW
+%token PUBLIC_KW
+%token PRIVATE_KW
+%token PROTECTED_KW
 %token CONST_KW
 %token PROCEDURE_KW
 %token FUNCTION_KW
@@ -175,9 +180,11 @@ param_list:     var_decl_list
 param_list_E:   param_list
                 | /*empty*/
 
-procedure_decl: PROCEDURE_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET SEMICOLON var_decl_sect stmt_list_E
+procedure_decl: PROCEDURE_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET SEMICOLON stmt
+                | PROCEDURE_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET SEMICOLON var_decl_sect stmt
 
-function_decl:  FUNCTION_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET COLON type SEMICOLON var_decl_sect stmt_list_E
+function_decl:  FUNCTION_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET COLON type SEMICOLON stmt
+                | FUNCTION_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET COLON type SEMICOLON var_decl_sect stmt
 
 // перегрузка функций (методов) на будущее
 
@@ -190,3 +197,18 @@ while_stmt:     WHILE_KW expr DO_KW stmt
 
 for_stmt:       FOR_KW ID ASSIGNMENT expr TO_KW expr DO_KW stmt
                 | FOR_KW ID ASSIGNMENT expr DOWNTO_KW expr DO_KW stmt
+
+type_sect:      TYPE_KW 
+
+enum_param_list:    ID
+                    | ID ASSIGNMENT expr // вот здесь конфликт с stmt: expr ASSIGNMENT expr
+                    | enum_param_list COMMA ID ASSIGNMENT expr
+
+enum_decl:      ID EQUALS OPEN_BRACKET enum_param_list CLOSE_BRACKET SEMICOLON
+
+class_decl:     ID EQUALS CLASS_KW
+                | ID EQUALS CLASS_KW OPEN_BRACKET ID CLOSE_BRACKET
+
+method_property_list:   
+
+class_decl_body:    

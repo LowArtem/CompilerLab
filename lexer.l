@@ -107,7 +107,6 @@ override            { printf("Keyword: %s\n", yytext); }
 private             { printf("Keyword: %s\n", yytext); }
 protected           { printf("Keyword: %s\n", yytext); }
 public              { printf("Keyword: %s\n", yytext); }
-published           { printf("Keyword: %s\n", yytext); }
 read                { printf("Keyword: %s\n", yytext); }
 resident            { printf("Keyword: %s\n", yytext); }
 stored              { printf("Keyword: %s\n", yytext); }
