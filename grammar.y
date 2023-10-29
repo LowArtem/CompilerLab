@@ -104,11 +104,11 @@ expr:           const_expr
                 | expr MULTIPLICATION expr
                 | expr DIVISION expr
                 | expr DOTE ID
-                | expr DOTE ID OPEN_BRACKET expr_list_E CLOSE_BRACKET 
-                | expr OPEN_SQUARE_BRACKET expr CLOSE_SQUARE_BRACKET 
+                | expr DOTE ID OPEN_BRACKET expr_list_E CLOSE_BRACKET
+                | expr OPEN_SQUARE_BRACKET expr CLOSE_SQUARE_BRACKET
                 | MINUS expr %prec UMINUS
-                | ID OPEN_BRACKET expr_list_E CLOSE_BRACKET 
-                | simple_type OPEN_BRACKET expr CLOSE_BRACKET 
+                | ID OPEN_BRACKET expr_list_E CLOSE_BRACKET
+                | simple_type OPEN_BRACKET expr CLOSE_BRACKET
                 | expr LESS expr
                 | expr GREATER expr
                 | expr NOT_EQUAL expr
