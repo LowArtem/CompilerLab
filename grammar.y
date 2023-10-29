@@ -126,8 +126,8 @@ expr:           const_expr
                 | expr XOR_KW expr
                 | expr AND_KW expr
                 | expr AS_KW expr
-                |  OPEN_BRACKET expr CLOSE_BRACKET 
-                |  OPEN_SQUARE_BRACKET expr_list_E CLOSE_SQUARE_BRACKET 
+                | OPEN_BRACKET expr CLOSE_BRACKET 
+                | OPEN_SQUARE_BRACKET expr_list_E CLOSE_SQUARE_BRACKET 
 
 expr_list:      expr
                 | expr_list COMMA expr
