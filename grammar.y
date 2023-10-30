@@ -206,8 +206,9 @@ for_stmt:       FOR_KW ID ASSIGNMENT expr TO_KW expr DO_KW stmt
 type_sect:      TYPE_KW 
 
 enum_param_list:    ID
-                    | ID ASSIGNMENT expr // вот здесь конфликт с stmt: expr ASSIGNMENT expr
-                    | enum_param_list COMMA ID ASSIGNMENT expr
+                    | ID EQUALS expr
+                    | enum_param_list COMMA ID EQUALS expr
+                    | enum_param_list COMMA ID
 
 enum_decl:      ID EQUALS OPEN_BRACKET enum_param_list CLOSE_BRACKET SEMICOLON
 
