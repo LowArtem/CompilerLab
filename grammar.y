@@ -138,7 +138,7 @@ expr_list:      expr
                 | expr_list COMMA expr
 
 expr_list_E:    expr_list
-                |/*empty*/
+                | /*empty*/
 
 stmt:           expr ASSIGNMENT expr
                 | ID OPEN_BRACKET expr_list_E CLOSE_BRACKET
@@ -153,14 +153,9 @@ stmt_list:      stmt
                 | stmt_list SEMICOLON stmt
 
 stmt_list_E:    stmt_list
-                |/*empty*/
+                | /*empty*/
 
-stmt_list_semicolon:    stmt_list SEMICOLON
-
-stmt_list_semicolon_E:  stmt_list_E
-                        | stmt_list_semicolon
-
-stmt_block:     BEGIN_KW stmt_list_semicolon_E END_KW
+stmt_block:     BEGIN_KW stmt_list_E END_KW
 
 id_list:        ID
                 | id_list COMMA ID
@@ -196,7 +191,7 @@ function_decl:  FUNCTION_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET COLON typ
 if_stmt:        IF_KW expr THEN_KW stmt
                 | IF_KW expr THEN_KW stmt ELSE_KW stmt
 
-repeat_stmt:    REPEAT_KW stmt_list_semicolon_E UNTIL_KW expr SEMICOLON
+repeat_stmt:    REPEAT_KW stmt_list_E UNTIL_KW expr
 
 while_stmt:     WHILE_KW expr DO_KW stmt
 
