@@ -140,28 +140,30 @@ expr_list:      expr
 expr_list_E:    expr_list
                 |/*empty*/
 
-stmt:           expr ASSIGNMENT expr SEMICOLON
-                | expr SEMICOLON
-                | var_decl
-                | ID SEMICOLON // но если это не функция или процедура, будет ошибка
+stmt:           expr
+                | expr ASSIGNMENT expr
                 | stmt_block
-                | SEMICOLON
 
 stmt_list:      stmt
-                | stmt_list stmt
+                | stmt_list SEMICOLON stmt
 
 stmt_list_E:    stmt_list
                 |/*empty*/
 
-stmt_block:     BEGIN_KW stmt_list_E END_KW DOTE 
-                | BEGIN_KW stmt_list_E END_KW SEMICOLON
-                | BEGIN_KW stmt_list_E END_KW
+stmt_list_semicolon:    stmt_list SEMICOLON
+
+stmt_list_semicolon_E:  stmt_list_E
+                        | stmt_list_semicolon
+
+stmt_block:     BEGIN_KW stmt_list_semicolon_E END_KW DOTE 
+                | BEGIN_KW stmt_list_semicolon_E END_KW SEMICOLON
+                | BEGIN_KW stmt_list_semicolon_E END_KW
 
 id_list:        ID
                 | id_list COMMA ID
 
-var_decl:       id_list COLON type SEMICOLON
-                | ID COLON type EQUALS expr SEMICOLON
+var_decl:       id_list COLON type
+                | ID COLON type EQUALS expr
 
 var_decl_list:  var_decl
                 | var_decl_list var_decl
@@ -191,7 +193,7 @@ function_decl:  FUNCTION_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET COLON typ
 if_stmt:        IF_KW expr THEN_KW stmt
                 | IF_KW expr THEN_KW stmt ELSE_KW stmt
 
-repeat_stmt:    REPEAT_KW stmt_list_E UNTIL_KW expr SEMICOLON
+repeat_stmt:    REPEAT_KW stmt_list_semicolon_E UNTIL_KW expr SEMICOLON
 
 while_stmt:     WHILE_KW expr DO_KW stmt
 
