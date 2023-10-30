@@ -80,8 +80,8 @@
 
 %%
 
-start_symbol:   PROGRAM_KW ID SEMICOLON stmt_block
-                | PROGRAM_KW ID SEMICOLON var_decl_sect stmt_block
+start_symbol:   PROGRAM_KW ID SEMICOLON stmt_block DOTE
+                | PROGRAM_KW ID SEMICOLON var_decl_sect stmt_block DOTE
 
 simple_type:    INTEGER_KW
                 | REAL_KW
@@ -140,9 +140,14 @@ expr_list:      expr
 expr_list_E:    expr_list
                 |/*empty*/
 
-stmt:           expr
-                | expr ASSIGNMENT expr
+stmt:           expr ASSIGNMENT expr
+                | ID OPEN_BRACKET expr_list_E CLOSE_BRACKET
+                | /*empty*/
                 | stmt_block
+                | if_stmt
+                | repeat_stmt
+                | while_stmt
+                | for_stmt
 
 stmt_list:      stmt
                 | stmt_list SEMICOLON stmt
@@ -155,9 +160,7 @@ stmt_list_semicolon:    stmt_list SEMICOLON
 stmt_list_semicolon_E:  stmt_list_E
                         | stmt_list_semicolon
 
-stmt_block:     BEGIN_KW stmt_list_semicolon_E END_KW DOTE 
-                | BEGIN_KW stmt_list_semicolon_E END_KW SEMICOLON
-                | BEGIN_KW stmt_list_semicolon_E END_KW
+stmt_block:     BEGIN_KW stmt_list_semicolon_E END_KW
 
 id_list:        ID
                 | id_list COMMA ID
