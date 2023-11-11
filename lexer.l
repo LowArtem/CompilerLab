@@ -104,11 +104,13 @@ name                { printf("Keyword: %s\n", yytext); }
 near                { printf("Keyword: %s\n", yytext); }
 nodefault           { printf("Keyword: %s\n", yytext); }
 override            { printf("Keyword: %s\n", yytext); }
+overload            { printf("Keyword: %s\n", yytext); }
 private             { printf("Keyword: %s\n", yytext); }
 protected           { printf("Keyword: %s\n", yytext); }
 public              { printf("Keyword: %s\n", yytext); }
 read                { printf("Keyword: %s\n", yytext); }
 resident            { printf("Keyword: %s\n", yytext); }
+static              { printf("Keyword: %s\n", yytext); }
 stored              { printf("Keyword: %s\n", yytext); }
 virtual             { printf("Keyword: %s\n", yytext); }
 write               { printf("Keyword: %s\n", yytext); }

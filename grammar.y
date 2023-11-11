@@ -37,8 +37,10 @@
 %token PROTECTED_KW
 %token PROPERTY_KW
 %token READ_KW
+%token STATIC_KW
 %token WRITE_KW
 %token OVERRIDE_KW
+%token OVERLOAD_KW
 %token CONST_KW
 %token PROCEDURE_KW
 %token FUNCTION_KW
@@ -222,21 +224,36 @@ access_modifier:    PUBLIC_KW
 property_decl:  PROPERTY_KW ID COLON type READ_KW ID WRITE_KW ID
                 | PROPERTY_KW ID COLON type READ_KW ID
 
+field_modifier:     STATIC_KW
+                    | OVERRIDE_KW
+
+field_modifier_list:    field_modifier
+                        | field_modifier_list SEMICOLON field_modifier
+
+field_decl_with_modifier_E:     var_decl
+                                | var_decl SEMICOLON field_modifier_list
+
 method_procedure_decl:  PROCEDURE_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET 
-                        | PROCEDURE_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET SEMICOLON OVERRIDE_KW 
 
 method_function_decl:   FUNCTION_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET COLON type 
-                        | FUNCTION_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET COLON type SEMICOLON OVERRIDE_KW 
 
-method_decl:    method_procedure_decl
-                | method_function_decl
+method_modifier:    field_modifier
+                    | OVERLOAD_KW
 
-method_field_property_list: var_decl
+method_modifier_list:   method_modifier
+                        | method_modifier_list SEMICOLON method_modifier
+
+method_decl_with_modifier_E:    method_procedure_decl
+                                | method_procedure_decl SEMICOLON method_modifier_list
+                                | method_function_decl
+                                | method_function_decl SEMICOLON method_modifier_list
+
+method_field_property_list: field_decl_with_modifier_E
                             | property_decl
-                            | method_decl
-                            | method_field_property_list SEMICOLON var_decl
+                            | method_decl_with_modifier_E
+                            | method_field_property_list SEMICOLON field_decl_with_modifier_E
                             | method_field_property_list SEMICOLON property_decl
-                            | method_field_property_list SEMICOLON method_decl
+                            | method_field_property_list SEMICOLON method_decl_with_modifier_E
 
 class_element:  PRIVATE_KW method_field_property_list
                 | PUBLIC_KW method_field_property_list
