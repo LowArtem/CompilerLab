@@ -184,11 +184,11 @@ param_list:     var_decl_list
 param_list_E:   param_list
                 | /*empty*/
 
-procedure_decl: PROCEDURE_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET SEMICOLON stmt
-                | PROCEDURE_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET SEMICOLON var_decl_sect stmt
+procedure_impl:     PROCEDURE_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET SEMICOLON stmt
+                    | PROCEDURE_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET SEMICOLON var_decl_sect stmt
 
-function_decl:  FUNCTION_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET COLON type SEMICOLON stmt
-                | FUNCTION_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET COLON type SEMICOLON var_decl_sect stmt
+function_impl:      FUNCTION_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET COLON type SEMICOLON stmt
+                    | FUNCTION_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET COLON type SEMICOLON var_decl_sect stmt
 
 // перегрузка функций (методов) на будущее
 
@@ -207,25 +207,26 @@ enum_param_list:    ID
                     | enum_param_list COMMA ID EQUALS expr
                     | enum_param_list COMMA ID
 
-enum_decl:      ID EQUALS OPEN_BRACKET enum_param_list CLOSE_BRACKET SEMICOLON
+enum_decl:          ID EQUALS OPEN_BRACKET enum_param_list CLOSE_BRACKET
 
-enum_decl_list:  enum_decl
-                | enum_decl_list enum_decl
+enum_decl_list:     enum_decl
+                    | enum_decl_list SEMICOLON enum_decl
 
-class_decl_header:     ID EQUALS CLASS_KW
-                | ID EQUALS CLASS_KW OPEN_BRACKET ID CLOSE_BRACKET
+class_decl_header:      ID EQUALS CLASS_KW
+                        | ID EQUALS CLASS_KW OPEN_BRACKET ID CLOSE_BRACKET
 
 access_modifier:    PUBLIC_KW
                     | PRIVATE_KW
                     | PROTECTED_KW
 
 property_decl:  PROPERTY_KW ID COLON type READ_KW ID WRITE_KW ID
+                | PROPERTY_KW ID COLON type READ_KW ID
 
-method_procedure_decl:  PROCEDURE_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET SEMICOLON
-                        | PROCEDURE_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET SEMICOLON OVERRIDE_KW SEMICOLON
+method_procedure_decl:  PROCEDURE_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET 
+                        | PROCEDURE_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET SEMICOLON OVERRIDE_KW 
 
-method_function_decl:   FUNCTION_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET COLON type SEMICOLON
-                        | FUNCTION_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET COLON type SEMICOLON OVERRIDE_KW SEMICOLON
+method_function_decl:   FUNCTION_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET COLON type 
+                        | FUNCTION_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET COLON type SEMICOLON OVERRIDE_KW 
 
 method_decl:    method_procedure_decl
                 | method_function_decl
@@ -242,12 +243,12 @@ class_element:  PRIVATE_KW method_field_property_list
                 | PROTECTED_KW method_field_property_list
 
 class_element_list: class_element
-                    | class_element_list class_element
+                    | class_element_list SEMICOLON class_element
 
-class_decl:    class_decl_header class_element_list END_KW SEMICOLON
+class_decl:    class_decl_header class_element_list SEMICOLON END_KW 
 
-class_decl_list: class_decl
-                    | class_decl_list class_decl
+class_decl_list:    class_decl
+                    | class_decl_list SEMICOLON class_decl
 
-type_sect:  TYPE_KW class_decl_list
-            | TYPE_KW enum_decl_list
+type_sect:  TYPE_KW class_decl_list SEMICOLON
+            | TYPE_KW enum_decl_list SEMICOLON
