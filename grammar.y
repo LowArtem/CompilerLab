@@ -45,6 +45,7 @@
 %token PROCEDURE_KW
 %token FUNCTION_KW
 %token IF_KW
+%token CASE_KW
 %token THEN_KW
 %token ELSE_KW
 %token WHILE_KW
@@ -55,6 +56,9 @@
 %token OUT_KW
 %token REPEAT_KW
 %token UNTIL_KW
+%token WITH_KW
+%token OF_KW
+
 %token ASSIGNMENT
 %token EQUALS
 %token NOT_EQUAL
@@ -151,9 +155,11 @@ stmt:           expr ASSIGNMENT expr
                 | /*empty*/
                 | stmt_block
                 | if_stmt
+                | case_stmt
                 | repeat_stmt
                 | while_stmt
                 | for_stmt
+                | with_stmt
 
 stmt_list:      stmt
                 | stmt_list SEMICOLON stmt
@@ -196,6 +202,12 @@ function_impl:      FUNCTION_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET COLON
 
 if_stmt:        IF_KW expr THEN_KW stmt
                 | IF_KW expr THEN_KW stmt ELSE_KW stmt
+
+case_list:      expr COLON stmt
+                | case_list SEMICOLON expr COLON stmt
+
+case_stmt:      CASE_KW expr OF_KW case_list END_KW
+                | CASE_KW expr OF_KW case_list ELSE_KW stmt END_KW
 
 repeat_stmt:    REPEAT_KW stmt_list_E UNTIL_KW expr
 
@@ -269,3 +281,5 @@ class_decl_list:    class_decl
 
 type_sect:  TYPE_KW class_decl_list SEMICOLON
             | TYPE_KW enum_decl_list SEMICOLON
+
+with_stmt:  WITH_KW id_list DO_KW stmt
