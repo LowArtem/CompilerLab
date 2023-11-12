@@ -173,10 +173,7 @@ stmt:           expr ASSIGNMENT expr
 stmt_list:      stmt
                 | stmt_list SEMICOLON stmt
 
-stmt_list_E:    stmt_list
-                | /*empty*/
-
-stmt_block:     BEGIN_KW stmt_list_E END_KW
+stmt_block:     BEGIN_KW stmt_list END_KW
 
 id_list:        ID
                 | id_list COMMA ID
@@ -230,7 +227,7 @@ case_list:      expr_list COLON stmt
 case_stmt:      CASE_KW expr OF_KW case_list END_KW
                 | CASE_KW expr OF_KW case_list ELSE_KW stmt END_KW
 
-repeat_stmt:    REPEAT_KW stmt_list_E UNTIL_KW expr
+repeat_stmt:    REPEAT_KW stmt_list UNTIL_KW expr
 
 while_stmt:     WHILE_KW expr DO_KW stmt
 
