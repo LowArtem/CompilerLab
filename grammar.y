@@ -90,8 +90,14 @@
 
 %%
 
+section:        var_decl_sect
+                | type_sect
+
+sect_list:      section
+                | sect_list SEMICOLON section
+
 start_symbol:   PROGRAM_KW ID SEMICOLON stmt_block DOTE
-                | PROGRAM_KW ID SEMICOLON var_decl_sect stmt_block DOTE
+                | PROGRAM_KW ID SEMICOLON sect_list SEMICOLON stmt_block DOTE
 
 simple_type:    INTEGER_KW
                 | REAL_KW
@@ -177,7 +183,7 @@ var_decl:       id_list COLON type
                 | ID COLON type EQUALS expr
 
 var_decl_list:  var_decl
-                | var_decl_list var_decl
+                | var_decl_list SEMICOLON var_decl
 
 var_decl_sect:  VAR_KW var_decl_list
 
@@ -280,7 +286,7 @@ class_decl:    class_decl_header class_element_list SEMICOLON END_KW
 class_decl_list:    class_decl
                     | class_decl_list SEMICOLON class_decl
 
-type_sect:  TYPE_KW class_decl_list SEMICOLON
-            | TYPE_KW enum_decl_list SEMICOLON
+type_sect:  TYPE_KW class_decl_list
+            | TYPE_KW enum_decl_list
 
 with_stmt:  WITH_KW id_list DO_KW stmt
