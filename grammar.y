@@ -32,6 +32,8 @@
 %token VAR_KW
 %token TYPE_KW
 %token CLASS_KW
+%token CONSTRUCTOR_KW
+%token DESTRUCTOR_KW
 %token PUBLIC_KW
 %token PRIVATE_KW
 %token PROTECTED_KW
@@ -200,10 +202,22 @@ param_list_E:   param_list
                 | /*empty*/
 
 procedure_impl:     PROCEDURE_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET SEMICOLON stmt
+                    | PROCEDURE_KW ID SEMICOLON stmt
                     | PROCEDURE_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET SEMICOLON var_decl_sect stmt
+                    | PROCEDURE_KW ID SEMICOLON var_decl_sect stmt
+                    | PROCEDURE_KW ID DOTE ID OPEN_BRACKET param_list_E CLOSE_BRACKET SEMICOLON stmt /*class method*/
+                    | PROCEDURE_KW ID DOTE ID SEMICOLON stmt
+                    | PROCEDURE_KW ID DOTE ID OPEN_BRACKET param_list_E CLOSE_BRACKET SEMICOLON var_decl_sect stmt
+                    | PROCEDURE_KW ID DOTE ID SEMICOLON var_decl_sect stmt
 
 function_impl:      FUNCTION_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET COLON type SEMICOLON stmt
+                    | FUNCTION_KW ID COLON type SEMICOLON stmt
                     | FUNCTION_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET COLON type SEMICOLON var_decl_sect stmt
+                    | FUNCTION_KW ID COLON type SEMICOLON var_decl_sect stmt
+                    | FUNCTION_KW ID DOTE ID OPEN_BRACKET param_list_E CLOSE_BRACKET COLON type SEMICOLON stmt  /*class method*/
+                    | FUNCTION_KW ID DOTE ID COLON type SEMICOLON stmt
+                    | FUNCTION_KW ID DOTE ID OPEN_BRACKET param_list_E CLOSE_BRACKET COLON type SEMICOLON var_decl_sect stmt
+                    | FUNCTION_KW ID DOTE ID COLON type SEMICOLON var_decl_sect stmt
 
 // перегрузка функций (методов) на будущее
 
@@ -253,8 +267,26 @@ field_decl_with_modifier_E:     var_decl
                                 | var_decl SEMICOLON field_modifier_list
 
 method_procedure_decl:  PROCEDURE_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET 
+                        | PROCEDURE_KW ID
 
 method_function_decl:   FUNCTION_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET COLON type 
+                        | FUNCTION_KW ID COLON type
+
+constructor_decl:   CONSTRUCTOR_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET
+                    | CONSTRUCTOR_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET SEMICOLON OVERRIDE_KW
+                    | CONSTRUCTOR_KW ID
+                    | CONSTRUCTOR_KW ID SEMICOLON OVERRIDE_KW
+
+constructor_impl:   CONSTRUCTOR_KW ID DOTE ID OPEN_BRACKET param_list_E CLOSE_BRACKET SEMICOLON stmt
+                    | CONSTRUCTOR_KW ID DOTE ID OPEN_BRACKET param_list_E CLOSE_BRACKET SEMICOLON OVERRIDE_KW SEMICOLON stmt
+                    | CONSTRUCTOR_KW ID DOTE ID SEMICOLON stmt
+                    | CONSTRUCTOR_KW ID DOTE ID SEMICOLON OVERRIDE_KW SEMICOLON stmt
+
+destructor_decl:    DESTRUCTOR_KW ID
+                    | DESTRUCTOR_KW ID SEMICOLON OVERRIDE_KW
+
+destructor_impl:    DESTRUCTOR_KW ID DOTE ID SEMICOLON stmt
+                    | DESTRUCTOR_KW ID DOTE ID SEMICOLON OVERRIDE_KW SEMICOLON stmt
 
 method_modifier:    field_modifier
                     | OVERLOAD_KW
