@@ -106,13 +106,14 @@ simple_type:    INTEGER_KW
                 | BOOLEAN_KW
                 | STRING_KW
                 | CHAR_KW
-                | ARRAY_KW // объявляется по-другому
                 | VARIANT_KW //??
 
 type:           simple_type
                 | ID
                 | SET_KW OF_KW CHAR_KW
                 | SET_KW OF_KW expr DOTE DOTE expr
+                | ARRAY_KW OF_KW type // dynamic array
+                | ARRAY_KW OPEN_SQUARE_BRACKET expr DOTE DOTE expr CLOSE_SQUARE_BRACKET OF_KW type // static array
 
 const_expr:     INTEGER
                 | REAL
