@@ -143,6 +143,7 @@ expr:           const_expr
                 | expr AS_KW expr
                 | OPEN_BRACKET expr CLOSE_BRACKET 
                 | OPEN_SQUARE_BRACKET expr_list_E CLOSE_SQUARE_BRACKET 
+                | expr DOTE DOTE expr
 
 expr_list:      expr
                 | expr_list COMMA expr
@@ -203,8 +204,8 @@ function_impl:      FUNCTION_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET COLON
 if_stmt:        IF_KW expr THEN_KW stmt
                 | IF_KW expr THEN_KW stmt ELSE_KW stmt
 
-case_list:      expr COLON stmt
-                | case_list SEMICOLON expr COLON stmt
+case_list:      expr_list COLON stmt
+                | case_list SEMICOLON expr_list COLON stmt
 
 case_stmt:      CASE_KW expr OF_KW case_list END_KW
                 | CASE_KW expr OF_KW case_list ELSE_KW stmt END_KW
