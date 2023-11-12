@@ -153,7 +153,6 @@ expr:           const_expr
                 | expr AS_KW expr
                 | OPEN_BRACKET expr CLOSE_BRACKET 
                 | OPEN_SQUARE_BRACKET expr_list_E CLOSE_SQUARE_BRACKET 
-                | expr DOTE DOTE expr
 
 expr_list:      expr
                 | expr_list COMMA expr
