@@ -108,10 +108,11 @@ simple_type:    INTEGER_KW
                 | CHAR_KW
                 | ARRAY_KW // объявляется по-другому
                 | VARIANT_KW //??
-                | SET_KW
 
 type:           simple_type
                 | ID
+                | SET_KW OF_KW CHAR_KW
+                | SET_KW OF_KW expr DOTE DOTE expr
 
 const_expr:     INTEGER
                 | REAL
