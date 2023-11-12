@@ -1,6 +1,5 @@
 %start start_symbol
 
-%token PROGRAM_KW
 %token INTEGER_KW
 %token REAL_KW
 %token BOOLEAN_KW
@@ -9,28 +8,23 @@
 %token ARRAY_KW
 %token VARIANT_KW
 %token SET_KW
+
 %token ID
-%token INTEGER
-%token REAL
-%token BOOLEAN
+%token INTEGER  //???????????? в лексере нету
+%token REAL     //???????????? в лексере нету
+%token BOOLEAN  //???????????? в лексере нету
 %token STRING
-%token CHAR
-%token ARRAY
-%token VARIANT
-%token SET
-%token IN_KW
-%token IS_KW
-%token NOT_KW
-%token DIV_KW
-%token MOD_KW
-%token AND_KW
-%token AS_KW
-%token XOR_KW
-%token OR_KW
+%token CHAR     //???????????? в лексере нету
+%token ARRAY    //???????????? в лексере нету
+%token VARIANT  //???????????? в лексере нету
+%token SET      //???????????? в лексере нету
+
+%token PROGRAM_KW
 %token BEGIN_KW
 %token END_KW
 %token VAR_KW
 %token TYPE_KW
+
 %token CLASS_KW
 %token CONSTRUCTOR_KW
 %token DESTRUCTOR_KW
@@ -46,6 +40,9 @@
 %token CONST_KW
 %token PROCEDURE_KW
 %token FUNCTION_KW
+%token WITH_KW
+%token OF_KW
+
 %token IF_KW
 %token CASE_KW
 %token THEN_KW
@@ -58,20 +55,30 @@
 %token OUT_KW
 %token REPEAT_KW
 %token UNTIL_KW
-%token WITH_KW
-%token OF_KW
 
 %token ASSIGNMENT
+
 %token EQUALS
 %token NOT_EQUAL
 %token LESS
 %token GREATER
 %token LESS_OR_EQUAL
 %token GREATER_OR_EQUAL
+%token IN_KW
+%token IS_KW
+%token NOT_KW
+%token AND_KW
+%token AS_KW
+%token XOR_KW
+%token OR_KW
+
 %token PLUS
 %token MINUS
 %token MULTIPLICATION
 %token DIVISION
+%token DIV_KW
+%token MOD_KW
+
 %token DOTE
 %token OPEN_SQUARE_BRACKET
 %token CLOSE_SQUARE_BRACKET
