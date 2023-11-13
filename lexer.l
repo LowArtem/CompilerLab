@@ -6,6 +6,8 @@
 	#include <stdio.h>
     #include <stdlib.h>
     #include <string.h>
+    #include "parser.tab.h"
+    extern int yyparse(void);
 %}
 
 DIGIT [0-9]
@@ -219,7 +221,7 @@ int main(int argc, char** argv) {
 
     yyin = file;
 
-    while (yylex() != 0);
+    yyparse();
 
     fclose(file);
 

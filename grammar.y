@@ -1,3 +1,8 @@
+%{
+    #include <stdio.h>
+    extern int yylex(void);
+%}
+
 %start start_symbol
 
 %token INTEGER_KW
