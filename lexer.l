@@ -51,7 +51,8 @@ goto                { return ; }
 if                  { return IF_KW; }
 implementation      { return ; }
 in                  { return IN_KW; }
-inherited           { return ; }
+inherited           { return INHERITED_KW; }
+self                { return SELF_KW; }
 initialization      { return ; }
 inline              { return ; }
 interface           { return ; }

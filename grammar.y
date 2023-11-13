@@ -45,6 +45,8 @@
 %token CONST_KW
 %token PROCEDURE_KW
 %token FUNCTION_KW
+%token INHERITED_KW
+%token SELF_KW
 %token WITH_KW
 %token OF_KW
 
@@ -84,7 +86,7 @@
 %token DIV_KW
 %token MOD_KW
 
-%token DOTE
+%token DOT
 %token OPEN_SQUARE_BRACKET
 %token CLOSE_SQUARE_BRACKET
 %token OPEN_BRACKET
@@ -93,12 +95,11 @@
 %token SEMICOLON
 %token COLON
 
-%right ASSIGNMENT     // right???
 %left EQUALS NOT_EQUAL LESS GREATER LESS_OR_EQUAL GREATER_OR_EQUAL IN_KW IS_KW  //??IS IN
 %left  PLUS MINUS OR_KW XOR_KW
 %left  MULTIPLICATION DIVISION DIV_KW MOD_KW AND_KW AS_KW    //??as
 %right NOT_KW
-%left  DOTE OPEN_SQUARE_BRACKET CLOSE_SQUARE_BRACKET 
+%left  DOT OPEN_SQUARE_BRACKET CLOSE_SQUARE_BRACKET 
 %right UMINUS   // нужен ли плюс (просто он есть)??
 %nonassoc  OPEN_BRACKET CLOSE_BRACKET 
 
@@ -110,8 +111,8 @@ section:        var_decl_sect
 sect_list:      section
                 | sect_list SEMICOLON section
 
-start_symbol:   PROGRAM_KW ID SEMICOLON stmt_block DOTE
-                | PROGRAM_KW ID SEMICOLON sect_list SEMICOLON stmt_block DOTE
+start_symbol:   PROGRAM_KW ID SEMICOLON stmt_block DOT
+                | PROGRAM_KW ID SEMICOLON sect_list SEMICOLON stmt_block DOT
 
 simple_type:    INTEGER_KW
                 | REAL_KW
@@ -123,11 +124,11 @@ simple_type:    INTEGER_KW
 type:           simple_type
                 | ID
                 | SET_KW OF_KW CHAR_KW
-                | SET_KW OF_KW expr DOTE DOTE expr
+                | SET_KW OF_KW expr
                 | ARRAY_KW OF_KW type // dynamic array
-                | ARRAY_KW OPEN_SQUARE_BRACKET expr DOTE DOTE expr CLOSE_SQUARE_BRACKET OF_KW type // static array
+                | ARRAY_KW expr OF_KW type // static array
 
-const_expr:     INTEGER
+expr:           INTEGER
                 | REAL
                 | BOOLEAN
                 | STRING
@@ -135,16 +136,14 @@ const_expr:     INTEGER
                 | ARRAY // объявляется по-другому
                 | VARIANT
                 | SET
-
-expr:           const_expr
                 | ID
                 | expr PLUS expr
                 | expr MINUS expr
                 | expr MULTIPLICATION expr
                 | expr DIVISION expr
-                | expr DOTE ID
-                | expr DOTE ID OPEN_BRACKET expr_list_E CLOSE_BRACKET
-                | expr OPEN_SQUARE_BRACKET expr CLOSE_SQUARE_BRACKET
+                | expr DOT ID
+                | expr DOT ID OPEN_BRACKET expr_list_E CLOSE_BRACKET
+                | expr OPEN_SQUARE_BRACKET expr_list CLOSE_SQUARE_BRACKET
                 | MINUS expr %prec UMINUS
                 | ID OPEN_BRACKET expr_list_E CLOSE_BRACKET
                 | simple_type OPEN_BRACKET expr CLOSE_BRACKET
@@ -164,7 +163,11 @@ expr:           const_expr
                 | expr AND_KW expr
                 | expr AS_KW expr
                 | OPEN_BRACKET expr CLOSE_BRACKET 
-                | OPEN_SQUARE_BRACKET expr_list_E CLOSE_SQUARE_BRACKET 
+                | OPEN_SQUARE_BRACKET expr_list CLOSE_SQUARE_BRACKET 
+                | expr DOT DOT expr
+                | SELF_KW
+                | INHERITED_KW
+                | INHERITED_KW ID OPEN_BRACKET expr_list_E CLOSE_BRACKET
 
 expr_list:      expr
                 | expr_list COMMA expr
@@ -174,6 +177,7 @@ expr_list_E:    expr_list
 
 stmt:           expr ASSIGNMENT expr
                 | ID OPEN_BRACKET expr_list_E CLOSE_BRACKET
+                | INHERITED_KW
                 | /*empty*/
                 | stmt_block
                 | if_stmt
@@ -192,7 +196,7 @@ id_list:        ID
                 | id_list COMMA ID
 
 var_decl:       id_list COLON type
-                | ID COLON type EQUALS expr
+                | id_list COLON type EQUALS expr
 
 var_decl_list:  var_decl
                 | var_decl_list SEMICOLON var_decl
@@ -215,19 +219,19 @@ procedure_impl:     PROCEDURE_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET SEMI
                     | PROCEDURE_KW ID SEMICOLON stmt
                     | PROCEDURE_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET SEMICOLON var_decl_sect stmt
                     | PROCEDURE_KW ID SEMICOLON var_decl_sect stmt
-                    | PROCEDURE_KW ID DOTE ID OPEN_BRACKET param_list_E CLOSE_BRACKET SEMICOLON stmt /*class method*/
-                    | PROCEDURE_KW ID DOTE ID SEMICOLON stmt
-                    | PROCEDURE_KW ID DOTE ID OPEN_BRACKET param_list_E CLOSE_BRACKET SEMICOLON var_decl_sect stmt
-                    | PROCEDURE_KW ID DOTE ID SEMICOLON var_decl_sect stmt
+                    | PROCEDURE_KW ID DOT ID OPEN_BRACKET param_list_E CLOSE_BRACKET SEMICOLON stmt /*class method*/
+                    | PROCEDURE_KW ID DOT ID SEMICOLON stmt
+                    | PROCEDURE_KW ID DOT ID OPEN_BRACKET param_list_E CLOSE_BRACKET SEMICOLON var_decl_sect stmt
+                    | PROCEDURE_KW ID DOT ID SEMICOLON var_decl_sect stmt
 
 function_impl:      FUNCTION_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET COLON type SEMICOLON stmt
                     | FUNCTION_KW ID COLON type SEMICOLON stmt
                     | FUNCTION_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET COLON type SEMICOLON var_decl_sect stmt
                     | FUNCTION_KW ID COLON type SEMICOLON var_decl_sect stmt
-                    | FUNCTION_KW ID DOTE ID OPEN_BRACKET param_list_E CLOSE_BRACKET COLON type SEMICOLON stmt  /*class method*/
-                    | FUNCTION_KW ID DOTE ID COLON type SEMICOLON stmt
-                    | FUNCTION_KW ID DOTE ID OPEN_BRACKET param_list_E CLOSE_BRACKET COLON type SEMICOLON var_decl_sect stmt
-                    | FUNCTION_KW ID DOTE ID COLON type SEMICOLON var_decl_sect stmt
+                    | FUNCTION_KW ID DOT ID OPEN_BRACKET param_list_E CLOSE_BRACKET COLON type SEMICOLON stmt  /*class method*/
+                    | FUNCTION_KW ID DOT ID COLON type SEMICOLON stmt
+                    | FUNCTION_KW ID DOT ID OPEN_BRACKET param_list_E CLOSE_BRACKET COLON type SEMICOLON var_decl_sect stmt
+                    | FUNCTION_KW ID DOT ID COLON type SEMICOLON var_decl_sect stmt
 
 // перегрузка функций (методов) на будущее
 
@@ -273,8 +277,8 @@ field_modifier:     STATIC_KW
 field_modifier_list:    field_modifier
                         | field_modifier_list SEMICOLON field_modifier
 
-field_decl_with_modifier_E:     var_decl
-                                | var_decl SEMICOLON field_modifier_list
+field_decl:             var_decl
+                        | var_decl SEMICOLON field_modifier_list
 
 method_procedure_decl:  PROCEDURE_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET 
                         | PROCEDURE_KW ID
@@ -287,16 +291,16 @@ constructor_decl:   CONSTRUCTOR_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET
                     | CONSTRUCTOR_KW ID
                     | CONSTRUCTOR_KW ID SEMICOLON OVERRIDE_KW
 
-constructor_impl:   CONSTRUCTOR_KW ID DOTE ID OPEN_BRACKET param_list_E CLOSE_BRACKET SEMICOLON stmt
-                    | CONSTRUCTOR_KW ID DOTE ID OPEN_BRACKET param_list_E CLOSE_BRACKET SEMICOLON OVERRIDE_KW SEMICOLON stmt
-                    | CONSTRUCTOR_KW ID DOTE ID SEMICOLON stmt
-                    | CONSTRUCTOR_KW ID DOTE ID SEMICOLON OVERRIDE_KW SEMICOLON stmt
+constructor_impl:   CONSTRUCTOR_KW ID DOT ID OPEN_BRACKET param_list_E CLOSE_BRACKET SEMICOLON stmt
+                    | CONSTRUCTOR_KW ID DOT ID OPEN_BRACKET param_list_E CLOSE_BRACKET SEMICOLON OVERRIDE_KW SEMICOLON stmt
+                    | CONSTRUCTOR_KW ID DOT ID SEMICOLON stmt
+                    | CONSTRUCTOR_KW ID DOT ID SEMICOLON OVERRIDE_KW SEMICOLON stmt
 
 destructor_decl:    DESTRUCTOR_KW ID
                     | DESTRUCTOR_KW ID SEMICOLON OVERRIDE_KW
 
-destructor_impl:    DESTRUCTOR_KW ID DOTE ID SEMICOLON stmt
-                    | DESTRUCTOR_KW ID DOTE ID SEMICOLON OVERRIDE_KW SEMICOLON stmt
+destructor_impl:    DESTRUCTOR_KW ID DOT ID SEMICOLON stmt
+                    | DESTRUCTOR_KW ID DOT ID SEMICOLON OVERRIDE_KW SEMICOLON stmt
 
 method_modifier:    field_modifier
                     | OVERLOAD_KW
@@ -304,17 +308,21 @@ method_modifier:    field_modifier
 method_modifier_list:   method_modifier
                         | method_modifier_list SEMICOLON method_modifier
 
-method_decl_with_modifier_E:    method_procedure_decl
-                                | method_procedure_decl SEMICOLON method_modifier_list
-                                | method_function_decl
-                                | method_function_decl SEMICOLON method_modifier_list
+method_decl:            method_procedure_decl
+                        | method_procedure_decl SEMICOLON method_modifier_list
+                        | method_function_decl
+                        | method_function_decl SEMICOLON method_modifier_list
 
-method_field_property_list: field_decl_with_modifier_E
+method_field_property_list: constructor_decl
+                            | destructor_decl
+                            | field_decl
                             | property_decl
-                            | method_decl_with_modifier_E
-                            | method_field_property_list SEMICOLON field_decl_with_modifier_E
+                            | method_decl
+                            | method_field_property_list SEMICOLON constructor_decl
+                            | method_field_property_list SEMICOLON destructor_decl
+                            | method_field_property_list SEMICOLON field_decl
                             | method_field_property_list SEMICOLON property_decl
-                            | method_field_property_list SEMICOLON method_decl_with_modifier_E
+                            | method_field_property_list SEMICOLON method_decl
 
 class_element:  PRIVATE_KW method_field_property_list
                 | PUBLIC_KW method_field_property_list
