@@ -264,9 +264,9 @@ enum_decl_list:     enum_decl
 class_decl_header:      ID EQUALS CLASS_KW
                         | ID EQUALS CLASS_KW OPEN_BRACKET ID CLOSE_BRACKET
 
-access_modifier:    PUBLIC_KW
+/* access_modifier:    PUBLIC_KW
                     | PRIVATE_KW
-                    | PROTECTED_KW
+                    | PROTECTED_KW */
 
 property_decl:  PROPERTY_KW ID COLON type READ_KW ID WRITE_KW ID
                 | PROPERTY_KW ID COLON type READ_KW ID
@@ -327,6 +327,7 @@ method_field_property_list: constructor_decl
 class_element:  PRIVATE_KW method_field_property_list
                 | PUBLIC_KW method_field_property_list
                 | PROTECTED_KW method_field_property_list
+                | method_field_property_list
 
 class_element_list: class_element
                     | class_element_list SEMICOLON class_element
