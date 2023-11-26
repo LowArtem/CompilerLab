@@ -270,11 +270,13 @@ class_decl_header:      ID EQUALS CLASS_KW
                     | PRIVATE_KW
                     | PROTECTED_KW */
 
-property_decl:  PROPERTY_KW ID COLON type READ_KW ID WRITE_KW ID
-                | PROPERTY_KW ID COLON type READ_KW ID
+property_decl:  PROPERTY_KW ID COLON type READ_KW ID WRITE_KW ID SEMICOLON
+                | PROPERTY_KW ID COLON type READ_KW ID SEMICOLON
+
+override_modifier:    OVERRIDE_KW SEMICOLON
 
 field_modifier:     STATIC_KW SEMICOLON
-                    | OVERRIDE_KW SEMICOLON
+                    | override_modifier
 
 field_modifier_list:    field_modifier
                         | field_modifier_list field_modifier
@@ -282,34 +284,34 @@ field_modifier_list:    field_modifier
 field_decl:             var_decl
                         | var_decl field_modifier_list
 
-method_procedure_decl:  PROCEDURE_KW function_element 
-                        | PROCEDURE_KW ID
+method_procedure_decl:  PROCEDURE_KW function_element SEMICOLON
+                        | PROCEDURE_KW ID SEMICOLON
 
 method_procedure_decl_with_modifier_NO:     method_procedure_decl
-                                            | method_procedure_decl SEMICOLON method_modifier_list
+                                            | method_procedure_decl method_modifier_list
 
-method_function_decl:   FUNCTION_KW function_element COLON type 
-                        | FUNCTION_KW ID COLON type
+method_function_decl:   FUNCTION_KW function_element COLON type SEMICOLON
+                        | FUNCTION_KW ID COLON type SEMICOLON
 
 method_function_decl_with_modifier_NO:      method_function_decl
-                                            | method_function_decl SEMICOLON method_modifier_list
+                                            | method_function_decl method_modifier_list
 
-constructor_decl:   CONSTRUCTOR_KW function_element
-                    | CONSTRUCTOR_KW ID
+constructor_decl:   CONSTRUCTOR_KW function_element SEMICOLON
+                    | CONSTRUCTOR_KW ID SEMICOLON
 
 constructor_decl_with_modifier_NO:      constructor_decl
-                                        | constructor_decl SEMICOLON OVERRIDE_KW
+                                        | constructor_decl override_modifier
 
 constructor_impl:   CONSTRUCTOR_KW ID DOT function_element SEMICOLON stmt
-                    | CONSTRUCTOR_KW ID DOT function_element SEMICOLON OVERRIDE_KW SEMICOLON stmt
+                    | CONSTRUCTOR_KW ID DOT function_element SEMICOLON override_modifier stmt
                     | CONSTRUCTOR_KW ID DOT ID SEMICOLON stmt
-                    | CONSTRUCTOR_KW ID DOT ID SEMICOLON OVERRIDE_KW SEMICOLON stmt
+                    | CONSTRUCTOR_KW ID DOT ID SEMICOLON override_modifier stmt
 
-destructor_decl:    DESTRUCTOR_KW ID
-                    | DESTRUCTOR_KW ID SEMICOLON OVERRIDE_KW
+destructor_decl:    DESTRUCTOR_KW ID SEMICOLON
+                    | DESTRUCTOR_KW ID SEMICOLON override_modifier
 
 destructor_impl:    DESTRUCTOR_KW ID DOT ID SEMICOLON stmt
-                    | DESTRUCTOR_KW ID DOT ID SEMICOLON OVERRIDE_KW SEMICOLON stmt
+                    | DESTRUCTOR_KW ID DOT ID SEMICOLON override_modifier stmt
 
 method_modifier:    field_modifier
                     | OVERLOAD_KW SEMICOLON
@@ -320,16 +322,16 @@ method_modifier_list:   method_modifier
 method_decl:            method_procedure_decl_with_modifier_NO
                         | method_function_decl_with_modifier_NO
 
-method_field_property_list: constructor_decl SEMICOLON
-                            | destructor_decl SEMICOLON
-                            | field_decl SEMICOLON
-                            | property_decl SEMICOLON
-                            | method_decl SEMICOLON
-                            | method_field_property_list constructor_decl SEMICOLON
-                            | method_field_property_list destructor_decl SEMICOLON
-                            | method_field_property_list field_decl SEMICOLON
-                            | method_field_property_list property_decl SEMICOLON
-                            | method_field_property_list method_decl SEMICOLON
+method_field_property_list: constructor_decl_with_modifier_NO
+                            | destructor_decl
+                            | field_decl
+                            | property_decl
+                            | method_decl
+                            | method_field_property_list constructor_decl_with_modifier_NO
+                            | method_field_property_list destructor_decl
+                            | method_field_property_list field_decl
+                            | method_field_property_list property_decl
+                            | method_field_property_list method_decl
 
 class_element:  PRIVATE_KW method_field_property_list SEMICOLON
                 | PUBLIC_KW method_field_property_list SEMICOLON
