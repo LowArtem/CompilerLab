@@ -213,7 +213,8 @@ false               { return FALSE_KW; }
 
 ";"                 { return SEMICOLON; }
 ":"                 { return COLON; }
-"."                 { return DOTE; }
+".."                { return DOUBLE_DOT; }
+"."                 { return DOT; }
 ","                 { return COMMA; }
 
 "("                 { return OPEN_BRACKET; }

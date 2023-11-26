@@ -84,6 +84,7 @@
 %token MOD_KW
 
 %token DOT
+%token DOUBLE_DOT
 %token OPEN_SQUARE_BRACKET
 %token CLOSE_SQUARE_BRACKET
 %token OPEN_BRACKET
@@ -158,7 +159,7 @@ expr:           INTEGER
                 | expr AS_KW expr
                 | OPEN_BRACKET expr CLOSE_BRACKET 
                 | OPEN_SQUARE_BRACKET expr_list CLOSE_SQUARE_BRACKET 
-                | expr DOT DOT expr
+                | expr DOUBLE_DOT expr
                 | SELF_KW
                 | INHERITED_KW
                 | INHERITED_KW ID OPEN_BRACKET expr_list_E CLOSE_BRACKET
