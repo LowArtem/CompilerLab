@@ -11,18 +11,15 @@
 %token STRING_KW
 %token CHAR_KW
 %token ARRAY_KW
-%token VARIANT_KW
 %token SET_KW
 
 %token ID
-%token INTEGER  //???????????? в лексере нету
-%token REAL     //???????????? в лексере нету
-%token BOOLEAN  //???????????? в лексере нету
+%token TRUE_KW
+%token FALSE_KW
+%token INTEGER
+%token REAL
 %token STRING
-%token CHAR     //???????????? в лексере нету
-%token ARRAY    //???????????? в лексере нету
-%token VARIANT  //???????????? в лексере нету
-%token SET      //???????????? в лексере нету
+%token CHAR
 
 %token PROGRAM_KW
 %token BEGIN_KW
@@ -87,6 +84,7 @@
 %token MOD_KW
 
 %token DOT
+%token DOUBLE_DOT
 %token OPEN_SQUARE_BRACKET
 %token CLOSE_SQUARE_BRACKET
 %token OPEN_BRACKET
@@ -120,7 +118,6 @@ simple_type:    INTEGER_KW
                 | BOOLEAN_KW
                 | STRING_KW
                 | CHAR_KW
-                | VARIANT_KW //??
 
 type:           simple_type
                 | ID
@@ -131,12 +128,10 @@ type:           simple_type
 
 expr:           INTEGER
                 | REAL
-                | BOOLEAN
+                | TRUE_KW
+                | FALSE_KW
                 | STRING
                 | CHAR
-                | ARRAY // объявляется по-другому
-                | VARIANT
-                | SET
                 | ID
                 | expr PLUS expr
                 | expr MINUS expr
@@ -165,7 +160,7 @@ expr:           INTEGER
                 | expr AS_KW expr
                 | OPEN_BRACKET expr CLOSE_BRACKET 
                 | OPEN_SQUARE_BRACKET expr_list CLOSE_SQUARE_BRACKET 
-                | expr DOT DOT expr
+                | expr DOUBLE_DOT expr
                 | SELF_KW
                 | INHERITED_KW
                 | INHERITED_KW ID OPEN_BRACKET expr_list_E CLOSE_BRACKET
