@@ -195,22 +195,22 @@ stmt_block:     BEGIN_KW stmt_list END_KW
 id_list:        ID
                 | id_list COMMA ID
 
-var_decl:       id_list COLON type
-                | id_list COLON type EQUALS expr
+var_decl:       id_list COLON type SEMICOLON
+                | id_list COLON type EQUALS expr SEMICOLON
 
 var_decl_list:  var_decl
-                | var_decl_list SEMICOLON var_decl
+                | var_decl_list var_decl
 
 var_decl_sect:  VAR_KW var_decl_list
 
-param_list:     var_decl_list
-                | VAR_KW var_decl_list
-                | CONST_KW var_decl_list
-                | OUT_KW var_decl_list
-                | param_list SEMICOLON var_decl_list
-                | param_list SEMICOLON VAR_KW var_decl_list
-                | param_list SEMICOLON CONST_KW var_decl_list
-                | param_list SEMICOLON OUT_KW var_decl_list
+param_list:     var_decl_list SEMICOLON
+                | VAR_KW var_decl_list SEMICOLON
+                | CONST_KW var_decl_list SEMICOLON
+                | OUT_KW var_decl_list SEMICOLON
+                | param_list var_decl_list SEMICOLON
+                | param_list VAR_KW var_decl_list SEMICOLON
+                | param_list CONST_KW var_decl_list SEMICOLON
+                | param_list OUT_KW var_decl_list SEMICOLON
 
 param_list_E:   param_list
                 | /*empty*/
@@ -238,8 +238,8 @@ function_impl:      FUNCTION_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET COLON
 if_stmt:        IF_KW expr THEN_KW stmt
                 | IF_KW expr THEN_KW stmt ELSE_KW stmt
 
-case_list:      expr_list COLON stmt
-                | case_list SEMICOLON expr_list COLON stmt
+case_list:      expr_list COLON stmt SEMICOLON
+                | case_list expr_list COLON stmt SEMICOLON
 
 case_stmt:      CASE_KW expr OF_KW case_list END_KW
                 | CASE_KW expr OF_KW case_list ELSE_KW stmt END_KW
@@ -256,10 +256,10 @@ enum_param_list:    ID
                     | enum_param_list COMMA ID EQUALS expr
                     | enum_param_list COMMA ID
 
-enum_decl:          ID EQUALS OPEN_BRACKET enum_param_list CLOSE_BRACKET
+enum_decl:          ID EQUALS OPEN_BRACKET enum_param_list CLOSE_BRACKET SEMICOLON
 
 enum_decl_list:     enum_decl
-                    | enum_decl_list SEMICOLON enum_decl
+                    | enum_decl_list enum_decl
 
 class_decl_header:      ID EQUALS CLASS_KW
                         | ID EQUALS CLASS_KW OPEN_BRACKET ID CLOSE_BRACKET
@@ -271,14 +271,14 @@ access_modifier:    PUBLIC_KW
 property_decl:  PROPERTY_KW ID COLON type READ_KW ID WRITE_KW ID
                 | PROPERTY_KW ID COLON type READ_KW ID
 
-field_modifier:     STATIC_KW
-                    | OVERRIDE_KW
+field_modifier:     STATIC_KW SEMICOLON
+                    | OVERRIDE_KW SEMICOLON
 
 field_modifier_list:    field_modifier
-                        | field_modifier_list SEMICOLON field_modifier
+                        | field_modifier_list field_modifier
 
 field_decl:             var_decl
-                        | var_decl SEMICOLON field_modifier_list
+                        | var_decl field_modifier_list
 
 method_procedure_decl:  PROCEDURE_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET 
                         | PROCEDURE_KW ID
@@ -303,38 +303,38 @@ destructor_impl:    DESTRUCTOR_KW ID DOT ID SEMICOLON stmt
                     | DESTRUCTOR_KW ID DOT ID SEMICOLON OVERRIDE_KW SEMICOLON stmt
 
 method_modifier:    field_modifier
-                    | OVERLOAD_KW
+                    | OVERLOAD_KW SEMICOLON
 
 method_modifier_list:   method_modifier
-                        | method_modifier_list SEMICOLON method_modifier
+                        | method_modifier_list method_modifier
 
 method_decl:            method_procedure_decl
                         | method_procedure_decl SEMICOLON method_modifier_list
                         | method_function_decl
                         | method_function_decl SEMICOLON method_modifier_list
 
-method_field_property_list: constructor_decl
-                            | destructor_decl
-                            | field_decl
-                            | property_decl
-                            | method_decl
-                            | method_field_property_list SEMICOLON constructor_decl
-                            | method_field_property_list SEMICOLON destructor_decl
-                            | method_field_property_list SEMICOLON field_decl
-                            | method_field_property_list SEMICOLON property_decl
-                            | method_field_property_list SEMICOLON method_decl
+method_field_property_list: constructor_decl SEMICOLON
+                            | destructor_decl SEMICOLON
+                            | field_decl SEMICOLON
+                            | property_decl SEMICOLON
+                            | method_decl SEMICOLON
+                            | method_field_property_list constructor_decl SEMICOLON
+                            | method_field_property_list destructor_decl SEMICOLON
+                            | method_field_property_list field_decl SEMICOLON
+                            | method_field_property_list property_decl SEMICOLON
+                            | method_field_property_list method_decl SEMICOLON
 
-class_element:  PRIVATE_KW method_field_property_list
-                | PUBLIC_KW method_field_property_list
-                | PROTECTED_KW method_field_property_list
+class_element:  PRIVATE_KW method_field_property_list SEMICOLON
+                | PUBLIC_KW method_field_property_list SEMICOLON
+                | PROTECTED_KW method_field_property_list SEMICOLON
 
 class_element_list: class_element
-                    | class_element_list SEMICOLON class_element
+                    | class_element_list class_element
 
-class_decl:    class_decl_header class_element_list SEMICOLON END_KW 
+class_decl:    class_decl_header class_element_list SEMICOLON END_KW SEMICOLON
 
 class_decl_list:    class_decl
-                    | class_decl_list SEMICOLON class_decl
+                    | class_decl_list class_decl
 
 type_sect:  TYPE_KW class_decl_list
             | TYPE_KW enum_decl_list
