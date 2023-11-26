@@ -137,9 +137,12 @@ false               { return FALSE_KW; }
                             printf("ERROR: no support ASCII >255\n");
                         }
                         else {
-                            printf("Character constant: \"%c\"\n", (char)symbol_idx);
+                            //printf("Character constant: \"%c\"\n", (char)symbol_idx);
+                            return CHAR;
                         }
                     }
+
+\'.\'               { return CHAR; }
 
 {DIGIT}+"."?{DIGIT}*{EXPONENT}        {
                                          double val = atof(yytext);
