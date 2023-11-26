@@ -143,14 +143,27 @@ false               { return FALSE_KW; }
 
 {DIGIT}+"."?{DIGIT}*{EXPONENT}        {
                                          double val = atof(yytext);
-                                         printf("Exponential number: %f\n", val);
+                                         //printf("Exponential number: %f\n", val);
+                                         return REAL;
                                       }
 \&[^0-7]            { printf("ERROR: expected oct digit\n"); }
-\&{OCT_DIGIT}+      { printf("Oct digit: %d\n", (int)strtol(yytext + 1, NULL, 8)); }
+\&{OCT_DIGIT}+      { 
+                        //printf("Oct digit: %d\n", (int)strtol(yytext + 1, NULL, 8));
+                        return INTEGER;
+                    }
 \$[^0-9A-Fa-f]      { printf("ERROR: expected hex digit\n"); }                                      
-\${HEX_DIGIT}+      { printf("Hex digit: %d\n", (int)strtol(yytext + 1, NULL, 16)); }
-{DIGIT}+"."{DIGIT}* { printf("Real digit: %f\n", atof(yytext)); }
-{DIGIT}+            { printf("Digit: %d\n", atoi(yytext)); }
+\${HEX_DIGIT}+      { 
+                        //printf("Hex digit: %d\n", (int)strtol(yytext + 1, NULL, 16)); 
+                        return INTEGER;
+                    }
+{DIGIT}+"."{DIGIT}* { 
+                        //printf("Real digit: %f\n", atof(yytext)); 
+                        return REAL;
+                    }
+{DIGIT}+            { 
+                        //printf("Digit: %d\n", atoi(yytext)); 
+                        return INTEGER;
+                    }
 
 \'                  { 
                         string[0] = 0; 
