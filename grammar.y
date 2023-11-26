@@ -107,6 +107,7 @@
 
 section:        var_decl_sect
                 | type_sect
+                | implementation_sect
 
 sect_list:      section
                 | sect_list SEMICOLON section
@@ -312,6 +313,14 @@ destructor_decl:    DESTRUCTOR_KW ID SEMICOLON
 
 destructor_impl:    DESTRUCTOR_KW ID DOT ID SEMICOLON stmt
                     | DESTRUCTOR_KW ID DOT ID SEMICOLON override_modifier stmt
+
+implementation_element:  constructor_impl SEMICOLON
+                        | destructor_impl SEMICOLON
+                        | procedure_impl SEMICOLON
+                        | function_impl SEMICOLON
+
+implementation_sect:    implementation_element
+                        | implementation_sect implementation_element
 
 method_modifier:    field_modifier
                     | OVERLOAD_KW SEMICOLON
