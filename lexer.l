@@ -223,6 +223,8 @@ false               { return FALSE_KW; }
 
 [_a-zA-Z]{NUMBER_ALPHA_UNDERSCORE}*     { return ID; }
 
+.+                  { printf("ERROR: unexpected symbol: \"%c\"", char(yytext[0])); }
+
 %%
 
 int main(int argc, char** argv) {
