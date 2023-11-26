@@ -215,22 +215,24 @@ param_list:     var_decl_list SEMICOLON
 param_list_E:   param_list
                 | /*empty*/
 
-procedure_impl:     PROCEDURE_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET SEMICOLON stmt
+function_element:   ID OPEN_BRACKET param_list_E CLOSE_BRACKET
+
+procedure_impl:     PROCEDURE_KW function_element SEMICOLON stmt
                     | PROCEDURE_KW ID SEMICOLON stmt
-                    | PROCEDURE_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET SEMICOLON var_decl_sect stmt
+                    | PROCEDURE_KW function_element SEMICOLON var_decl_sect stmt
                     | PROCEDURE_KW ID SEMICOLON var_decl_sect stmt
-                    | PROCEDURE_KW ID DOT ID OPEN_BRACKET param_list_E CLOSE_BRACKET SEMICOLON stmt /*class method*/
+                    | PROCEDURE_KW ID DOT function_element SEMICOLON stmt /*class method*/
                     | PROCEDURE_KW ID DOT ID SEMICOLON stmt
-                    | PROCEDURE_KW ID DOT ID OPEN_BRACKET param_list_E CLOSE_BRACKET SEMICOLON var_decl_sect stmt
+                    | PROCEDURE_KW ID DOT function_element SEMICOLON var_decl_sect stmt
                     | PROCEDURE_KW ID DOT ID SEMICOLON var_decl_sect stmt
 
-function_impl:      FUNCTION_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET COLON type SEMICOLON stmt
+function_impl:      FUNCTION_KW function_element COLON type SEMICOLON stmt
                     | FUNCTION_KW ID COLON type SEMICOLON stmt
-                    | FUNCTION_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET COLON type SEMICOLON var_decl_sect stmt
+                    | FUNCTION_KW function_element COLON type SEMICOLON var_decl_sect stmt
                     | FUNCTION_KW ID COLON type SEMICOLON var_decl_sect stmt
-                    | FUNCTION_KW ID DOT ID OPEN_BRACKET param_list_E CLOSE_BRACKET COLON type SEMICOLON stmt  /*class method*/
+                    | FUNCTION_KW ID DOT function_element COLON type SEMICOLON stmt  /*class method*/
                     | FUNCTION_KW ID DOT ID COLON type SEMICOLON stmt
-                    | FUNCTION_KW ID DOT ID OPEN_BRACKET param_list_E CLOSE_BRACKET COLON type SEMICOLON var_decl_sect stmt
+                    | FUNCTION_KW ID DOT function_element COLON type SEMICOLON var_decl_sect stmt
                     | FUNCTION_KW ID DOT ID COLON type SEMICOLON var_decl_sect stmt
 
 // перегрузка функций (методов) на будущее
@@ -280,25 +282,26 @@ field_modifier_list:    field_modifier
 field_decl:             var_decl
                         | var_decl field_modifier_list
 
-method_procedure_decl:  PROCEDURE_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET 
+method_procedure_decl:  PROCEDURE_KW function_element 
                         | PROCEDURE_KW ID
 
 method_procedure_decl_with_modifier_NO:     method_procedure_decl
                                             | method_procedure_decl SEMICOLON method_modifier_list
 
-method_function_decl:   FUNCTION_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET COLON type 
+method_function_decl:   FUNCTION_KW function_element COLON type 
                         | FUNCTION_KW ID COLON type
 
 method_function_decl_with_modifier_NO:      method_function_decl
                                             | method_function_decl SEMICOLON method_modifier_list
 
-constructor_decl:   CONSTRUCTOR_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET
-                    | CONSTRUCTOR_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET SEMICOLON OVERRIDE_KW
+constructor_decl:   CONSTRUCTOR_KW function_element
                     | CONSTRUCTOR_KW ID
-                    | CONSTRUCTOR_KW ID SEMICOLON OVERRIDE_KW
 
-constructor_impl:   CONSTRUCTOR_KW ID DOT ID OPEN_BRACKET param_list_E CLOSE_BRACKET SEMICOLON stmt
-                    | CONSTRUCTOR_KW ID DOT ID OPEN_BRACKET param_list_E CLOSE_BRACKET SEMICOLON OVERRIDE_KW SEMICOLON stmt
+constructor_decl_with_modifier_NO:      constructor_decl
+                                        | constructor_decl SEMICOLON OVERRIDE_KW
+
+constructor_impl:   CONSTRUCTOR_KW ID DOT function_element SEMICOLON stmt
+                    | CONSTRUCTOR_KW ID DOT function_element SEMICOLON OVERRIDE_KW SEMICOLON stmt
                     | CONSTRUCTOR_KW ID DOT ID SEMICOLON stmt
                     | CONSTRUCTOR_KW ID DOT ID SEMICOLON OVERRIDE_KW SEMICOLON stmt
 
