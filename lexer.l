@@ -128,6 +128,9 @@ array               { return ARRAY_KW; }
 variant             { return VARIANT_KW; }
 set                 { return SET_KW; }
 
+true                { return TRUE_KW; }
+false               { return FALSE_KW; }
+
 #{DIGIT}+           { 
                         int symbol_idx = atoi(yytext + 1);
                         if(symbol_idx > 255) {

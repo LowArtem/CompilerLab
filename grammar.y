@@ -15,9 +15,10 @@
 %token SET_KW
 
 %token ID
+%token TRUE_KW
+%token FALSE_KW
 %token INTEGER  //???????????? в лексере нету
 %token REAL     //???????????? в лексере нету
-%token BOOLEAN  //???????????? в лексере нету
 %token STRING
 %token CHAR     //???????????? в лексере нету
 %token ARRAY    //???????????? в лексере нету
@@ -130,7 +131,8 @@ type:           simple_type
 
 expr:           INTEGER
                 | REAL
-                | BOOLEAN
+                | TRUE_KW
+                | FALSE_KW
                 | STRING
                 | CHAR
                 | ARRAY // объявляется по-другому
