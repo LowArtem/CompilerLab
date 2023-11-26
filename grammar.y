@@ -21,9 +21,7 @@
 %token REAL
 %token STRING
 %token CHAR     //???????????? в лексере нету
-%token ARRAY    //???????????? в лексере нету
 %token VARIANT  //???????????? в лексере нету
-%token SET      //???????????? в лексере нету
 
 %token PROGRAM_KW
 %token BEGIN_KW
@@ -135,9 +133,7 @@ expr:           INTEGER
                 | FALSE_KW
                 | STRING
                 | CHAR
-                | ARRAY // объявляется по-другому
                 | VARIANT
-                | SET
                 | ID
                 | expr PLUS expr
                 | expr MINUS expr
