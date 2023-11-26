@@ -11,7 +11,6 @@
 %token STRING_KW
 %token CHAR_KW
 %token ARRAY_KW
-%token VARIANT_KW
 %token SET_KW
 
 %token ID
@@ -20,7 +19,6 @@
 %token INTEGER
 %token REAL
 %token STRING
-%token VARIANT  //???????????? в лексере нету
 %token CHAR
 
 %token PROGRAM_KW
@@ -118,7 +116,6 @@ simple_type:    INTEGER_KW
                 | BOOLEAN_KW
                 | STRING_KW
                 | CHAR_KW
-                | VARIANT_KW //??
 
 type:           simple_type
                 | ID
@@ -133,7 +130,6 @@ expr:           INTEGER
                 | FALSE_KW
                 | STRING
                 | CHAR
-                | VARIANT
                 | ID
                 | expr PLUS expr
                 | expr MINUS expr

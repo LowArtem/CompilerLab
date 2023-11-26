@@ -125,7 +125,7 @@ boolean             { return BOOLEAN_KW; }
 string              { return STRING_KW; }
 char                { return CHAR_KW; }
 array               { return ARRAY_KW; }
-variant             { return VARIANT_KW; }
+variant             { printf("ERROR: unexpected symbol: \"%c\"", char(yytext[0])); }
 set                 { return SET_KW; }
 
 true                { return TRUE_KW; }
