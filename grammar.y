@@ -283,8 +283,14 @@ field_decl:             var_decl
 method_procedure_decl:  PROCEDURE_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET 
                         | PROCEDURE_KW ID
 
+method_procedure_decl_with_modifier_NO:     method_procedure_decl
+                                            | method_procedure_decl SEMICOLON method_modifier_list
+
 method_function_decl:   FUNCTION_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET COLON type 
                         | FUNCTION_KW ID COLON type
+
+method_function_decl_with_modifier_NO:      method_function_decl
+                                            | method_function_decl SEMICOLON method_modifier_list
 
 constructor_decl:   CONSTRUCTOR_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET
                     | CONSTRUCTOR_KW ID OPEN_BRACKET param_list_E CLOSE_BRACKET SEMICOLON OVERRIDE_KW
@@ -308,10 +314,8 @@ method_modifier:    field_modifier
 method_modifier_list:   method_modifier
                         | method_modifier_list method_modifier
 
-method_decl:            method_procedure_decl
-                        | method_procedure_decl SEMICOLON method_modifier_list
-                        | method_function_decl
-                        | method_function_decl SEMICOLON method_modifier_list
+method_decl:            method_procedure_decl_with_modifier_NO
+                        | method_function_decl_with_modifier_NO
 
 method_field_property_list: constructor_decl SEMICOLON
                             | destructor_decl SEMICOLON
