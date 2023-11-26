@@ -205,11 +205,11 @@ var_decl_list:  var_decl
 var_decl_sect:  VAR_KW var_decl_list
 
 param_list:     var_decl_list SEMICOLON
-                | VAR_KW var_decl_list SEMICOLON
+                | var_decl_sect SEMICOLON
                 | CONST_KW var_decl_list SEMICOLON
                 | OUT_KW var_decl_list SEMICOLON
                 | param_list var_decl_list SEMICOLON
-                | param_list VAR_KW var_decl_list SEMICOLON
+                | param_list var_decl_sect SEMICOLON
                 | param_list CONST_KW var_decl_list SEMICOLON
                 | param_list OUT_KW var_decl_list SEMICOLON
 
