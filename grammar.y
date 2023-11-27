@@ -27,6 +27,7 @@
 %token VAR_KW
 %token TYPE_KW
 
+%token IMPLEMENTATION_KW
 %token CLASS_KW
 %token CONSTRUCTOR_KW
 %token DESTRUCTOR_KW
@@ -93,12 +94,12 @@
 %token SEMICOLON
 %token COLON
 
+%nonassoc DOUBLE_DOT
 %left EQUALS NOT_EQUAL LESS GREATER LESS_OR_EQUAL GREATER_OR_EQUAL IN_KW IS_KW  //??IS IN
 %left  PLUS MINUS OR_KW XOR_KW
 %left  MULTIPLICATION DIVISION DIV_KW MOD_KW AND_KW AS_KW    //??as
-%right NOT_KW
+%right NOT_KW UMINUS UPLUS
 %left  DOT OPEN_SQUARE_BRACKET CLOSE_SQUARE_BRACKET 
-%right UMINUS   // нужен ли плюс (просто он есть)??
 %nonassoc  OPEN_BRACKET CLOSE_BRACKET 
 
 %%
@@ -119,10 +120,17 @@ simple_type:    INTEGER_KW
                 | STRING_KW
                 | CHAR_KW
 
+literal:        INTEGER
+                | REAL
+                | TRUE_KW
+                | FALSE_KW
+                | CHAR
+
 type:           simple_type
                 | ID
                 | SET_KW OF_KW CHAR_KW
-                | SET_KW OF_KW expr
+                | SET_KW OF_KW BOOLEAN_KW
+                | SET_KW OF_KW literal DOUBLE_DOT literal
                 | ARRAY_KW OF_KW type // dynamic array
                 | ARRAY_KW expr OF_KW type // static array
 
@@ -141,6 +149,7 @@ expr:           INTEGER
                 | expr DOT ID OPEN_BRACKET expr_list_E CLOSE_BRACKET
                 | expr OPEN_SQUARE_BRACKET expr_list CLOSE_SQUARE_BRACKET
                 | MINUS expr %prec UMINUS
+                | PLUS expr %prec UPLUS
                 | ID OPEN_BRACKET expr_list_E CLOSE_BRACKET
                 | simple_type OPEN_BRACKET expr CLOSE_BRACKET
                 | expr LESS expr
@@ -160,7 +169,7 @@ expr:           INTEGER
                 | expr AS_KW expr
                 | OPEN_BRACKET expr CLOSE_BRACKET 
                 | OPEN_SQUARE_BRACKET expr_list CLOSE_SQUARE_BRACKET 
-                | expr DOUBLE_DOT expr
+                | OPEN_SQUARE_BRACKET literal DOUBLE_DOT literal CLOSE_SQUARE_BRACKET
                 | SELF_KW
                 | INHERITED_KW
                 | INHERITED_KW ID OPEN_BRACKET expr_list_E CLOSE_BRACKET
@@ -215,21 +224,21 @@ function_element:   ID OPEN_BRACKET param_list_E CLOSE_BRACKET
 
 procedure_impl:     PROCEDURE_KW function_element SEMICOLON stmt
                     | PROCEDURE_KW ID SEMICOLON stmt
-                    | PROCEDURE_KW function_element SEMICOLON var_decl_sect stmt
-                    | PROCEDURE_KW ID SEMICOLON var_decl_sect stmt
+                    | PROCEDURE_KW function_element SEMICOLON VAR_KW var_decl_list stmt
+                    | PROCEDURE_KW ID SEMICOLON VAR_KW var_decl_list stmt
                     | PROCEDURE_KW ID DOT function_element SEMICOLON stmt /*class method*/
                     | PROCEDURE_KW ID DOT ID SEMICOLON stmt
-                    | PROCEDURE_KW ID DOT function_element SEMICOLON var_decl_sect stmt
-                    | PROCEDURE_KW ID DOT ID SEMICOLON var_decl_sect stmt
+                    | PROCEDURE_KW ID DOT function_element SEMICOLON VAR_KW var_decl_list stmt
+                    | PROCEDURE_KW ID DOT ID SEMICOLON VAR_KW var_decl_list stmt
 
 function_impl:      FUNCTION_KW function_element COLON type SEMICOLON stmt
                     | FUNCTION_KW ID COLON type SEMICOLON stmt
-                    | FUNCTION_KW function_element COLON type SEMICOLON var_decl_sect stmt
-                    | FUNCTION_KW ID COLON type SEMICOLON var_decl_sect stmt
+                    | FUNCTION_KW function_element COLON type SEMICOLON VAR_KW var_decl_list stmt
+                    | FUNCTION_KW ID COLON type SEMICOLON VAR_KW var_decl_list stmt
                     | FUNCTION_KW ID DOT function_element COLON type SEMICOLON stmt  /*class method*/
                     | FUNCTION_KW ID DOT ID COLON type SEMICOLON stmt
-                    | FUNCTION_KW ID DOT function_element COLON type SEMICOLON var_decl_sect stmt
-                    | FUNCTION_KW ID DOT ID COLON type SEMICOLON var_decl_sect stmt
+                    | FUNCTION_KW ID DOT function_element COLON type SEMICOLON VAR_KW var_decl_list stmt
+                    | FUNCTION_KW ID DOT ID COLON type SEMICOLON VAR_KW var_decl_list stmt
 
 // перегрузка функций (методов) на будущее
 
@@ -314,8 +323,10 @@ implementation_element:  constructor_impl SEMICOLON
                         | procedure_impl SEMICOLON
                         | function_impl SEMICOLON
 
-implementation_sect:    implementation_element
-                        | implementation_sect implementation_element
+implementation_list:    implementation_element
+                        | implementation_list implementation_element
+
+implementation_sect: IMPLEMENTATION_KW implementation_list
 
 method_modifier:    field_modifier
                     | OVERLOAD_KW SEMICOLON

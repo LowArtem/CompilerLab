@@ -49,7 +49,7 @@ for                 { return FOR_KW; }
 function            { return FUNCTION_KW; }
 goto                { printf("ERROR: unexpected symbol: \"%c\"", char(yytext[0])); }
 if                  { return IF_KW; }
-implementation      { printf("ERROR: unexpected symbol: \"%c\"", char(yytext[0])); }
+implementation      { return IMPLEMENTATION_KW; }
 in                  { return IN_KW; }
 inherited           { return INHERITED_KW; }
 self                { return SELF_KW; }
