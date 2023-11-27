@@ -134,12 +134,8 @@ type:           simple_type
                 | ARRAY_KW OF_KW type
                 | ARRAY_KW expr OF_KW type
 
-expr:           INTEGER
-                | REAL
-                | TRUE_KW
-                | FALSE_KW
+expr:           literal
                 | STRING
-                | CHAR
                 | ID
                 | expr PLUS expr
                 | expr MINUS expr
