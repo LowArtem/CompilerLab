@@ -95,9 +95,9 @@
 %token COLON
 
 %nonassoc DOUBLE_DOT
-%left EQUALS NOT_EQUAL LESS GREATER LESS_OR_EQUAL GREATER_OR_EQUAL IN_KW IS_KW  //??IS IN
+%left EQUALS NOT_EQUAL LESS GREATER LESS_OR_EQUAL GREATER_OR_EQUAL IN_KW IS_KW
 %left  PLUS MINUS OR_KW XOR_KW
-%left  MULTIPLICATION DIVISION DIV_KW MOD_KW AND_KW AS_KW    //??as
+%left  MULTIPLICATION DIVISION DIV_KW MOD_KW AND_KW AS_KW
 %right NOT_KW UMINUS UPLUS
 %left  DOT OPEN_SQUARE_BRACKET CLOSE_SQUARE_BRACKET 
 %nonassoc  OPEN_BRACKET CLOSE_BRACKET 
@@ -131,8 +131,8 @@ type:           simple_type
                 | SET_KW OF_KW CHAR_KW
                 | SET_KW OF_KW BOOLEAN_KW
                 | SET_KW OF_KW literal DOUBLE_DOT literal
-                | ARRAY_KW OF_KW type // dynamic array
-                | ARRAY_KW expr OF_KW type // static array
+                | ARRAY_KW OF_KW type
+                | ARRAY_KW expr OF_KW type
 
 expr:           INTEGER
                 | REAL
@@ -226,7 +226,7 @@ procedure_impl:     PROCEDURE_KW function_element SEMICOLON stmt
                     | PROCEDURE_KW ID SEMICOLON stmt
                     | PROCEDURE_KW function_element SEMICOLON VAR_KW var_decl_list stmt
                     | PROCEDURE_KW ID SEMICOLON VAR_KW var_decl_list stmt
-                    | PROCEDURE_KW ID DOT function_element SEMICOLON stmt /*class method*/
+                    | PROCEDURE_KW ID DOT function_element SEMICOLON stmt
                     | PROCEDURE_KW ID DOT ID SEMICOLON stmt
                     | PROCEDURE_KW ID DOT function_element SEMICOLON VAR_KW var_decl_list stmt
                     | PROCEDURE_KW ID DOT ID SEMICOLON VAR_KW var_decl_list stmt
@@ -235,12 +235,10 @@ function_impl:      FUNCTION_KW function_element COLON type SEMICOLON stmt
                     | FUNCTION_KW ID COLON type SEMICOLON stmt
                     | FUNCTION_KW function_element COLON type SEMICOLON VAR_KW var_decl_list stmt
                     | FUNCTION_KW ID COLON type SEMICOLON VAR_KW var_decl_list stmt
-                    | FUNCTION_KW ID DOT function_element COLON type SEMICOLON stmt  /*class method*/
+                    | FUNCTION_KW ID DOT function_element COLON type SEMICOLON stmt
                     | FUNCTION_KW ID DOT ID COLON type SEMICOLON stmt
                     | FUNCTION_KW ID DOT function_element COLON type SEMICOLON VAR_KW var_decl_list stmt
                     | FUNCTION_KW ID DOT ID COLON type SEMICOLON VAR_KW var_decl_list stmt
-
-// перегрузка функций (методов) на будущее
 
 if_stmt:        IF_KW expr THEN_KW stmt
                 | IF_KW expr THEN_KW stmt ELSE_KW stmt
@@ -270,10 +268,6 @@ enum_decl_list:     enum_decl
 
 class_decl_header:      ID EQUALS CLASS_KW
                         | ID EQUALS CLASS_KW OPEN_BRACKET ID CLOSE_BRACKET
-
-/* access_modifier:    PUBLIC_KW
-                    | PRIVATE_KW
-                    | PROTECTED_KW */
 
 property_decl:  PROPERTY_KW ID COLON type READ_KW ID WRITE_KW ID SEMICOLON
                 | PROPERTY_KW ID COLON type READ_KW ID SEMICOLON
