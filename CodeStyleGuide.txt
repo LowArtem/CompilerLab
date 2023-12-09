@@ -1,0 +1,2 @@
+идентификаторы - snake_case
+типы - CamelCase
