@@ -175,10 +175,10 @@ expr:           literal
                 | expr AND_KW expr
                 | expr AS_KW expr
                 | OPEN_BRACKET expr CLOSE_BRACKET 
-                | OPEN_SQUARE_BRACKET expr_list CLOSE_SQUARE_BRACKET    // что это????
+                /* | OPEN_SQUARE_BRACKET expr_list CLOSE_SQUARE_BRACKET    // что это???? */
                 | OPEN_SQUARE_BRACKET literal DOUBLE_DOT literal CLOSE_SQUARE_BRACKET   // не делаем!
                 | SELF_KW
-                | INHERITED_KW  // убрать????
+                /* | INHERITED_KW  // убрать???? */
                 | INHERITED_KW ID OPEN_BRACKET expr_list_E CLOSE_BRACKET
 
 expr_list:      expr
