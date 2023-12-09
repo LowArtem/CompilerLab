@@ -1,7 +1,18 @@
 %{
     #include <stdio.h>
+    #include <list>
+    #include "classes/exprNode.h"
+
     extern int yylex(void);
 %}
+
+%union {
+  exprNode* expr_union;
+  std::list<exprNode*>* expr_list_union;
+}
+
+%type<expr_union> expr
+%type<expr_list_union> expr_list expr_list_e
 
 %start start_symbol
 
@@ -136,7 +147,7 @@ type:           simple_type
 
 expr:           literal
                 | STRING
-                | ID
+                | ID        { $$ = create_expr_node_from_id($1); }
                 | expr PLUS expr
                 | expr MINUS expr
                 | expr MULTIPLICATION expr
@@ -164,10 +175,10 @@ expr:           literal
                 | expr AND_KW expr
                 | expr AS_KW expr
                 | OPEN_BRACKET expr CLOSE_BRACKET 
-                | OPEN_SQUARE_BRACKET expr_list CLOSE_SQUARE_BRACKET 
-                | OPEN_SQUARE_BRACKET literal DOUBLE_DOT literal CLOSE_SQUARE_BRACKET
+                | OPEN_SQUARE_BRACKET expr_list CLOSE_SQUARE_BRACKET    // что это????
+                | OPEN_SQUARE_BRACKET literal DOUBLE_DOT literal CLOSE_SQUARE_BRACKET   // не делаем!
                 | SELF_KW
-                | INHERITED_KW
+                | INHERITED_KW  // убрать????
                 | INHERITED_KW ID OPEN_BRACKET expr_list_E CLOSE_BRACKET
 
 expr_list:      expr
@@ -355,3 +366,14 @@ type_sect:  TYPE_KW class_decl_list
             | TYPE_KW enum_decl_list
 
 with_stmt:  WITH_KW id_list DO_KW stmt
+
+%%
+
+static exprNode *exprNode::create_expr_node_from_id(string &id)
+{
+    exprNode *res = new exprNode();
+    res->type = exprType::id_type;
+    res->id = id;
+    res->id_node = ++exprNode::max_id;
+    return res;
+}
