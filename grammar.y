@@ -169,17 +169,18 @@ expr:           literal
                 | MINUS expr %prec UMINUS     { $$ = create_expr_node_from_unary_operation(exprType::uminus_type, $2); }
                 | PLUS expr %prec UPLUS       { $$ = create_expr_node_from_unary_operation(exprType::uplus_type, $2); } 
                 | NOT_KW expr                 { $$ = create_expr_node_from_unary_operation(exprType::not_type, $2); }
-                | expr DOT ID
-                | expr DOT ID OPEN_BRACKET expr_list_E CLOSE_BRACKET
-                | expr OPEN_SQUARE_BRACKET expr_list CLOSE_SQUARE_BRACKET
-                | ID OPEN_BRACKET expr_list_E CLOSE_BRACKET
-                | simple_type OPEN_BRACKET expr CLOSE_BRACKET
-                | OPEN_BRACKET expr CLOSE_BRACKET 
+                | ID OPEN_BRACKET expr_list_E CLOSE_BRACKET               { $$ = create_expr_node_from_call($1, $3); }
+                | expr DOT ID OPEN_BRACKET expr_list_E CLOSE_BRACKET      { $$ = create_expr_node_from_method_call($1, $3, $5); }
+                | expr DOT ID                                             { $$ = create_expr_node_from_field_access($1, $3); }
+                | simple_type OPEN_BRACKET expr CLOSE_BRACKET             { $$ = create_expr_from_type_casting($1, $3); }
+                | SELF_KW                                                 { $$ = create_expr_node_from_self(); }
+                | INHERITED_KW ID OPEN_BRACKET expr_list_E CLOSE_BRACKET  { $$ = create_expr_node_from_inherited_call($2, $4); }               
+                | expr OPEN_SQUARE_BRACKET expr_list CLOSE_SQUARE_BRACKET { $$ = create_expr_node_from_array_access($1, $3); }
+                | OPEN_BRACKET expr CLOSE_BRACKET                         { $$ = create_expr_node_from_brackets($2); }
                 /* | OPEN_SQUARE_BRACKET expr_list CLOSE_SQUARE_BRACKET    // что это???? */
                 | OPEN_SQUARE_BRACKET literal DOUBLE_DOT literal CLOSE_SQUARE_BRACKET   // не делаем!
-                | SELF_KW
                 /* | INHERITED_KW  // убрать???? */
-                | INHERITED_KW ID OPEN_BRACKET expr_list_E CLOSE_BRACKET
+                
 
 expr_list:      expr
                 | expr_list COMMA expr
@@ -369,7 +370,7 @@ with_stmt:  WITH_KW id_list DO_KW stmt
 
 %%
 
-static exprNode *create_expr_node_from_string(string &value)
+static exprNode *exprNode::create_expr_node_from_string(string &value)
 {
     exprNode *res = new exprNode();
     res->type = exprType::string_type;
@@ -402,6 +403,84 @@ static exprNode *exprNode::create_expr_node_from_unary_operation(exprType type, 
     exprNode *res = new exprNode();
     res->type = type;
     res->operand = operand;
+    res->id_node = ++exprNode::max_id;
+    return res;
+}
+
+static exprNode *exprNode::create_expr_node_from_function_call(string &id, list<exprNode *> *params)
+{
+    exprNode *res = new exprNode();
+    res->type = exprType::function_call_type;
+    res->id = id;
+    res->params = params;
+    res->id_node = ++exprNode::max_id;
+    return res;
+}
+
+static exprNode *exprNode::create_expr_node_from_method_function_call(exprNode *left_operand, string &id, list<exprNode *> *params)
+{
+    exprNode *res = new exprNode();
+    res->type = exprType::method_function_call_type;
+    res->left_operand = left_operand;
+    res->id = id;
+    res->params = params;
+    res->id_node = ++exprNode::max_id;
+    return res;
+}
+
+static exprNode *exprNode::create_expr_node_from_field_access(exprNode *left_operand, string &id)
+{
+    exprNode *res = new exprNode();
+    res->type = exprType::field_access_type;
+    res->left_operand = left_operand;
+    res->id = id;
+    res->id_node = ++exprNode::max_id;
+    return res;
+}
+
+static exprNode *exprNode::create_expr_node_from_type_casting(simpleType simple_type, exprNode *operand)
+{
+    exprNode *res = new exprNode();
+    res->type = exprType::type_casting_type;
+    res->simple_type = simple_type;
+    res->operand = operand;
+    res->id_node = ++exprNode::max_id;
+    return res;
+}
+
+static exprNode *exprNode::create_expr_node_from_self()
+{
+    exprNode *res = new exprNode();
+    res->type = exprType::self_type;
+    res->id_node = ++exprNode::max_id;
+    return res;
+}
+
+static exprNode *exprNode::create_expr_node_from_inherited_call(string &id, list<exprNode *> *params)
+{
+    exprNode *res = new exprNode();
+    res->type = exprType::inherited_call_type;
+    res->id = id;
+    res->params = params;
+    res->id_node = ++exprNode::max_id;
+    return res;
+}
+
+static exprNode *exprNode::create_expr_node_from_array_access(exprNode *left_operand, list<exprNode *> *params)
+{
+    exprNode *res = new exprNode();
+    res->type = exprType::array_access_type;
+    res->left_operand = left_operand;
+    res->params = params;
+    res->id_node = ++exprNode::max_id;
+    return res;
+}
+
+static exprNode *create_expr_node_from_brackets(exprNode *left_operand)
+{
+    exprNode *res = new exprNode();
+    res->type = exprType::brackets_type;
+    res->left_operand = left_operand;
     res->id_node = ++exprNode::max_id;
     return res;
 }
