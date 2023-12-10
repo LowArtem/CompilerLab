@@ -146,7 +146,7 @@ type:           simple_type
                 | ARRAY_KW expr OF_KW type
 
 expr:           literal
-                | STRING
+                | STRING                      { $$ = create_expr_node_from_string($1); }
                 | ID                          { $$ = create_expr_node_from_id($1); }
                 | expr PLUS expr              { $$ = create_expr_node_from_binary_operation(exprType::plus_type, $1, $3); }
                 | expr MINUS expr             { $$ = create_expr_node_from_binary_operation(exprType::minus_type, $1, $3); }
@@ -368,6 +368,15 @@ type_sect:  TYPE_KW class_decl_list
 with_stmt:  WITH_KW id_list DO_KW stmt
 
 %%
+
+static exprNode *create_expr_node_from_string(string &value)
+{
+    exprNode *res = new exprNode();
+    res->type = exprType::string_type;
+    res->value = value;
+    res->id_node = ++exprNode::max_id;
+    return res;
+}
 
 static exprNode *exprNode::create_expr_node_from_id(string &id)
 {

@@ -67,6 +67,16 @@ public:
     int id_node;
     static int max_id;
 
+    static exprNode *create_expr_node_from_int(int value);
+
+    static exprNode *create_expr_node_from_real(double value);
+
+    static exprNode *create_expr_node_from_boolean(bool value);
+
+    static exprNode *create_expr_node_from_char(char value);
+
+    static exprNode *create_expr_node_from_string(string &value);
+
     static exprNode *create_expr_node_from_id(string &id);
 
     static exprNode *create_expr_node_from_binary_operation(exprType type, exprNode *left_operand, exprNode *right_operand);
