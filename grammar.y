@@ -147,33 +147,33 @@ type:           simple_type
 
 expr:           literal
                 | STRING
-                | ID        { $$ = create_expr_node_from_id($1); }
-                | expr PLUS expr
-                | expr MINUS expr
-                | expr MULTIPLICATION expr
-                | expr DIVISION expr
+                | ID                          { $$ = create_expr_node_from_id($1); }
+                | expr PLUS expr              { $$ = create_expr_node_from_binary_operation(exprType::plus_type, $1, $3); }
+                | expr MINUS expr             { $$ = create_expr_node_from_binary_operation(exprType::minus_type, $1, $3); }
+                | expr MULTIPLICATION expr    { $$ = create_expr_node_from_binary_operation(exprType::multiplication_type, $1, $3); }
+                | expr DIVISION expr          { $$ = create_expr_node_from_binary_operation(exprType::division_type, $1, $3); }
+                | expr LESS expr              { $$ = create_expr_node_from_binary_operation(exprType::less_type, $1, $3); }
+                | expr GREATER expr           { $$ = create_expr_node_from_binary_operation(exprType::greater_type, $1, $3); }
+                | expr NOT_EQUAL expr         { $$ = create_expr_node_from_binary_operation(exprType::not_equal_type, $1, $3); }
+                | expr LESS_OR_EQUAL expr     { $$ = create_expr_node_from_binary_operation(exprType::less_or_equal_type, $1, $3); }
+                | expr GREATER_OR_EQUAL expr  { $$ = create_expr_node_from_binary_operation(exprType::greater_or_equal_type, $1, $3); }
+                | expr EQUALS expr            { $$ = create_expr_node_from_binary_operation(exprType::equals_type, $1, $3); }
+                | expr IN_KW expr             { $$ = create_expr_node_from_binary_operation(exprType::in_type, $1, $3); }
+                | expr IS_KW expr             { $$ = create_expr_node_from_binary_operation(exprType::is_type, $1, $3); }
+                | expr DIV_KW expr            { $$ = create_expr_node_from_binary_operation(exprType::div_type, $1, $3); }
+                | expr MOD_KW expr            { $$ = create_expr_node_from_binary_operation(exprType::mod_type, $1, $3); }
+                | expr OR_KW expr             { $$ = create_expr_node_from_binary_operation(exprType::or_type, $1, $3); }
+                | expr XOR_KW expr            { $$ = create_expr_node_from_binary_operation(exprType::xor_type, $1, $3); }
+                | expr AND_KW expr            { $$ = create_expr_node_from_binary_operation(exprType::and_type, $1, $3); }
+                | expr AS_KW expr             { $$ = create_expr_node_from_binary_operation(exprType::as_type, $1, $3); }
+                | MINUS expr %prec UMINUS     { $$ = create_expr_node_from_unary_operation(exprType::uminus_type, $2); }
+                | PLUS expr %prec UPLUS       { $$ = create_expr_node_from_unary_operation(exprType::uplus_type, $2); } 
+                | NOT_KW expr                 { $$ = create_expr_node_from_unary_operation(exprType::not_type, $2); }
                 | expr DOT ID
                 | expr DOT ID OPEN_BRACKET expr_list_E CLOSE_BRACKET
                 | expr OPEN_SQUARE_BRACKET expr_list CLOSE_SQUARE_BRACKET
-                | MINUS expr %prec UMINUS
-                | PLUS expr %prec UPLUS
                 | ID OPEN_BRACKET expr_list_E CLOSE_BRACKET
                 | simple_type OPEN_BRACKET expr CLOSE_BRACKET
-                | expr LESS expr
-                | expr GREATER expr
-                | expr NOT_EQUAL expr
-                | expr LESS_OR_EQUAL expr
-                | expr GREATER_OR_EQUAL expr
-                | expr EQUALS expr
-                | expr IN_KW expr
-                | expr IS_KW expr
-                | NOT_KW expr
-                | expr DIV_KW expr
-                | expr MOD_KW expr
-                | expr OR_KW expr
-                | expr XOR_KW expr
-                | expr AND_KW expr
-                | expr AS_KW expr
                 | OPEN_BRACKET expr CLOSE_BRACKET 
                 /* | OPEN_SQUARE_BRACKET expr_list CLOSE_SQUARE_BRACKET    // что это???? */
                 | OPEN_SQUARE_BRACKET literal DOUBLE_DOT literal CLOSE_SQUARE_BRACKET   // не делаем!
@@ -374,6 +374,25 @@ static exprNode *exprNode::create_expr_node_from_id(string &id)
     exprNode *res = new exprNode();
     res->type = exprType::id_type;
     res->id = id;
+    res->id_node = ++exprNode::max_id;
+    return res;
+}
+
+static exprNode *exprNode::create_expr_node_from_binary_operation(exprType type, exprNode *left_operand, exprNode *right_operand)
+{
+    exprNode *res = new exprNode();
+    res->type = type;
+    res->left_operand = left_operand;
+    res->right_operand = right_operand;
+    res->id_node = ++exprNode::max_id;
+    return res;
+}
+
+static exprNode *exprNode::create_expr_node_from_unary_operation(exprType type, exprNode *operand)
+{
+    exprNode *res = new exprNode();
+    res->type = type;
+    res->operand = operand;
     res->id_node = ++exprNode::max_id;
     return res;
 }
