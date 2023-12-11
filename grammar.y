@@ -5,6 +5,7 @@
     #include "classes/exprNode.h"
     #include "classes/stmtNode.h"
     #include "classes/ifStmtNode.h"
+    #include "classes/stmtBlockNode.h"
     #pragma once
 
     extern int yylex(void);
@@ -15,16 +16,18 @@
   exprNode* expr_union;
   std::list<exprNode*>* expr_list_union;
   stmtNode* stmt_union;
-  ifStmtNode* if_stmt_union;
   std::list<stmtNode*>* stmt_list_union;
+  ifStmtNode* if_stmt_union;
+  stmtBlockNode* stmt_block_union;
 }
 
 %type<literal_union> literal
 %type<expr_union> expr
 %type<expr_list_union> expr_list expr_list_e
 %type<stmt_union> stmt
-%type<if_stmt_union> if_stmt
 %type<stmt_list_union> stmt_list
+%type<if_stmt_union> if_stmt
+%type<stmt_block_union> stmt_block
 
 %start start_symbol
 
@@ -215,7 +218,7 @@ stmt:           expr ASSIGNMENT expr
 stmt_list:      stmt                            { $$ = create_stmt_node_list_from_stmt_node($1); }
                 | stmt_list SEMICOLON stmt      { $$ = add_stmt_node_to_stmt_node_list($1, $3); }
 
-stmt_block:     BEGIN_KW stmt_list END_KW
+stmt_block:     BEGIN_KW stmt_list END_KW       { $$ = create_stmt_block_node($2); }
 
 id_list:        ID
                 | id_list COMMA ID
@@ -579,4 +582,13 @@ static std::list<stmtNode *>* stmtNode::add_stmt_node_to_stmt_node_list(std::lis
 {
     stmt_node_list->push_back(stmt_node);
     return stmt_node_list;
+}
+
+// --------------------------stmt_block--------------------------
+static stmtBlockNode *stmtBlockNode::create_stmt_block_node(list<stmtNode *> *stmt_list)
+{
+    stmtBlockNode *res = new stmtBlockNode();
+    res->stmt_list = stmt_list;
+    res->id_node = ++stmtBlockNode::max_id;
+    return res;
 }

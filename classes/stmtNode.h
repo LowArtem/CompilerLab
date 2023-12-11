@@ -28,7 +28,7 @@ public:
     int id_node;
     static int max_id;
 
-    static std::list<stmtNode *> *create_stmt_node_list_from_stmt_node(stmtNode *stmt_node);
+    static list<stmtNode *> *create_stmt_node_list_from_stmt_node(stmtNode *stmt_node);
 
-    static std::list<stmtNode *> *add_stmt_node_to_stmt_node_list(std::list<stmtNode *> *stmt_node_list, stmtNode *stmt_node);
+    static list<stmtNode *> *add_stmt_node_to_stmt_node_list(std::list<stmtNode *> *stmt_node_list, stmtNode *stmt_node);
 };
