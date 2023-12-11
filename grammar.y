@@ -186,8 +186,8 @@ expr:           literal                       { $$ = create_expr_node_from_liter
                 /* | INHERITED_KW  // убрать???? */
                 
 
-expr_list:      expr
-                | expr_list COMMA expr
+expr_list:      expr                        { $$ = create_expr_node_list_from_expr_node($1); }
+                | expr_list COMMA expr      { $$ = add_expr_node_to_expr_node_list($1, $3); }
 
 expr_list_E:    expr_list
                 | /*empty*/
@@ -532,4 +532,17 @@ static exprNode *exprNode::сreate_expr_node_from_literal_node(literalNode *lite
     res->literal_node = literal_node;
     res->id_node = ++exprNode::max_id;
     return res;
+}
+
+static std::list<exprNode*>* exprNode::create_expr_node_list_from_expr_node(exprNode *expr_node)
+{
+    std::list<exprNode*>* res = new std::list<exprNode*>();
+    res->push_back(expr_node);
+    return res;
+}
+
+static std::list<exprNode*>* exprNode::add_expr_node_to_expr_node_list(std::list<exprNode*>* expr_node_list, exprNode *expr_node)
+{
+    expr_node_list->push_back(expr_node);
+    return expr_node_list;
 }

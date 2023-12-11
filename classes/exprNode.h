@@ -96,4 +96,8 @@ public:
     static exprNode *create_expr_node_from_brackets(exprNode *left_operand);
 
     static exprNode *create_expr_node_from_literal_node(literalNode *literal_node);
+
+    static std::list<exprNode *> *create_expr_node_list_from_expr_node(exprNode *expr_node);
+
+    static std::list<exprNode *> *add_expr_node_to_expr_node_list(std::list<exprNode *> *expr_node_list, exprNode *expr_node);
 };
