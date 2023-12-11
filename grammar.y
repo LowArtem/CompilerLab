@@ -156,11 +156,11 @@ simple_type:    INTEGER_KW
                 | STRING_KW
                 | CHAR_KW
 
-literal:        INTEGER     { $$ = create_literal_node_from_int($1); }
-                | REAL      { $$ = create_literal_node_from_real($1); }
-                | TRUE_KW   { $$ = create_literal_node_from_bool(true); }
-                | FALSE_KW  { $$ = create_literal_node_from_bool(false); }
-                | CHAR      { $$ = create_literal_node_from_char($1); }
+literal:        INTEGER     { $$ = literalNode::create_literal_node_from_int($1); }
+                | REAL      { $$ = literalNode::create_literal_node_from_real($1); }
+                | TRUE_KW   { $$ = literalNode::create_literal_node_from_bool(true); }
+                | FALSE_KW  { $$ = literalNode::create_literal_node_from_bool(false); }
+                | CHAR      { $$ = literalNode::create_literal_node_from_char($1); }
 
 type:           simple_type
                 | ID
@@ -170,45 +170,45 @@ type:           simple_type
                 | ARRAY_KW OF_KW type
                 | ARRAY_KW expr OF_KW type
 
-expr:           literal                       { $$ = create_expr_node_from_literal($1); }
-                | STRING                      { $$ = create_expr_node_from_string($1); }
-                | ID                          { $$ = create_expr_node_from_id($1); }
-                | expr PLUS expr              { $$ = create_expr_node_from_binary_operation(exprType::plus_type, $1, $3); }
-                | expr MINUS expr             { $$ = create_expr_node_from_binary_operation(exprType::minus_type, $1, $3); }
-                | expr MULTIPLICATION expr    { $$ = create_expr_node_from_binary_operation(exprType::multiplication_type, $1, $3); }
-                | expr DIVISION expr          { $$ = create_expr_node_from_binary_operation(exprType::division_type, $1, $3); }
-                | expr LESS expr              { $$ = create_expr_node_from_binary_operation(exprType::less_type, $1, $3); }
-                | expr GREATER expr           { $$ = create_expr_node_from_binary_operation(exprType::greater_type, $1, $3); }
-                | expr NOT_EQUAL expr         { $$ = create_expr_node_from_binary_operation(exprType::not_equal_type, $1, $3); }
-                | expr LESS_OR_EQUAL expr     { $$ = create_expr_node_from_binary_operation(exprType::less_or_equal_type, $1, $3); }
-                | expr GREATER_OR_EQUAL expr  { $$ = create_expr_node_from_binary_operation(exprType::greater_or_equal_type, $1, $3); }
-                | expr EQUALS expr            { $$ = create_expr_node_from_binary_operation(exprType::equals_type, $1, $3); }
-                | expr IN_KW expr             { $$ = create_expr_node_from_binary_operation(exprType::in_type, $1, $3); }
-                | expr IS_KW expr             { $$ = create_expr_node_from_binary_operation(exprType::is_type, $1, $3); }
-                | expr DIV_KW expr            { $$ = create_expr_node_from_binary_operation(exprType::div_type, $1, $3); }
-                | expr MOD_KW expr            { $$ = create_expr_node_from_binary_operation(exprType::mod_type, $1, $3); }
-                | expr OR_KW expr             { $$ = create_expr_node_from_binary_operation(exprType::or_type, $1, $3); }
-                | expr XOR_KW expr            { $$ = create_expr_node_from_binary_operation(exprType::xor_type, $1, $3); }
-                | expr AND_KW expr            { $$ = create_expr_node_from_binary_operation(exprType::and_type, $1, $3); }
-                | expr AS_KW expr             { $$ = create_expr_node_from_binary_operation(exprType::as_type, $1, $3); }
-                | MINUS expr %prec UMINUS     { $$ = create_expr_node_from_unary_operation(exprType::uminus_type, $2); }
-                | PLUS expr %prec UPLUS       { $$ = create_expr_node_from_unary_operation(exprType::uplus_type, $2); } 
-                | NOT_KW expr                 { $$ = create_expr_node_from_unary_operation(exprType::not_type, $2); }
-                | ID OPEN_BRACKET expr_list_E CLOSE_BRACKET               { $$ = create_expr_node_from_call($1, $3); }
-                | expr DOT ID OPEN_BRACKET expr_list_E CLOSE_BRACKET      { $$ = create_expr_node_from_method_call($1, $3, $5); }
-                | expr DOT ID                                             { $$ = create_expr_node_from_field_access($1, $3); }
-                | simple_type OPEN_BRACKET expr CLOSE_BRACKET             { $$ = create_expr_from_type_casting($1, $3); }
-                | SELF_KW                                                 { $$ = create_expr_node_from_self(); }
-                | INHERITED_KW ID OPEN_BRACKET expr_list_E CLOSE_BRACKET  { $$ = create_expr_node_from_inherited_call($2, $4); }               
-                | expr OPEN_SQUARE_BRACKET expr_list CLOSE_SQUARE_BRACKET { $$ = create_expr_node_from_array_access($1, $3); }
-                | OPEN_BRACKET expr CLOSE_BRACKET                         { $$ = create_expr_node_from_brackets($2); }
+expr:           literal                       { $$ = exprNode::create_expr_node_from_literal_node($1); }
+                | STRING                      { $$ = exprNode::create_expr_node_from_string($1); }
+                | ID                          { $$ = exprNode::create_expr_node_from_id($1); }
+                | expr PLUS expr              { $$ = exprNode::create_expr_node_from_binary_operation(exprType::plus_type, $1, $3); }
+                | expr MINUS expr             { $$ = exprNode::create_expr_node_from_binary_operation(exprType::minus_type, $1, $3); }
+                | expr MULTIPLICATION expr    { $$ = exprNode::create_expr_node_from_binary_operation(exprType::multiplication_type, $1, $3); }
+                | expr DIVISION expr          { $$ = exprNode::create_expr_node_from_binary_operation(exprType::division_type, $1, $3); }
+                | expr LESS expr              { $$ = exprNode::create_expr_node_from_binary_operation(exprType::less_type, $1, $3); }
+                | expr GREATER expr           { $$ = exprNode::create_expr_node_from_binary_operation(exprType::greater_type, $1, $3); }
+                | expr NOT_EQUAL expr         { $$ = exprNode::create_expr_node_from_binary_operation(exprType::not_equal_type, $1, $3); }
+                | expr LESS_OR_EQUAL expr     { $$ = exprNode::create_expr_node_from_binary_operation(exprType::less_or_equal_type, $1, $3); }
+                | expr GREATER_OR_EQUAL expr  { $$ = exprNode::create_expr_node_from_binary_operation(exprType::greater_or_equal_type, $1, $3); }
+                | expr EQUALS expr            { $$ = exprNode::create_expr_node_from_binary_operation(exprType::equals_type, $1, $3); }
+                | expr IN_KW expr             { $$ = exprNode::create_expr_node_from_binary_operation(exprType::in_type, $1, $3); }
+                | expr IS_KW expr             { $$ = exprNode::create_expr_node_from_binary_operation(exprType::is_type, $1, $3); }
+                | expr DIV_KW expr            { $$ = exprNode::create_expr_node_from_binary_operation(exprType::div_type, $1, $3); }
+                | expr MOD_KW expr            { $$ = exprNode::create_expr_node_from_binary_operation(exprType::mod_type, $1, $3); }
+                | expr OR_KW expr             { $$ = exprNode::create_expr_node_from_binary_operation(exprType::or_type, $1, $3); }
+                | expr XOR_KW expr            { $$ = exprNode::create_expr_node_from_binary_operation(exprType::xor_type, $1, $3); }
+                | expr AND_KW expr            { $$ = exprNode::create_expr_node_from_binary_operation(exprType::and_type, $1, $3); }
+                | expr AS_KW expr             { $$ = exprNode::create_expr_node_from_binary_operation(exprType::as_type, $1, $3); }
+                | MINUS expr %prec UMINUS     { $$ = exprNode::create_expr_node_from_unary_operation(exprType::uminus_type, $2); }
+                | PLUS expr %prec UPLUS       { $$ = exprNode::create_expr_node_from_unary_operation(exprType::uplus_type, $2); } 
+                | NOT_KW expr                 { $$ = exprNode::create_expr_node_from_unary_operation(exprType::not_type, $2); }
+                | ID OPEN_BRACKET expr_list_E CLOSE_BRACKET               { $$ = exprNode::create_expr_node_from_call($1, $3); }
+                | expr DOT ID OPEN_BRACKET expr_list_E CLOSE_BRACKET      { $$ = exprNode::create_expr_node_from_method_call($1, $3, $5); }
+                | expr DOT ID                                             { $$ = exprNode::create_expr_node_from_field_access($1, $3); }
+                | simple_type OPEN_BRACKET expr CLOSE_BRACKET             { $$ = exprNode::create_expr_from_type_casting($1, $3); }
+                | SELF_KW                                                 { $$ = exprNode::create_expr_node_from_self(); }
+                | INHERITED_KW ID OPEN_BRACKET expr_list_E CLOSE_BRACKET  { $$ = exprNode::create_expr_node_from_inherited_call($2, $4); }               
+                | expr OPEN_SQUARE_BRACKET expr_list CLOSE_SQUARE_BRACKET { $$ = exprNode::create_expr_node_from_array_access($1, $3); }
+                | OPEN_BRACKET expr CLOSE_BRACKET                         { $$ = exprNode::create_expr_node_from_brackets($2); }
                 /* | OPEN_SQUARE_BRACKET expr_list CLOSE_SQUARE_BRACKET    // что это???? */
                 /* | OPEN_SQUARE_BRACKET literal DOUBLE_DOT literal CLOSE_SQUARE_BRACKET   // не делаем! */
                 /* | INHERITED_KW  // убрать???? */
                 
 
-expr_list:      expr                        { $$ = create_expr_node_list_from_expr_node($1); }
-                | expr_list COMMA expr      { $$ = add_expr_node_to_expr_node_list($1, $3); }
+expr_list:      expr                        { $$ = exprNode::create_expr_node_list_from_expr_node($1); }
+                | expr_list COMMA expr      { $$ = exprNode::add_expr_node_to_expr_node_list($1, $3); }
 
 expr_list_E:    expr_list
                 | /*empty*/
@@ -225,18 +225,18 @@ stmt:           expr ASSIGNMENT expr
                 | with_stmt
                 | /*empty*/
 
-stmt_list:      stmt                            { $$ = create_stmt_node_list_from_stmt_node($1); }
-                | stmt_list SEMICOLON stmt      { $$ = add_stmt_node_to_stmt_node_list($1, $3); }
+stmt_list:      stmt                            { $$ = stmtNode::create_stmt_node_list_from_stmt_node($1); }
+                | stmt_list SEMICOLON stmt      { $$ = stmtNode::add_stmt_node_to_stmt_node_list($1, $3); }
 
-stmt_block:     BEGIN_KW stmt_list END_KW       { $$ = create_stmt_block_node($2); }
+stmt_block:     BEGIN_KW stmt_list END_KW       { $$ = stmtBlockNode::create_stmt_block_node($2); }
 
 id_list:        ID                              { 
-                                                    auto id = create_expr_node_from_id($1);
-                                                    $$ = create_expr_node_list_from_expr_node(id); 
+                                                    auto id = exprNode::create_expr_node_from_id($1);
+                                                    $$ = exprNode::create_expr_node_list_from_expr_node(id); 
                                                 }
                 | id_list COMMA ID              {
-                                                    auto id = create_expr_node_from_id($3);
-                                                    $$ = add_expr_node_to_expr_node_list($1, id);
+                                                    auto id = exprNode::create_expr_node_from_id($3);
+                                                    $$ = exprNode::add_expr_node_to_expr_node_list($1, id);
                                                 }
 
 var_decl:       id_list COLON type SEMICOLON
@@ -279,16 +279,16 @@ function_impl:      FUNCTION_KW function_element COLON type SEMICOLON stmt
                     | FUNCTION_KW ID DOT function_element COLON type SEMICOLON VAR_KW var_decl_list stmt
                     | FUNCTION_KW ID DOT ID COLON type SEMICOLON VAR_KW var_decl_list stmt
 
-if_stmt:        IF_KW expr THEN_KW stmt                 { $$ = create_if_stmt_node($2, $4, NULL); }
-                | IF_KW expr THEN_KW stmt ELSE_KW stmt  { $$ = create_if_stmt_node($2, $4, $6); }
+if_stmt:        IF_KW expr THEN_KW stmt                 { $$ = ifStmtNode::create_if_stmt_node($2, $4, NULL); }
+                | IF_KW expr THEN_KW stmt ELSE_KW stmt  { $$ = ifStmtNode::create_if_stmt_node($2, $4, $6); }
 
-case_list:      expr_list COLON stmt SEMICOLON                          { $$ = create_case_element_list_node($1, $3); }
-                | case_list expr_list COLON stmt SEMICOLON              { $$ = add_case_element_to_list_node($1, $2, $4); }
+case_list:      expr_list COLON stmt SEMICOLON                          { $$ = caseElementNode::create_case_element_list_node($1, $3); }
+                | case_list expr_list COLON stmt SEMICOLON              { $$ = caseElementNode::add_case_element_to_list_node($1, $2, $4); }
 
-case_stmt:      CASE_KW expr OF_KW case_list END_KW                     { $$ = create_case_node($2, $4, NULL); }
-                | CASE_KW expr OF_KW case_list ELSE_KW stmt END_KW      { $$ = create_case_node($2, $4, $6); }
+case_stmt:      CASE_KW expr OF_KW case_list END_KW                     { $$ = caseNode::create_case_node($2, $4, NULL); }
+                | CASE_KW expr OF_KW case_list ELSE_KW stmt END_KW      { $$ = caseNode::create_case_node($2, $4, $6); }
 
-repeat_stmt:    REPEAT_KW stmt_list UNTIL_KW expr       { $$ = create_repeat_stmt_node($2, $4); }
+repeat_stmt:    REPEAT_KW stmt_list UNTIL_KW expr       { $$ = repeatStmtNode::create_repeat_stmt_node($2, $4); }
 
 while_stmt:     WHILE_KW expr DO_KW stmt
 
