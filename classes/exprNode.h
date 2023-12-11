@@ -1,5 +1,6 @@
 #include <string>
 #include <list>
+#include "literalNode.h"
 
 using namespace std;
 
@@ -48,7 +49,8 @@ enum exprType
     self_type,
     inherited_call_type,
     array_access_type,
-    brackets_type
+    brackets_type,
+    literal_node_type
 };
 
 class exprNode
@@ -65,16 +67,9 @@ public:
     exprNode *right_operand;
     list<exprNode *> *params;
     simpleType simple_type;
+    literalNode *literal_node;
     int id_node;
     static int max_id;
-
-    static exprNode *create_expr_node_from_int(int value);
-
-    static exprNode *create_expr_node_from_real(double value);
-
-    static exprNode *create_expr_node_from_boolean(bool value);
-
-    static exprNode *create_expr_node_from_char(char value);
 
     static exprNode *create_expr_node_from_string(string &value);
 
@@ -99,4 +94,6 @@ public:
     static exprNode *create_expr_node_from_array_access(exprNode *left_operand, list<exprNode *> *params);
 
     static exprNode *create_expr_node_from_brackets(exprNode *left_operand);
+
+    static exprNode *create_expr_node_from_literal_node(literalNode *literal_node);
 };

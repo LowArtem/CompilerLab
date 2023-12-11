@@ -1,16 +1,20 @@
 %{
     #include <stdio.h>
     #include <list>
+    #include "classes/literalNode.h"
     #include "classes/exprNode.h"
+    #pragma once
 
     extern int yylex(void);
 %}
 
 %union {
+  literalNode* literal_union;
   exprNode* expr_union;
   std::list<exprNode*>* expr_list_union;
 }
 
+%type<literal_union> literal
 %type<expr_union> expr
 %type<expr_list_union> expr_list expr_list_e
 
@@ -131,11 +135,11 @@ simple_type:    INTEGER_KW
                 | STRING_KW
                 | CHAR_KW
 
-literal:        INTEGER
-                | REAL
-                | TRUE_KW
-                | FALSE_KW
-                | CHAR
+literal:        INTEGER     { $$ = create_literal_node_from_int($1); }
+                | REAL      { $$ = create_literal_node_from_real($1); }
+                | TRUE_KW   { $$ = create_literal_node_from_bool(true); }
+                | FALSE_KW  { $$ = create_literal_node_from_bool(false); }
+                | CHAR      { $$ = create_literal_node_from_char($1); }
 
 type:           simple_type
                 | ID
@@ -145,7 +149,7 @@ type:           simple_type
                 | ARRAY_KW OF_KW type
                 | ARRAY_KW expr OF_KW type
 
-expr:           literal
+expr:           literal                       { $$ = create_expr_node_from_literal($1); }
                 | STRING                      { $$ = create_expr_node_from_string($1); }
                 | ID                          { $$ = create_expr_node_from_id($1); }
                 | expr PLUS expr              { $$ = create_expr_node_from_binary_operation(exprType::plus_type, $1, $3); }
@@ -370,6 +374,42 @@ with_stmt:  WITH_KW id_list DO_KW stmt
 
 %%
 
+static literalNode *literalNode::create_literal_node_from_int(int value)
+{
+    literalNode *res = new literalNode();
+    res->type = literalType::int_type;
+    res->value = value;
+    res->id_node = ++literalNode::max_id;
+    return res;
+}
+
+static literalNode *literalNode::create_literal_node_from_real(double value)
+{
+    literalNode *res = new literalNode();
+    res->type = literalType::real_type;
+    res->value = value;
+    res->id_node = ++literalNode::max_id;
+    return res;
+}
+
+static literalNode *literalNode::create_literal_node_from_boolean(bool value)
+{
+    literalNode *res = new literalNode();
+    res->type = literalType::boolean_type;
+    res->value = value;
+    res->id_node = ++literalNode::max_id;
+    return res;
+}
+
+static literalNode *literalNode::create_literal_node_from_char(char value)
+{
+    literalNode *res = new literalNode();
+    res->type = literalType::char_type;
+    res->value = value;
+    res->id_node = ++literalNode::max_id;
+    return res;
+}
+
 static exprNode *exprNode::create_expr_node_from_string(string &value)
 {
     exprNode *res = new exprNode();
@@ -481,6 +521,15 @@ static exprNode *exprNode::create_expr_node_from_brackets(exprNode *operand)
     exprNode *res = new exprNode();
     res->type = exprType::brackets_type;
     res->left_operand = operand;
+    res->id_node = ++exprNode::max_id;
+    return res;
+}
+
+static exprNode *exprNode::reate_expr_node_from_literal_node(literalNode *literal_node)
+{
+    exprNode *res = new exprNode();
+    res->type = exprType::literal_node_type;
+    res->literal_node = literal_node;
     res->id_node = ++exprNode::max_id;
     return res;
 }
