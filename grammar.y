@@ -5,6 +5,7 @@
     #include "classes/exprNode.h"
     #include "classes/stmtNode.h"
     #include "classes/ifStmtNode.h"
+    #include "classes/stmtBlockNode.h"
     #include "classes/repeatStmtNode.h"
     #include "classes/caseNode.h"
     #include "classes/caseElementNode.h"
@@ -226,7 +227,7 @@ stmt:           expr ASSIGNMENT expr
 stmt_list:      stmt                            { $$ = create_stmt_node_list_from_stmt_node($1); }
                 | stmt_list SEMICOLON stmt      { $$ = add_stmt_node_to_stmt_node_list($1, $3); }
 
-stmt_block:     BEGIN_KW stmt_list END_KW
+stmt_block:     BEGIN_KW stmt_list END_KW       { $$ = create_stmt_block_node($2); }
 
 id_list:        ID                              { 
                                                     auto id = create_expr_node_from_id($1);
@@ -606,6 +607,15 @@ static std::list<stmtNode *>* stmtNode::add_stmt_node_to_stmt_node_list(std::lis
 {
     stmt_node_list->push_back(stmt_node);
     return stmt_node_list;
+}
+
+// --------------------------stmt_block--------------------------
+static stmtBlockNode *stmtBlockNode::create_stmt_block_node(list<stmtNode *> *stmt_list)
+{
+    stmtBlockNode *res = new stmtBlockNode();
+    res->stmt_list = stmt_list;
+    res->id_node = ++stmtBlockNode::max_id;
+    return res;
 }
 
 // --------------------------case_stmt--------------------------
