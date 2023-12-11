@@ -5,6 +5,7 @@
     #include "classes/exprNode.h"
     #include "classes/stmtNode.h"
     #include "classes/ifStmtNode.h"
+    #include "classes/repeatStmtNode.h"
     #pragma once
 
     extern int yylex(void);
@@ -16,6 +17,7 @@
   std::list<exprNode*>* expr_list_union;
   stmtNode* stmt_union;
   ifStmtNode* if_stmt_union;
+  repeatStmtNode* repeat_stmt_union;
 }
 
 %type<literal_union> literal
@@ -23,6 +25,7 @@
 %type<expr_list_union> expr_list expr_list_e
 %type<stmt_union> stmt
 %type<if_stmt_union> if_stmt
+%type<repeat_stmt_union> repeat_stmt
 
 %start start_symbol
 
@@ -258,8 +261,8 @@ function_impl:      FUNCTION_KW function_element COLON type SEMICOLON stmt
                     | FUNCTION_KW ID DOT function_element COLON type SEMICOLON VAR_KW var_decl_list stmt
                     | FUNCTION_KW ID DOT ID COLON type SEMICOLON VAR_KW var_decl_list stmt
 
-if_stmt:        IF_KW expr THEN_KW stmt                 { $$ = create_stmt_node_from_if($2, $4, null); }
-                | IF_KW expr THEN_KW stmt ELSE_KW stmt  { $$ = create_stmt_node_from_if($2, $4, $6); }
+if_stmt:        IF_KW expr THEN_KW stmt                 { $$ = create_if_stmt_node($2, $4, null); }
+                | IF_KW expr THEN_KW stmt ELSE_KW stmt  { $$ = create_if_stmt_node($2, $4, $6); }
 
 case_list:      expr_list COLON stmt SEMICOLON
                 | case_list expr_list COLON stmt SEMICOLON
@@ -267,7 +270,7 @@ case_list:      expr_list COLON stmt SEMICOLON
 case_stmt:      CASE_KW expr OF_KW case_list END_KW
                 | CASE_KW expr OF_KW case_list ELSE_KW stmt END_KW
 
-repeat_stmt:    REPEAT_KW stmt_list UNTIL_KW expr
+repeat_stmt:    REPEAT_KW stmt_list UNTIL_KW expr       { $$ = create_repeat_stmt_node($2, $4); }
 
 while_stmt:     WHILE_KW expr DO_KW stmt
 
@@ -550,5 +553,15 @@ static ifStmtNode *ifStmtNode::create_if_stmt_node(exprNode *condition, stmtNode
     res->if_body = if_body;
     res->else_body = else_body;
     res->id_node = ++ifStmtNode::max_id;
+    return res;
+}
+
+// --------------------------repeat_stmt--------------------------
+static repeatStmtNode *repeatStmtNode::create_repeat_stmt_node(stmtNode *body, exprNode *condition)
+{
+    repeatStmtNode *res = new repeatStmtNode();
+    res->body = body;
+    res->condition = condition;
+    res->id_node = ++repeatStmtNode::max_id;
     return res;
 }
