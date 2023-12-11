@@ -3,6 +3,7 @@
     #include <list>
     #include "classes/literalNode.h"
     #include "classes/exprNode.h"
+    #include "classes/stmtNode.h"
     #pragma once
 
     extern int yylex(void);
@@ -12,11 +13,15 @@
   literalNode* literal_union;
   exprNode* expr_union;
   std::list<exprNode*>* expr_list_union;
+  stmtNode* stmt_union;
+  std::list<stmtNode*>* stmt_list_union;
 }
 
 %type<literal_union> literal
 %type<expr_union> expr
 %type<expr_list_union> expr_list expr_list_e
+%type<stmt_union> stmt
+%type<stmt_list_union> stmt_list
 
 %start start_symbol
 
@@ -204,8 +209,8 @@ stmt:           expr ASSIGNMENT expr
                 | with_stmt
                 | /*empty*/
 
-stmt_list:      stmt
-                | stmt_list SEMICOLON stmt
+stmt_list:      stmt                            { $$ = create_stmt_node_list_from_stmt_node($1); }
+                | stmt_list SEMICOLON stmt      { $$ = add_stmt_node_to_stmt_node_list($1, $3); }
 
 stmt_block:     BEGIN_KW stmt_list END_KW
 
@@ -545,4 +550,17 @@ static std::list<exprNode*>* exprNode::add_expr_node_to_expr_node_list(std::list
 {
     expr_node_list->push_back(expr_node);
     return expr_node_list;
+}
+
+static std::list<stmtNode *>* stmtNode::create_stmt_node_list_from_stmt_node(stmtNode *stmt_node)
+{
+    std::list<stmtNode*>* res = new std::list<stmtNode*>();
+    res->push_back(stmt_node);
+    return res;
+}
+
+static std::list<stmtNode *>* stmtNode::add_stmt_node_to_stmt_node_list(std::list<stmtNode*>* stmt_node_list, stmtNode *stmt_node)
+{
+    stmt_node_list->push_back(stmt_node);
+    return stmt_node_list;
 }
