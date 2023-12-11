@@ -178,7 +178,7 @@ expr:           literal
                 | expr OPEN_SQUARE_BRACKET expr_list CLOSE_SQUARE_BRACKET { $$ = create_expr_node_from_array_access($1, $3); }
                 | OPEN_BRACKET expr CLOSE_BRACKET                         { $$ = create_expr_node_from_brackets($2); }
                 /* | OPEN_SQUARE_BRACKET expr_list CLOSE_SQUARE_BRACKET    // что это???? */
-                | OPEN_SQUARE_BRACKET literal DOUBLE_DOT literal CLOSE_SQUARE_BRACKET   // не делаем!
+                /* | OPEN_SQUARE_BRACKET literal DOUBLE_DOT literal CLOSE_SQUARE_BRACKET   // не делаем! */
                 /* | INHERITED_KW  // убрать???? */
                 
 
@@ -402,7 +402,7 @@ static exprNode *exprNode::create_expr_node_from_unary_operation(exprType type, 
 {
     exprNode *res = new exprNode();
     res->type = type;
-    res->operand = operand;
+    res->left_operand = operand;
     res->id_node = ++exprNode::max_id;
     return res;
 }
@@ -443,7 +443,7 @@ static exprNode *exprNode::create_expr_node_from_type_casting(simpleType simple_
     exprNode *res = new exprNode();
     res->type = exprType::type_casting_type;
     res->simple_type = simple_type;
-    res->operand = operand;
+    res->left_operand = operand;
     res->id_node = ++exprNode::max_id;
     return res;
 }
@@ -476,11 +476,11 @@ static exprNode *exprNode::create_expr_node_from_array_access(exprNode *left_ope
     return res;
 }
 
-static exprNode *create_expr_node_from_brackets(exprNode *left_operand)
+static exprNode *exprNode::create_expr_node_from_brackets(exprNode *operand)
 {
     exprNode *res = new exprNode();
     res->type = exprType::brackets_type;
-    res->left_operand = left_operand;
+    res->left_operand = operand;
     res->id_node = ++exprNode::max_id;
     return res;
 }
