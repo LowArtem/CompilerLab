@@ -1,14 +1,18 @@
 #include "exprNode.h"
 #include "stmtNode.h"
+#include "node.h"
 #include <list>
 
-class caseElementNode
+/**
+ * Класс элемента инструкции case
+ */
+class caseElementNode : public node
 {
 public:
     exprNode *condition;
     stmtNode *body;
-    int id_node;
-    static int max_id;
+
+    caseElementNode();
 
     static std::list<caseElementNode *> *create_case_element_list_node(exprNode *condition, stmtNode *body);
 

@@ -1,14 +1,19 @@
 #include "exprNode.h"
 #include "stmtNode.h"
+#include "node.h"
 
-class ifStmtNode
+/**
+ * Класс инструкции if .. then .. else
+ *
+ */
+class ifStmtNode : public node
 {
 public:
     exprNode *condition;
     stmtNode *if_body;
     stmtNode *else_body;
-    int id_node;
-    static int max_id;
+
+    ifStmtNode();
 
     static ifStmtNode *create_if_stmt_node(exprNode *condition, stmtNode *if_body, stmtNode *else_body);
 };

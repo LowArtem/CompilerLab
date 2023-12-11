@@ -1,9 +1,13 @@
 #include <string>
 #include <list>
 #include "literalNode.h"
+#include "node.h"
 
 using namespace std;
 
+/**
+ * Перечисление simpleType определяет пять основных типов данных
+ */
 enum simpleType
 {
     int_type,
@@ -13,6 +17,10 @@ enum simpleType
     string_type
 };
 
+/**
+ * Перечисление exprType определяет типы выражений
+ *
+ */
 enum exprType
 {
     int_type,
@@ -53,7 +61,10 @@ enum exprType
     literal_node_type
 };
 
-class exprNode
+/**
+ * Класс выражения
+ */
+class exprNode : public node
 {
 public:
     exprType type;
@@ -68,8 +79,8 @@ public:
     list<exprNode *> *params;
     simpleType simple_type;
     literalNode *literal_node;
-    int id_node;
-    static int max_id;
+
+    exprNode();
 
     static exprNode *create_expr_node_from_string(string &value);
 

@@ -1,14 +1,18 @@
 #include <list>
 #include "stmtNode.h"
+#include "node.h"
 
 using namespace std;
 
-class stmtBlockNode
+/**
+ * Класс представляющий блок инструкций
+ */
+class stmtBlockNode : public node
 {
 public:
     list<stmtNode *> *stmt_list;
-    int id_node;
-    int max_id;
+
+    stmtBlockNode();
 
     static stmtBlockNode *create_stmt_block_node(list<stmtNode *> *stmt_list);
 };

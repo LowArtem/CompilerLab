@@ -1,3 +1,8 @@
+#include "node.h"
+
+/**
+ * Перечисление literalType определяет тип литерала
+ */
 enum literalType
 {
     int_type,
@@ -6,7 +11,10 @@ enum literalType
     char_type
 };
 
-class literalNode
+/**
+ * Класс представляющий литерал (целое, вещественное, логическое, символ)
+ */
+class literalNode : public node
 {
 public:
     literalType type;
@@ -14,8 +22,8 @@ public:
     double real_value;
     bool boolean_value;
     char char_value;
-    int id_node;
-    static int max_id;
+
+    literalNode();
 
     static literalNode *create_literal_node_from_int(int value);
 

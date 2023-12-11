@@ -1,8 +1,12 @@
 #include <list>
 #include "exprNode.h"
+#include "node.h"
 
 using namespace std;
 
+/**
+ * Перечисление stmtType определеляет тип выражения
+ */
 enum stmtType
 {
     assign_type,
@@ -17,7 +21,10 @@ enum stmtType
     with_type
 };
 
-class stmtNode
+/**
+ * Класс инструкции
+ */
+class stmtNode : public node
 {
 public:
     stmtType type;
@@ -25,8 +32,8 @@ public:
     exprNode *right_operand;
     string id;
     list<exprNode *> *params;
-    int id_node;
-    static int max_id;
+
+    stmtNode();
 
     static list<stmtNode *> *create_stmt_node_list_from_stmt_node(stmtNode *stmt_node);
 

@@ -1,13 +1,17 @@
 #include "exprNode.h"
 #include "stmtNode.h"
+#include "node.h"
 
-class repeatStmtNode
+/**
+ * Класс инструкции repeat .. until
+ */
+class repeatStmtNode : public node
 {
 public:
     stmtNode *body;
     exprNode *condition;
-    int id_node;
-    int max_id;
+
+    repeatStmtNode();
 
     static repeatStmtNode *create_repeat_stmt_node(stmtNode *body, exprNode *condition);
 };
