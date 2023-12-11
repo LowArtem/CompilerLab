@@ -525,7 +525,7 @@ static exprNode *exprNode::create_expr_node_from_brackets(exprNode *operand)
     return res;
 }
 
-static exprNode *exprNode::reate_expr_node_from_literal_node(literalNode *literal_node)
+static exprNode *exprNode::сreate_expr_node_from_literal_node(literalNode *literal_node)
 {
     exprNode *res = new exprNode();
     res->type = exprType::literal_node_type;
