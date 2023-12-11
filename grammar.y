@@ -195,7 +195,6 @@ expr_list_E:    expr_list
 stmt:           expr ASSIGNMENT expr
                 | ID OPEN_BRACKET expr_list_E CLOSE_BRACKET
                 | INHERITED_KW
-                | /*empty*/
                 | stmt_block
                 | if_stmt
                 | case_stmt
@@ -203,6 +202,7 @@ stmt:           expr ASSIGNMENT expr
                 | while_stmt
                 | for_stmt
                 | with_stmt
+                | /*empty*/
 
 stmt_list:      stmt
                 | stmt_list SEMICOLON stmt
