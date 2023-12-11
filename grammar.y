@@ -21,7 +21,7 @@
 
 %type<literal_union> literal
 %type<expr_union> expr
-%type<expr_list_union> expr_list expr_list_e
+%type<expr_list_union> expr_list expr_list_e id_list
 %type<stmt_union> stmt
 %type<if_stmt_union> if_stmt
 %type<stmt_list_union> stmt_list
@@ -217,8 +217,14 @@ stmt_list:      stmt                            { $$ = create_stmt_node_list_fro
 
 stmt_block:     BEGIN_KW stmt_list END_KW
 
-id_list:        ID
-                | id_list COMMA ID
+id_list:        ID                              { 
+                                                    auto id = create_expr_node_from_id($1);
+                                                    $$ = create_expr_node_list_from_expr_node(id); 
+                                                }
+                | id_list COMMA ID              {
+                                                    auto id = create_expr_node_from_id($3);
+                                                    $$ = add_expr_node_to_expr_node_list($1, id);
+                                                }
 
 var_decl:       id_list COLON type SEMICOLON
                 | id_list COLON type EQUALS expr SEMICOLON
