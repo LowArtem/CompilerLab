@@ -3,6 +3,8 @@
     #include <list>
     #include "classes/literalNode.h"
     #include "classes/exprNode.h"
+    #include "classes/stmtNode.h"
+    #include "classes/ifStmtNode.h"
     #pragma once
 
     extern int yylex(void);
@@ -12,11 +14,15 @@
   literalNode* literal_union;
   exprNode* expr_union;
   std::list<exprNode*>* expr_list_union;
+  stmtNode* stmt_union;
+  ifStmtNode* if_stmt_union;
 }
 
 %type<literal_union> literal
 %type<expr_union> expr
 %type<expr_list_union> expr_list expr_list_e
+%type<stmt_union> stmt
+%type<if_stmt_union> if_stmt
 
 %start start_symbol
 
@@ -252,8 +258,8 @@ function_impl:      FUNCTION_KW function_element COLON type SEMICOLON stmt
                     | FUNCTION_KW ID DOT function_element COLON type SEMICOLON VAR_KW var_decl_list stmt
                     | FUNCTION_KW ID DOT ID COLON type SEMICOLON VAR_KW var_decl_list stmt
 
-if_stmt:        IF_KW expr THEN_KW stmt
-                | IF_KW expr THEN_KW stmt ELSE_KW stmt
+if_stmt:        IF_KW expr THEN_KW stmt                 { $$ = create_stmt_node_from_if($2, $4, null); }
+                | IF_KW expr THEN_KW stmt ELSE_KW stmt  { $$ = create_stmt_node_from_if($2, $4, $6); }
 
 case_list:      expr_list COLON stmt SEMICOLON
                 | case_list expr_list COLON stmt SEMICOLON
@@ -374,6 +380,7 @@ with_stmt:  WITH_KW id_list DO_KW stmt
 
 %%
 
+// --------------------------literal--------------------------
 static literalNode *literalNode::create_literal_node_from_int(int value)
 {
     literalNode *res = new literalNode();
@@ -410,6 +417,7 @@ static literalNode *literalNode::create_literal_node_from_char(char value)
     return res;
 }
 
+// --------------------------expr--------------------------
 static exprNode *exprNode::create_expr_node_from_string(string &value)
 {
     exprNode *res = new exprNode();
@@ -531,5 +539,16 @@ static exprNode *exprNode::сreate_expr_node_from_literal_node(literalNode *lite
     res->type = exprType::literal_node_type;
     res->literal_node = literal_node;
     res->id_node = ++exprNode::max_id;
+    return res;
+}
+
+// --------------------------if_stmt--------------------------
+static ifStmtNode *ifStmtNode::create_if_stmt_node(exprNode *condition, stmtNode *if_body, stmtNode *else_body)
+{
+    ifStmtNode *res = new ifStmtNode();
+    res->condition = condition;
+    res->if_body = if_body;
+    res->else_body = else_body;
+    res->id_node = ++ifStmtNode::max_id;
     return res;
 }
