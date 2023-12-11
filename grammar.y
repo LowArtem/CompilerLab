@@ -23,6 +23,7 @@
   std::list<stmtNode*>* stmt_list_union;
   caseNode* case_stmt_union;
   std::list<caseElementNode*>* case_element_list_union;
+  stmtBlockNode* stmt_block_union;
 }
 
 %type<literal_union> literal
@@ -30,6 +31,11 @@
 %type<expr_list_union> expr_list expr_list_e id_list
 %type<stmt_union> stmt
 %type<if_stmt_union> if_stmt
+%type<stmt_block_union> stmt_block
+%type<stmt_list_union> stmt_list
+%type<case_stmt_union> case_stmt
+%type<case_element_list_union> case_list
+%type<repeat_stmt_union> repeat_stmt
 
 %start start_symbol
 
