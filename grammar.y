@@ -5,6 +5,8 @@
     #include "classes/exprNode.h"
     #include "classes/stmtNode.h"
     #include "classes/ifStmtNode.h"
+    #include "classes/caseNode.h"
+    #include "classes/caseElementNode.h"
     #pragma once
 
     extern int yylex(void);
@@ -17,6 +19,8 @@
   stmtNode* stmt_union;
   ifStmtNode* if_stmt_union;
   std::list<stmtNode*>* stmt_list_union;
+  caseNode* case_stmt_union;
+  std::list<caseElementNode*>* case_element_list_union;
 }
 
 %type<literal_union> literal
@@ -25,6 +29,8 @@
 %type<stmt_union> stmt
 %type<if_stmt_union> if_stmt
 %type<stmt_list_union> stmt_list
+%type<case_stmt_union> case_stmt
+%type<case_element_list_union> case_list
 
 %start start_symbol
 
@@ -266,14 +272,14 @@ function_impl:      FUNCTION_KW function_element COLON type SEMICOLON stmt
                     | FUNCTION_KW ID DOT function_element COLON type SEMICOLON VAR_KW var_decl_list stmt
                     | FUNCTION_KW ID DOT ID COLON type SEMICOLON VAR_KW var_decl_list stmt
 
-if_stmt:        IF_KW expr THEN_KW stmt                 { $$ = create_stmt_node_from_if($2, $4, null); }
-                | IF_KW expr THEN_KW stmt ELSE_KW stmt  { $$ = create_stmt_node_from_if($2, $4, $6); }
+if_stmt:        IF_KW expr THEN_KW stmt                                 { $$ = create_stmt_node_from_if($2, $4, NULL); }
+                | IF_KW expr THEN_KW stmt ELSE_KW stmt                  { $$ = create_stmt_node_from_if($2, $4, $6); }
 
-case_list:      expr_list COLON stmt SEMICOLON
-                | case_list expr_list COLON stmt SEMICOLON
+case_list:      expr_list COLON stmt SEMICOLON                          { $$ = create_case_element_list_node($1, $3); }
+                | case_list expr_list COLON stmt SEMICOLON              { $$ = add_case_element_to_list_node($1, $2, $4); }
 
-case_stmt:      CASE_KW expr OF_KW case_list END_KW
-                | CASE_KW expr OF_KW case_list ELSE_KW stmt END_KW
+case_stmt:      CASE_KW expr OF_KW case_list END_KW                     { $$ = create_case_node($2, $4, NULL); }
+                | CASE_KW expr OF_KW case_list ELSE_KW stmt END_KW      { $$ = create_case_node($2, $4, $6); }
 
 repeat_stmt:    REPEAT_KW stmt_list UNTIL_KW expr
 
@@ -585,4 +591,38 @@ static std::list<stmtNode *>* stmtNode::add_stmt_node_to_stmt_node_list(std::lis
 {
     stmt_node_list->push_back(stmt_node);
     return stmt_node_list;
+}
+
+// --------------------------case_stmt--------------------------
+static std::list<caseElementNode *> *caseElementNode::create_case_element_list_node(exprNode *condition, stmtNode *body)
+{
+    caseElementNode *case_element_node = new caseElementNode();
+    case_element_node->condition = condition;
+    case_element_node->body = body;
+    case_element_node->id_node = ++caseElementNode::max_id;
+
+    std::list<caseElementNode *> *res = new std::list<caseElementNode *>();
+    res->push_back(case_element_node);
+    return res;
+}
+
+static std::list<caseElementNode *> *caseElementNode::add_case_element_to_list_node(std::list<caseElementNode *> *list_node, exprNode *condition, stmtNode *body)
+{
+    caseElementNode *case_element_node = new caseElementNode();
+    case_element_node->condition = condition;
+    case_element_node->body = body;
+    case_element_node->id_node = ++caseElementNode::max_id;
+
+    list_node->push_back(case_element_node);
+    return list_node;
+}
+
+static caseNode *caseNode::create_case_node(exprNode *selector_expression, std::list<caseElementNode *> *elements, stmtNode *else_body)
+{
+    caseNode *res = new caseNode();
+    res->selector_expression = selector_expression;
+    res->elements = elements;
+    res->else_body = else_body;
+    res->id_node = ++caseNode::max_id;
+    return res;
 }
