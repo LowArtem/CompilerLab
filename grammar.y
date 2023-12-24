@@ -17,6 +17,9 @@
     #include "classes/withStmtNode.h"
     #include "classes/forStmtNode.h"
     #include "classes/whileStmtNode.h"
+    #include "classes/functionElementNode.h"
+    #include "classes/procedureImplNode.h"
+    #include "classes/functionImplNode.h"
     #pragma once
 
     using namespace std;
@@ -57,6 +60,8 @@
     typeSectNode* type_sect_union;
     paramListNode* param_list_union;
     functionElementNode* function_element_union;
+    procedureImplNode* procedure_impl_union;
+    functionImplNode* function_impl_union;
 }
 
 %type <simple_type_union> simple_type
@@ -83,6 +88,8 @@
 %type <type_sect_union> type_sect
 %type <param_list_union> param_list param_list_E
 %type <function_element_union> function_element
+%type <procedure_impl_union> procedure_impl
+%type <function_impl_union> function_impl
 
 %start start_symbol
 
@@ -310,23 +317,24 @@ param_list_E:   param_list                                    { $$ = $1; }
 
 function_element:   ID OPEN_BRACKET param_list_E CLOSE_BRACKET    { $$ = functionElementNode::create_function_element_node($1, $3); }
 
-procedure_impl:     PROCEDURE_KW function_element SEMICOLON stmt
-                    | PROCEDURE_KW ID SEMICOLON stmt
-                    | PROCEDURE_KW function_element SEMICOLON VAR_KW var_decl_list stmt
-                    | PROCEDURE_KW ID SEMICOLON VAR_KW var_decl_list stmt
-                    | PROCEDURE_KW ID DOT function_element SEMICOLON stmt
-                    | PROCEDURE_KW ID DOT ID SEMICOLON stmt
-                    | PROCEDURE_KW ID DOT function_element SEMICOLON VAR_KW var_decl_list stmt
-                    | PROCEDURE_KW ID DOT ID SEMICOLON VAR_KW var_decl_list stmt
+procedure_impl:     PROCEDURE_KW function_element SEMICOLON stmt                                { $$ = procedureImplNode::create_procedure_impl_node_with_params(NULL, $2, NULL, $4); }
+                    | PROCEDURE_KW ID SEMICOLON stmt                                            { $$ = procedureImplNode::create_procedure_impl_node_without_params(NULL, $2, NULL, $4); }
+                    | PROCEDURE_KW function_element SEMICOLON VAR_KW var_decl_list stmt         { $$ = procedureImplNode::create_procedure_impl_node_with_params(NULL, $2, $5, $7); }
+                    | PROCEDURE_KW ID SEMICOLON VAR_KW var_decl_list stmt                       { $$ = procedureImplNode::create_procedure_impl_node_without_params(NULL, $2, $5, $7); }
+                    | PROCEDURE_KW ID DOT function_element SEMICOLON stmt                       { $$ = procedureImplNode::create_procedure_impl_node_with_params($2, $4, NULL, $6); }
+                    | PROCEDURE_KW ID DOT ID SEMICOLON stmt                                     { $$ = procedureImplNode::create_procedure_impl_node_without_params($2, $4, NULL, $6); }
+                    | PROCEDURE_KW ID DOT function_element SEMICOLON VAR_KW var_decl_list stmt  { $$ = procedureImplNode::create_procedure_impl_node_with_params($2, $4, $7, $8); }
+                    | PROCEDURE_KW ID DOT ID SEMICOLON VAR_KW var_decl_list stmt                { $$ = procedureImplNode::create_procedure_impl_node_without_params($2, $4, $7, $8); }
 
-function_impl:      FUNCTION_KW function_element COLON type SEMICOLON stmt
-                    | FUNCTION_KW ID COLON type SEMICOLON stmt
-                    | FUNCTION_KW function_element COLON type SEMICOLON VAR_KW var_decl_list stmt
-                    | FUNCTION_KW ID COLON type SEMICOLON VAR_KW var_decl_list stmt
-                    | FUNCTION_KW ID DOT function_element COLON type SEMICOLON stmt
-                    | FUNCTION_KW ID DOT ID COLON type SEMICOLON stmt
-                    | FUNCTION_KW ID DOT function_element COLON type SEMICOLON VAR_KW var_decl_list stmt
-                    | FUNCTION_KW ID DOT ID COLON type SEMICOLON VAR_KW var_decl_list stmt
+function_impl:      FUNCTION_KW function_element COLON type SEMICOLON stmt                                { $$ = functionImplNode::create_function_impl_node_with_params(NULL, $2, NULL, $4, $6); }
+                    | FUNCTION_KW ID COLON type SEMICOLON stmt                                            { $$ = functionImplNode::create_function_impl_node_without_params(NULL, $2, NULL, $4, $6); }
+                    | FUNCTION_KW function_element COLON type SEMICOLON VAR_KW var_decl_list stmt         { $$ = functionImplNode::create_function_impl_node_with_params(NULL, $2, $7, $4, $8); }
+                    | FUNCTION_KW ID COLON type SEMICOLON VAR_KW var_decl_list stmt                       { $$ = functionImplNode::create_function_impl_node_without_params(NULL, $2, $7, $4, $8); }
+
+                    | FUNCTION_KW ID DOT function_element COLON type SEMICOLON stmt                       { $$ = functionImplNode::create_function_impl_node_with_params($2, $4, NULL, $6, $8); }
+                    | FUNCTION_KW ID DOT ID COLON type SEMICOLON stmt                                     { $$ = functionImplNode::create_function_impl_node_without_params($2, $4, NULL, $6, $8); }
+                    | FUNCTION_KW ID DOT function_element COLON type SEMICOLON VAR_KW var_decl_list stmt  { $$ = functionImplNode::create_function_impl_node_with_params($2, $4, $9, $6, $10); } 
+                    | FUNCTION_KW ID DOT ID COLON type SEMICOLON VAR_KW var_decl_list stmt                { $$ = functionImplNode::create_function_impl_node_without_params($2, $4, $9, $6, $10); }
 
 if_stmt:        IF_KW expr THEN_KW stmt                 { $$ = ifStmtNode::create_if_stmt_node($2, $4, NULL); }
                 | IF_KW expr THEN_KW stmt ELSE_KW stmt  { $$ = ifStmtNode::create_if_stmt_node($2, $4, $6); }
