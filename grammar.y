@@ -292,8 +292,8 @@ repeat_stmt:    REPEAT_KW stmt_list UNTIL_KW expr       { $$ = repeatStmtNode::c
 
 while_stmt:     WHILE_KW expr DO_KW stmt
 
-for_stmt:       FOR_KW ID ASSIGNMENT expr TO_KW expr DO_KW stmt
-                | FOR_KW ID ASSIGNMENT expr DOWNTO_KW expr DO_KW stmt
+for_stmt:       FOR_KW ID ASSIGNMENT expr TO_KW expr DO_KW stmt         { $$ = forStmtNode::create_for_stmt_node($2, $4, $6, $8, false); }
+                | FOR_KW ID ASSIGNMENT expr DOWNTO_KW expr DO_KW stmt   { $$ = forStmtNode::create_for_stmt_node($2, $4, $6, $8, true); }
 
 enum_param_list:    ID
                     | ID EQUALS expr
