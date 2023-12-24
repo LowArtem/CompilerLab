@@ -3,6 +3,9 @@
 #include "node.h"
 #include <list>
 
+/**
+ * Класс объявления переменной
+ */
 class varDeclNode : public node
 {
 public:
