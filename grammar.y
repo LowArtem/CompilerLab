@@ -19,6 +19,8 @@
     #include "classes/whileStmtNode.h"
     #pragma once
 
+    using namespace std;
+
     extern int yylex(void);
 %}
 
@@ -27,27 +29,32 @@
     double real_union;
     bool boolean_union;
     char char_union;
-    char* string_union;
-    char* keyword_union;
-    char* id_union;
+    string string_union;
+    string keyword_union;
+    string service_symbol_union;
+    string id_union;
     simpleType simple_type_union;
     literalNode* literal_union;
     arrayDimensionNode* array_dimension_union;
-    std::list<arrayDimensionNode*>* array_dimension_list_union;
+    list<arrayDimensionNode*>* array_dimension_list_union;
     typeNode* type_union;
     exprNode* expr_union;
-    std::list<exprNode*>* expr_list_union;
+    list<exprNode*>* expr_list_union;
     stmtNode* stmt_union;
-    std::list<stmtNode*>* stmt_list_union;
+    list<stmtNode*>* stmt_list_union;
     ifStmtNode* if_stmt_union;
     repeatStmtNode* repeat_stmt_union;
     whileStmtNode* while_stmt_union;
     forStmtNode* for_stmt_union;
     withStmtNode* with_stmt_union;
     caseStmtNode* case_stmt_union;
-    std::list<caseElementNode*>* case_element_list_union;
+    list<caseElementNode*>* case_element_list_union;
     stmtBlockNode* stmt_block_union;
     varDeclNode* var_decl_union;
+    list<enumParamNode*>* enum_param_list_union;
+    enumDeclNode* enum_decl_union;
+    list<enumDeclNode*>* enum_decl_list_union;
+    typeSectNode* type_sect_union;
     paramListNode* param_list_union;
     functionElementNode* function_element_union;
 }
@@ -70,6 +77,10 @@
 %type <for_stmt_union> for_stmt
 %type <with_stmt_union> with_stmt
 %type <var_decl_union> var_decl var_decl_list var_decl_sect
+%type <enum_param_list_union> enum_param_list
+%type <enum_decl_union> enum_decl
+%type <enum_decl_list_union> enum_decl_list
+%type <type_sect_union> type_sect
 %type <param_list_union> param_list param_list_E
 %type <function_element_union> function_element
 
@@ -131,14 +142,14 @@
 %token <keyword_union> REPEAT_KW
 %token <keyword_union> UNTIL_KW
 
-%token ASSIGNMENT
+%token <service_symbol_union> ASSIGNMENT
 
-%token EQUALS
-%token NOT_EQUAL
-%token LESS
-%token GREATER
-%token LESS_OR_EQUAL
-%token GREATER_OR_EQUAL
+%token <service_symbol_union> EQUALS
+%token <service_symbol_union> NOT_EQUAL
+%token <service_symbol_union> LESS
+%token <service_symbol_union> GREATER
+%token <service_symbol_union> LESS_OR_EQUAL
+%token <service_symbol_union> GREATER_OR_EQUAL
 %token <keyword_union> IN_KW
 %token <keyword_union> IS_KW
 %token <keyword_union> NOT_KW
@@ -147,22 +158,22 @@
 %token <keyword_union> XOR_KW
 %token <keyword_union> OR_KW
 
-%token PLUS
-%token MINUS
-%token MULTIPLICATION
-%token DIVISION
+%token <service_symbol_union> PLUS
+%token <service_symbol_union> MINUS
+%token <service_symbol_union> MULTIPLICATION
+%token <service_symbol_union> DIVISION
 %token <keyword_union> DIV_KW
 %token <keyword_union> MOD_KW
 
-%token DOT
-%token DOUBLE_DOT
-%token OPEN_SQUARE_BRACKET
-%token CLOSE_SQUARE_BRACKET
-%token OPEN_BRACKET
-%token CLOSE_BRACKET
-%token COMMA
-%token SEMICOLON
-%token COLON
+%token <service_symbol_union> DOT
+%token <service_symbol_union> DOUBLE_DOT
+%token <service_symbol_union> OPEN_SQUARE_BRACKET
+%token <service_symbol_union> CLOSE_SQUARE_BRACKET
+%token <service_symbol_union> OPEN_BRACKET
+%token <service_symbol_union> CLOSE_BRACKET
+%token <service_symbol_union> COMMA
+%token <service_symbol_union> SEMICOLON
+%token <service_symbol_union> COLON
 
 %nonassoc DOUBLE_DOT
 %left EQUALS NOT_EQUAL LESS GREATER LESS_OR_EQUAL GREATER_OR_EQUAL IN_KW IS_KW
@@ -333,15 +344,27 @@ while_stmt:     WHILE_KW expr DO_KW stmt                { $$ = whileStmtNode::cr
 for_stmt:       FOR_KW ID ASSIGNMENT expr TO_KW expr DO_KW stmt         { $$ = forStmtNode::create_for_stmt_node($2, $4, $6, $8, false); }
                 | FOR_KW ID ASSIGNMENT expr DOWNTO_KW expr DO_KW stmt   { $$ = forStmtNode::create_for_stmt_node($2, $4, $6, $8, true); }
 
-enum_param_list:    ID
-                    | ID EQUALS expr
-                    | enum_param_list COMMA ID EQUALS expr
-                    | enum_param_list COMMA ID
+enum_param_list:    ID                                      { 
+                                                                auto tmp = enumParamNode::create_enum_param_node_without_value($1); 
+                                                                $$ = enumParamNode::create_enum_param_node_list_from_enum_param_node(tmp); 
+                                                            }
+                    | ID EQUALS expr                        {
+                                                                auto tmp = enumParamNode::create_enum_param_node_with_value($1, $3);
+                                                                $$ = enumParamNode::create_enum_param_node_list_from_enum_param_node(tmp);
+                                                            }
+                    | enum_param_list COMMA ID EQUALS expr  {
+                                                                auto tmp = enumParamNode::create_enum_param_node_with_value($3, $5);
+                                                                $$ = enumParamNode::add_enum_param_node_to_enum_param_node_list($1, tmp);
+                                                            }
+                    | enum_param_list COMMA ID              {
+                                                                auto tmp = enumParamNode::create_enum_param_node_without_value($3);
+                                                                $$ = enumParamNode::add_enum_param_node_to_enum_param_node_list($1, tmp);
+                                                            }
 
-enum_decl:          ID EQUALS OPEN_BRACKET enum_param_list CLOSE_BRACKET SEMICOLON
+enum_decl:          ID EQUALS OPEN_BRACKET enum_param_list CLOSE_BRACKET SEMICOLON  { $$ = create_enum_decl_node($1, $4);}
 
-enum_decl_list:     enum_decl
-                    | enum_decl_list enum_decl
+enum_decl_list:     enum_decl                               { $$ = enumDeclNode::create_enum_decl_node_list_from_enum_decl_node($1); }
+                    | enum_decl_list enum_decl              { $$ = enumDeclNode::add_enum_decl_node_to_enum_decl_node_list($1, $2); }
 
 class_decl_header:      ID EQUALS CLASS_KW
                         | ID EQUALS CLASS_KW OPEN_BRACKET ID CLOSE_BRACKET
@@ -432,8 +455,8 @@ class_decl:    class_decl_header class_element_list SEMICOLON END_KW SEMICOLON
 class_decl_list:    class_decl
                     | class_decl_list class_decl
 
-type_sect:  TYPE_KW class_decl_list
-            | TYPE_KW enum_decl_list
+type_sect:  TYPE_KW class_decl_list         { $$ = create_type_sect_node_from_class_decl_list($2); }
+            | TYPE_KW enum_decl_list        { $$ = create_type_sect_node_from_enum_decl_list($2); }
 
 with_stmt:  WITH_KW id_list DO_KW stmt      { $$ = withStmtNode::create_with_stmt_node($2, $4); }
 
