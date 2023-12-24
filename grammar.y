@@ -49,6 +49,7 @@
     stmtBlockNode* stmt_block_union;
     varDeclNode* var_decl_union;
     paramListNode* param_list_union;
+    functionElementNode* function_element_union;
 }
 
 %type <simple_type_union> simple_type
@@ -70,6 +71,7 @@
 %type <with_stmt_union> with_stmt
 %type <var_decl_union> var_decl var_decl_list var_decl_sect
 %type <param_list_union> param_list param_list_E
+%type <function_element_union> function_element
 
 %start start_symbol
 
@@ -295,7 +297,7 @@ param_list:     var_decl_list SEMICOLON                       { $$ = paramListNo
 param_list_E:   param_list                                    { $$ = $1; }
               | /*empty*/                                     { $$ = paramListNode::create_param_list_node_list(NULL, paramListNodeTypeEnum::general_param); }
 
-function_element:   ID OPEN_BRACKET param_list_E CLOSE_BRACKET
+function_element:   ID OPEN_BRACKET param_list_E CLOSE_BRACKET    { $$ = functionElementNode::create_function_element_node($1, $3); }
 
 procedure_impl:     PROCEDURE_KW function_element SEMICOLON stmt
                     | PROCEDURE_KW ID SEMICOLON stmt
