@@ -10,6 +10,13 @@
     #include "classes/repeatStmtNode.h"
     #include "classes/caseStmtNode.h"
     #include "classes/caseElementNode.h"
+    #include "classes/paramListNode.h"
+    #include "classes/varDeclNode.h"
+    #include "classes/typeNode.h"
+    #include "classes/arrayDimensionNode.h"
+    #include "classes/withStmtNode.h"
+    #include "classes/forStmtNode.h"
+    #include "classes/whileStmtNode.h"
     #pragma once
 
     extern int yylex(void);
@@ -41,6 +48,7 @@
     std::list<caseElementNode*>* case_element_list_union;
     stmtBlockNode* stmt_block_union;
     varDeclNode* var_decl_union;
+    paramListNode* param_list_union;
 }
 
 %type <simple_type_union> simple_type
@@ -60,7 +68,8 @@
 %type <while_stmt_union> while_stmt
 %type <for_stmt_union> for_stmt
 %type <with_stmt_union> with_stmt
-%type<var_decl_union> var_decl var_decl_list var_decl_sect
+%type <var_decl_union> var_decl var_decl_list var_decl_sect
+%type <param_list_union> param_list param_list_E
 
 %start start_symbol
 
@@ -274,17 +283,17 @@ var_decl_list:  var_decl                                      { $$ = varDeclNode
 
 var_decl_sect:  VAR_KW var_decl_list                          { $$ = $2 }
 
-param_list:     var_decl_list SEMICOLON
-                | var_decl_sect SEMICOLON
-                | CONST_KW var_decl_list SEMICOLON
-                | OUT_KW var_decl_list SEMICOLON
-                | param_list var_decl_list SEMICOLON
-                | param_list var_decl_sect SEMICOLON
-                | param_list CONST_KW var_decl_list SEMICOLON
-                | param_list OUT_KW var_decl_list SEMICOLON
+param_list:     var_decl_list SEMICOLON                       { $$ = paramListNode::create_param_list_node_list($1, paramListNodeTypeEnum::general_param); }
+                | var_decl_sect SEMICOLON                     { $$ = paramListNode::create_param_list_node_list($1, paramListNodeTypeEnum::reference_param); }
+                | CONST_KW var_decl_list SEMICOLON            { $$ = paramListNode::create_param_list_node_list($2, paramListNodeTypeEnum::const_param); }
+                | OUT_KW var_decl_list SEMICOLON              { $$ = paramListNode::create_param_list_node_list($2, paramListNodeTypeEnum::out_param); }
+                | param_list var_decl_list SEMICOLON          { $$ = paramListNode::add_param_list_node_to_param_list_node_list($1, $2, paramListNodeTypeEnum::general_param); }
+                | param_list var_decl_sect SEMICOLON          { $$ = paramListNode::add_param_list_node_to_param_list_node_list($1, $2, paramListNodeTypeEnum::reference_param); }
+                | param_list CONST_KW var_decl_list SEMICOLON { $$ = paramListNode::add_param_list_node_to_param_list_node_list($1, $3, paramListNodeTypeEnum::const_param); }
+                | param_list OUT_KW var_decl_list SEMICOLON   { $$ = paramListNode::add_param_list_node_to_param_list_node_list($1, $3, paramListNodeTypeEnum::out_param); }
 
-param_list_E:   param_list
-                | /*empty*/
+param_list_E:   param_list                                    { $$ = $1; }
+              | /*empty*/                                     { $$ = paramListNode::create_param_list_node_list(NULL, paramListNodeTypeEnum::general_param); }
 
 function_element:   ID OPEN_BRACKET param_list_E CLOSE_BRACKET
 
