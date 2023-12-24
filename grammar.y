@@ -44,6 +44,7 @@
     list<enumParamNode*>* enum_param_list_union;
     enumDeclNode* enum_decl_union;
     list<enumDeclNode*>* enum_decl_list_union;
+    typeSectNode* type_sect_union;
 }
 
 %type <simple_type_union> simple_type
@@ -67,6 +68,7 @@
 %type <enum_param_list_union> enum_param_list
 %type <enum_decl_union> enum_decl
 %type <enum_decl_list_union> enum_decl_list
+%type <type_sect_union> type_sect
 
 %start start_symbol
 
@@ -328,15 +330,6 @@ while_stmt:     WHILE_KW expr DO_KW stmt                { $$ = whileStmtNode::cr
 for_stmt:       FOR_KW ID ASSIGNMENT expr TO_KW expr DO_KW stmt         { $$ = forStmtNode::create_for_stmt_node($2, $4, $6, $8, false); }
                 | FOR_KW ID ASSIGNMENT expr DOWNTO_KW expr DO_KW stmt   { $$ = forStmtNode::create_for_stmt_node($2, $4, $6, $8, true); }
 
-enum_param_list:    ID
-                    | ID EQUALS expr
-                    | enum_param_list COMMA ID EQUALS expr
-                    | enum_param_list COMMA ID
-
-enum_decl:          ID EQUALS OPEN_BRACKET enum_param_list CLOSE_BRACKET SEMICOLON
-
-enum_decl_list:     enum_decl
-                    | enum_decl_list enum_decl
 enum_param_list:    ID                                      { 
                                                                 auto tmp = enumParamNode::create_enum_param_node_without_value($1); 
                                                                 $$ = enumParamNode::create_enum_param_node_list_from_enum_param_node(tmp); 
@@ -448,8 +441,8 @@ class_decl:    class_decl_header class_element_list SEMICOLON END_KW SEMICOLON
 class_decl_list:    class_decl
                     | class_decl_list class_decl
 
-type_sect:  TYPE_KW class_decl_list
-            | TYPE_KW enum_decl_list
+type_sect:  TYPE_KW class_decl_list         { $$ = create_type_sect_node_from_class_decl_list($2); }
+            | TYPE_KW enum_decl_list        { $$ = create_type_sect_node_from_enum_decl_list($2); }
 
 with_stmt:  WITH_KW id_list DO_KW stmt      { $$ = withStmtNode::create_with_stmt_node($2, $4); }
 
