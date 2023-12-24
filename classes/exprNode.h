@@ -1,21 +1,10 @@
 #include <string>
 #include <list>
+#include "simpleTypeEnum.h"
 #include "literalNode.h"
 #include "node.h"
 
 using namespace std;
-
-/**
- * Перечисление simpleType определяет пять основных типов данных
- */
-enum simpleType
-{
-    int_type,
-    real_type,
-    boolean_type,
-    char_type,
-    string_type
-};
 
 /**
  * Перечисление exprType определяет типы выражений
