@@ -1,5 +1,4 @@
 #include "varDeclNode.h"
-#include <list>
 
 varDeclNode::varDeclNode()
 {
