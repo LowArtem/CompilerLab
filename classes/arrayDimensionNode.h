@@ -5,7 +5,7 @@
 using namespace std;
 
 /**
- * Класс инструкции arrayDimension
+ * Класс arrayDimension
  */
 class arrayDimensionNode : public node
 {
