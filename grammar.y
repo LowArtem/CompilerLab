@@ -8,7 +8,7 @@
     #include "classes/ifStmtNode.h"
     #include "classes/stmtBlockNode.h"
     #include "classes/repeatStmtNode.h"
-    #include "classes/caseNode.h"
+    #include "classes/caseStmtNode.h"
     #include "classes/caseElementNode.h"
     #pragma once
 
@@ -22,8 +22,11 @@
   stmtNode* stmt_union;
   ifStmtNode* if_stmt_union;
   repeatStmtNode* repeat_stmt_union;
+  whileStmtNode* while_stmt_union;
+  forStmtNode* for_stmt_union;
+  withStmtNode* with_stmt_union;
   std::list<stmtNode*>* stmt_list_union;
-  caseNode* case_stmt_union;
+  caseStmtNode* case_stmt_union;
   std::list<caseElementNode*>* case_element_list_union;
   stmtBlockNode* stmt_block_union;
 }
@@ -38,6 +41,9 @@
 %type<case_stmt_union> case_stmt
 %type<case_element_list_union> case_list
 %type<repeat_stmt_union> repeat_stmt
+%type<while_stmt_union> while_stmt
+%type<for_stmt_union> for_stmt
+%type<with_stmt_union> with_stmt
 
 %start start_symbol
 
@@ -210,20 +216,20 @@ expr:           literal                       { $$ = exprNode::create_expr_node_
 expr_list:      expr                        { $$ = exprNode::create_expr_node_list_from_expr_node($1); }
                 | expr_list COMMA expr      { $$ = exprNode::add_expr_node_to_expr_node_list($1, $3); }
 
-expr_list_E:    expr_list
-                | /*empty*/
+expr_list_E:    expr_list                   { $$ = $1; }
+                | /*empty*/                 { $$ = exprNode::create_expr_node_list_from_expr_node(NULL); }
 
-stmt:           expr ASSIGNMENT expr
-                | ID OPEN_BRACKET expr_list_E CLOSE_BRACKET
-                | INHERITED_KW
-                | stmt_block
-                | if_stmt
-                | case_stmt
-                | repeat_stmt
-                | while_stmt
-                | for_stmt
-                | with_stmt
-                | /*empty*/
+stmt:           expr ASSIGNMENT expr                            { $$ = stmtNode::create_stmt_node_from_assignment($1, $3); }
+                | ID OPEN_BRACKET expr_list_E CLOSE_BRACKET     { $$ = stmtNode::create_stmt_node_from_function_call($1, $3); }
+                | INHERITED_KW                                  { $$ = stmtNode::create_stmt_node_from_inherited(); }
+                | stmt_block                                    { $$ = stmtNode::create_stmt_node_from_stmt_block($1); }
+                | if_stmt                                       { $$ = stmtNode::create_stmt_node_from_if_stmt($1); }
+                | case_stmt                                     { $$ = stmtNode::create_stmt_node_from_case_stmt($1); }
+                | repeat_stmt                                   { $$ = stmtNode::create_stmt_node_from_repeat_stmt($1); }
+                | while_stmt                                    { $$ = stmtNode::create_stmt_node_from_while_stmt($1); }
+                | for_stmt                                      { $$ = stmtNode::create_stmt_node_from_for_stmt($1); }
+                | with_stmt                                     { $$ = stmtNode::create_stmt_node_from_with_stmt($1); }
+                | /*empty*/                                     { $$ = stmtNode::create_stmt_node_from_empty(); }
 
 stmt_list:      stmt                            { $$ = stmtNode::create_stmt_node_list_from_stmt_node($1); }
                 | stmt_list SEMICOLON stmt      { $$ = stmtNode::add_stmt_node_to_stmt_node_list($1, $3); }
@@ -285,12 +291,12 @@ if_stmt:        IF_KW expr THEN_KW stmt                 { $$ = ifStmtNode::creat
 case_list:      expr_list COLON stmt SEMICOLON                          { $$ = caseElementNode::create_case_element_list_node($1, $3); }
                 | case_list expr_list COLON stmt SEMICOLON              { $$ = caseElementNode::add_case_element_to_list_node($1, $2, $4); }
 
-case_stmt:      CASE_KW expr OF_KW case_list END_KW                     { $$ = caseNode::create_case_node($2, $4, NULL); }
-                | CASE_KW expr OF_KW case_list ELSE_KW stmt END_KW      { $$ = caseNode::create_case_node($2, $4, $6); }
+case_stmt:      CASE_KW expr OF_KW case_list END_KW                     { $$ = caseStmtNode::create_case_node($2, $4, NULL); }
+                | CASE_KW expr OF_KW case_list ELSE_KW stmt END_KW      { $$ = caseStmtNode::create_case_node($2, $4, $6); }
 
-repeat_stmt:    REPEAT_KW stmt_list UNTIL_KW expr       { $$ = repeatStmtNode::create_repeat_stmt_node($2, $4); }
+repeat_stmt:    REPEAT_KW stmt_list UNTIL_KW expr       { $$ = repeatStmtNode::create_repeat_stmt_node($4, $2); }
 
-while_stmt:     WHILE_KW expr DO_KW stmt
+while_stmt:     WHILE_KW expr DO_KW stmt                { $$ = whileStmtNode::create_while_stmt_node($4, $2); }
 
 for_stmt:       FOR_KW ID ASSIGNMENT expr TO_KW expr DO_KW stmt         { $$ = forStmtNode::create_for_stmt_node($2, $4, $6, $8, false); }
                 | FOR_KW ID ASSIGNMENT expr DOWNTO_KW expr DO_KW stmt   { $$ = forStmtNode::create_for_stmt_node($2, $4, $6, $8, true); }
@@ -397,6 +403,6 @@ class_decl_list:    class_decl
 type_sect:  TYPE_KW class_decl_list
             | TYPE_KW enum_decl_list
 
-with_stmt:  WITH_KW id_list DO_KW stmt
+with_stmt:  WITH_KW id_list DO_KW stmt      { $$ = withStmtNode::create_with_stmt_node($2, $4); }
 
 %%
