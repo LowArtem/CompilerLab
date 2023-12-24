@@ -16,92 +16,107 @@
 %}
 
 %union {
-  literalNode* literal_union;
-  exprNode* expr_union;
-  std::list<exprNode*>* expr_list_union;
-  stmtNode* stmt_union;
-  ifStmtNode* if_stmt_union;
-  repeatStmtNode* repeat_stmt_union;
-  whileStmtNode* while_stmt_union;
-  forStmtNode* for_stmt_union;
-  withStmtNode* with_stmt_union;
-  std::list<stmtNode*>* stmt_list_union;
-  caseStmtNode* case_stmt_union;
-  std::list<caseElementNode*>* case_element_list_union;
-  stmtBlockNode* stmt_block_union;
+    int int_union;
+    double real_union;
+    bool boolean_union;
+    char char_union;
+    char* string_union;
+    char* keyword_union;
+    char* id_union;
+    simpleType simple_type_union;
+    literalNode* literal_union;
+    arrayDimensionNode* array_dimension_union;
+    std::list<arrayDimensionNode*>* array_dimension_list_union;
+    typeNode* type_union;
+    exprNode* expr_union;
+    std::list<exprNode*>* expr_list_union;
+    stmtNode* stmt_union;
+    std::list<stmtNode*>* stmt_list_union;
+    ifStmtNode* if_stmt_union;
+    repeatStmtNode* repeat_stmt_union;
+    whileStmtNode* while_stmt_union;
+    forStmtNode* for_stmt_union;
+    withStmtNode* with_stmt_union;
+    caseStmtNode* case_stmt_union;
+    std::list<caseElementNode*>* case_element_list_union;
+    stmtBlockNode* stmt_block_union;
 }
 
-%type<literal_union> literal
-%type<expr_union> expr
-%type<expr_list_union> expr_list expr_list_E id_list
-%type<stmt_union> stmt
-%type<if_stmt_union> if_stmt
-%type<stmt_block_union> stmt_block
-%type<stmt_list_union> stmt_list
-%type<case_stmt_union> case_stmt
-%type<case_element_list_union> case_list
-%type<repeat_stmt_union> repeat_stmt
-%type<while_stmt_union> while_stmt
-%type<for_stmt_union> for_stmt
-%type<with_stmt_union> with_stmt
+%type <simple_type_union> simple_type
+%type <literal_union> literal
+%type <array_dimension_union> array_dimension
+%type <array_dimension_list_union> array_dimension_list
+%type <type_union> type
+%type <expr_union> expr
+%type <expr_list_union> expr_list expr_list_E id_list
+%type <stmt_union> stmt
+%type <if_stmt_union> if_stmt
+%type <stmt_block_union> stmt_block
+%type <stmt_list_union> stmt_list
+%type <case_stmt_union> case_stmt
+%type <case_element_list_union> case_list
+%type <repeat_stmt_union> repeat_stmt
+%type <while_stmt_union> while_stmt
+%type <for_stmt_union> for_stmt
+%type <with_stmt_union> with_stmt
 
 %start start_symbol
 
-%token INTEGER_KW
-%token REAL_KW
-%token BOOLEAN_KW
-%token STRING_KW
-%token CHAR_KW
+%token <keyword_union> INTEGER_KW
+%token <keyword_union> REAL_KW
+%token <keyword_union> BOOLEAN_KW
+%token <keyword_union> STRING_KW
+%token <keyword_union> CHAR_KW
 %token ARRAY_KW
-%token SET_KW
+/* %token SET_KW */
 
-%token ID
-%token TRUE_KW
-%token FALSE_KW
-%token INTEGER
-%token REAL
-%token STRING
-%token CHAR
+%token <id_union> ID
+%token <keyword_union> TRUE_KW
+%token <keyword_union> FALSE_KW
+%token <int_union> INTEGER
+%token <real_union> REAL
+%token <string_union> STRING
+%token <char_union> CHAR
 
-%token PROGRAM_KW
-%token BEGIN_KW
-%token END_KW
-%token VAR_KW
-%token TYPE_KW
+%token <keyword_union> PROGRAM_KW
+%token <keyword_union> BEGIN_KW
+%token <keyword_union> END_KW
+%token <keyword_union> VAR_KW
+%token <keyword_union> TYPE_KW
 
-%token IMPLEMENTATION_KW
-%token CLASS_KW
-%token CONSTRUCTOR_KW
-%token DESTRUCTOR_KW
-%token PUBLIC_KW
-%token PRIVATE_KW
-%token PROTECTED_KW
-%token PROPERTY_KW
-%token READ_KW
-%token STATIC_KW
-%token WRITE_KW
-%token OVERRIDE_KW
-%token OVERLOAD_KW
-%token CONST_KW
-%token PROCEDURE_KW
-%token FUNCTION_KW
-%token INHERITED_KW
-%token SELF_KW
-%token WITH_KW
-%token OF_KW
+%token <keyword_union> IMPLEMENTATION_KW
+%token <keyword_union> CLASS_KW
+%token <keyword_union> CONSTRUCTOR_KW
+%token <keyword_union> DESTRUCTOR_KW
+%token <keyword_union> PUBLIC_KW
+%token <keyword_union> PRIVATE_KW
+%token <keyword_union> PROTECTED_KW
+%token <keyword_union> PROPERTY_KW
+%token <keyword_union> READ_KW
+%token <keyword_union> STATIC_KW
+%token <keyword_union> WRITE_KW
+%token <keyword_union> OVERRIDE_KW
+%token <keyword_union> OVERLOAD_KW
+%token <keyword_union> CONST_KW
+%token <keyword_union> PROCEDURE_KW
+%token <keyword_union> FUNCTION_KW
+%token <keyword_union> INHERITED_KW
+%token <keyword_union> SELF_KW
+%token <keyword_union> WITH_KW
+%token <keyword_union> OF_KW
 
-%token IF_KW
-%token CASE_KW
-%token THEN_KW
-%token ELSE_KW
-%token WHILE_KW
-%token DO_KW
-%token FOR_KW
-%token TO_KW
-%token DOWNTO_KW
-%token OUT_KW
-%token REPEAT_KW
-%token UNTIL_KW
+%token <keyword_union> IF_KW
+%token <keyword_union> CASE_KW
+%token <keyword_union> THEN_KW
+%token <keyword_union> ELSE_KW
+%token <keyword_union> WHILE_KW
+%token <keyword_union> DO_KW
+%token <keyword_union> FOR_KW
+%token <keyword_union> TO_KW
+%token <keyword_union> DOWNTO_KW
+%token <keyword_union> OUT_KW
+%token <keyword_union> REPEAT_KW
+%token <keyword_union> UNTIL_KW
 
 %token ASSIGNMENT
 
@@ -111,20 +126,20 @@
 %token GREATER
 %token LESS_OR_EQUAL
 %token GREATER_OR_EQUAL
-%token IN_KW
-%token IS_KW
-%token NOT_KW
-%token AND_KW
-%token AS_KW
-%token XOR_KW
-%token OR_KW
+%token <keyword_union> IN_KW
+%token <keyword_union> IS_KW
+%token <keyword_union> NOT_KW
+%token <keyword_union> AND_KW
+%token <keyword_union> AS_KW
+%token <keyword_union> XOR_KW
+%token <keyword_union> OR_KW
 
 %token PLUS
 %token MINUS
 %token MULTIPLICATION
 %token DIVISION
-%token DIV_KW
-%token MOD_KW
+%token <keyword_union> DIV_KW
+%token <keyword_union> MOD_KW
 
 %token DOT
 %token DOUBLE_DOT
@@ -156,25 +171,18 @@ sect_list:      section
 start_symbol:   PROGRAM_KW ID SEMICOLON stmt_block DOT
                 | PROGRAM_KW ID SEMICOLON sect_list SEMICOLON stmt_block DOT
 
-simple_type:    INTEGER_KW
-                | REAL_KW
-                | BOOLEAN_KW
-                | STRING_KW
-                | CHAR_KW
+simple_type:    INTEGER_KW          { $$ = simpleType::int_type; }
+                | REAL_KW           { $$ = simpleType::real_type; }
+                | BOOLEAN_KW        { $$ = simpleType::boolean_type; }
+                | STRING_KW         { $$ = simpleType::string_type; }
+                | CHAR_KW           { $$ = simpleType::char_type; }
 
-literal:        INTEGER     { $$ = literalNode::create_literal_node_from_int($1); }
-                | REAL      { $$ = literalNode::create_literal_node_from_real($1); }
-                | TRUE_KW   { $$ = literalNode::create_literal_node_from_bool(true); }
-                | FALSE_KW  { $$ = literalNode::create_literal_node_from_bool(false); }
-                | CHAR      { $$ = literalNode::create_literal_node_from_char($1); }
+literal:        INTEGER             { $$ = literalNode::create_literal_node_from_int($1); }
+                | REAL              { $$ = literalNode::create_literal_node_from_real($1); }
+                | TRUE_KW           { $$ = literalNode::create_literal_node_from_bool(true); }
+                | FALSE_KW          { $$ = literalNode::create_literal_node_from_bool(false); }
+                | CHAR              { $$ = literalNode::create_literal_node_from_char($1); }
 
-type:           simple_type
-                | ID
-                | SET_KW OF_KW CHAR_KW
-                | SET_KW OF_KW BOOLEAN_KW
-                | SET_KW OF_KW literal DOUBLE_DOT literal
-                | ARRAY_KW OF_KW type
-                | ARRAY_KW expr OF_KW type
 array_dimension:    literal DOUBLE_DOT literal  { $$ = arrayDimensionNode::create_array_dimension_node($1, $3); }
 
 array_dimension_list:   array_dimension                                 { $$ = arrayDimensionNode::create_array_dimension_node_list_from_array_dimension_node($1); }
@@ -224,7 +232,6 @@ expr:           literal                       { $$ = exprNode::create_expr_node_
                 /* | OPEN_SQUARE_BRACKET literal DOUBLE_DOT literal CLOSE_SQUARE_BRACKET   // не делаем! */
                 /* | INHERITED_KW  // убрать???? */
                 
-
 expr_list:      expr                        { $$ = exprNode::create_expr_node_list_from_expr_node($1); }
                 | expr_list COMMA expr      { $$ = exprNode::add_expr_node_to_expr_node_list($1, $3); }
 
