@@ -29,6 +29,7 @@
   caseStmtNode* case_stmt_union;
   std::list<caseElementNode*>* case_element_list_union;
   stmtBlockNode* stmt_block_union;
+  varDeclNode* var_decl_union;
 }
 
 %type<literal_union> literal
@@ -44,6 +45,7 @@
 %type<while_stmt_union> while_stmt
 %type<for_stmt_union> for_stmt
 %type<with_stmt_union> with_stmt
+%type<var_decl_union> var_decl var_decl_list
 
 %start start_symbol
 
@@ -245,11 +247,11 @@ id_list:        ID                              {
                                                     $$ = exprNode::add_expr_node_to_expr_node_list($1, id);
                                                 }
 
-var_decl:       id_list COLON type SEMICOLON
-                | id_list COLON type EQUALS expr SEMICOLON
+var_decl:       id_list COLON type SEMICOLON                  { $$ = varDeclNode::create_var_decl_node($1, $3, NULL); }
+                | id_list COLON type EQUALS expr SEMICOLON    { $$ = varDeclNode::create_var_decl_node($1, $3, $5); }
 
-var_decl_list:  var_decl
-                | var_decl_list var_decl
+var_decl_list:  var_decl                                      { $$ = varDeclNode::create_var_decl_node_list_from_var_decl_node($1); }
+                | var_decl_list var_decl                      { $$ = varDeclNode::add_var_decl_node_to_var_decl_node_list($1, $2); }
 
 var_decl_sect:  VAR_KW var_decl_list
 
