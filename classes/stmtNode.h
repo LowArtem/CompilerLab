@@ -13,7 +13,7 @@
 using namespace std;
 
 /**
- * Перечисление stmtType определеляет тип выражения
+ * Перечисление stmtType определеляет тип инструкции
  */
 enum stmtType
 {
