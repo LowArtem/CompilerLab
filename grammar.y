@@ -175,6 +175,10 @@ type:           simple_type
                 | SET_KW OF_KW literal DOUBLE_DOT literal
                 | ARRAY_KW OF_KW type
                 | ARRAY_KW expr OF_KW type
+array_dimension:    literal DOUBLE_DOT literal  { $$ = arrayDimensionNode::create_array_dimension_node($1, $3); }
+
+array_dimension_list:   array_dimension                                 { $$ = arrayDimensionNode::create_array_dimension_node_list_from_array_dimension_node($1); }
+                        | array_dimension_list COMMA array_dimension    { $$ = arrayDimensionNode::add_array_dimension_node_to_array_dimension_node_list($1, $3); }                
 
 expr:           literal                       { $$ = exprNode::create_expr_node_from_literal_node($1); }
                 | STRING                      { $$ = exprNode::create_expr_node_from_string($1); }
