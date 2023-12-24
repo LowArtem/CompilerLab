@@ -60,7 +60,7 @@
 %type <while_stmt_union> while_stmt
 %type <for_stmt_union> for_stmt
 %type <with_stmt_union> with_stmt
-%type<var_decl_union> var_decl var_decl_list
+%type<var_decl_union> var_decl var_decl_list var_decl_sect
 
 %start start_symbol
 
@@ -272,7 +272,7 @@ var_decl:       id_list COLON type SEMICOLON                  { $$ = varDeclNode
 var_decl_list:  var_decl                                      { $$ = varDeclNode::create_var_decl_node_list_from_var_decl_node($1); }
                 | var_decl_list var_decl                      { $$ = varDeclNode::add_var_decl_node_to_var_decl_node_list($1, $2); }
 
-var_decl_sect:  VAR_KW var_decl_list
+var_decl_sect:  VAR_KW var_decl_list                          { $$ = $2 }
 
 param_list:     var_decl_list SEMICOLON
                 | var_decl_sect SEMICOLON
