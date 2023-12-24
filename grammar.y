@@ -41,6 +41,7 @@
     std::list<caseElementNode*>* case_element_list_union;
     stmtBlockNode* stmt_block_union;
     varDeclNode* var_decl_union;
+    list<enumParamNode*>* enum_param_list_union;
 }
 
 %type <simple_type_union> simple_type
@@ -61,6 +62,7 @@
 %type <for_stmt_union> for_stmt
 %type <with_stmt_union> with_stmt
 %type<var_decl_union> var_decl var_decl_list
+%type <enum_param_list_union> enum_param_list
 
 %start start_symbol
 
@@ -331,6 +333,22 @@ enum_decl:          ID EQUALS OPEN_BRACKET enum_param_list CLOSE_BRACKET SEMICOL
 
 enum_decl_list:     enum_decl
                     | enum_decl_list enum_decl
+enum_param_list:    ID                                      { 
+                                                                auto tmp = enumParamNode::create_enum_param_node_without_value($1); 
+                                                                $$ = enumParamNode::create_enum_param_node_list_from_enum_param_node(tmp); 
+                                                            }
+                    | ID EQUALS expr                        {
+                                                                auto tmp = enumParamNode::create_enum_param_node_with_value($1, $3);
+                                                                $$ = enumParamNode::create_enum_param_node_list_from_enum_param_node(tmp);
+                                                            }
+                    | enum_param_list COMMA ID EQUALS expr  {
+                                                                auto tmp = enumParamNode::create_enum_param_node_with_value($3, $5);
+                                                                $$ = enumParamNode::add_enum_param_node_to_enum_param_node_list($1, tmp);
+                                                            }
+                    | enum_param_list COMMA ID              {
+                                                                auto tmp = enumParamNode::create_enum_param_node_without_value($3);
+                                                                $$ = enumParamNode::add_enum_param_node_to_enum_param_node_list($1, tmp);
+                                                            }
 
 class_decl_header:      ID EQUALS CLASS_KW
                         | ID EQUALS CLASS_KW OPEN_BRACKET ID CLOSE_BRACKET
