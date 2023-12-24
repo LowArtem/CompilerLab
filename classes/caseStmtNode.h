@@ -7,14 +7,14 @@
 /**
  * Класс инструкции case
  */
-class caseNode : public node
+class caseStmtNode : public node
 {
 public:
     exprNode *selector_expression;
     std::list<caseElementNode *> *elements;
     stmtNode *else_body;
 
-    caseNode();
+    caseStmtNode();
 
-    static caseNode *create_case_node(exprNode *selector_expression, std::list<caseElementNode *> *elements, stmtNode *else_body);
+    static caseStmtNode *create_case_node(exprNode *selector_expression, std::list<caseElementNode *> *elements, stmtNode *else_body);
 };
