@@ -65,6 +65,9 @@
     functionElementNode* function_element_union;
     procedureImplNode* procedure_impl_union;
     functionImplNode* function_impl_union;
+    modifier modifier_union;
+    list<modifier>* modifier_list_union;
+    fieldDeclNode* field_decl_union;
     classDeclHeaderNode* class_decl_header_union;
     propertyDeclNode* property_decl_union;
     methodFunctionDeclNode* method_function_decl_union;
@@ -96,6 +99,9 @@
 %type <function_element_union> function_element method_procedure_decl
 %type <procedure_impl_union> procedure_impl
 %type <function_impl_union> function_impl
+%type <modifier_union> override_modifier field_modifier method_modifier
+%type <modifier_list_union> field_modifier_list method_modifier_list
+%type <field_decl_union> field_decl
 %type <class_decl_header_union> class_decl_header
 %type <property_decl_union> property_decl
 %type <method_function_decl_union> method_function_decl
@@ -389,16 +395,23 @@ class_decl_header:      ID EQUALS CLASS_KW                                      
 property_decl:  PROPERTY_KW ID COLON type READ_KW ID WRITE_KW ID SEMICOLON      { $$ = propertyDeclNode::create_property_decl_node($2, $4, $6, $8); }
                 | PROPERTY_KW ID COLON type READ_KW ID SEMICOLON                { $$ = propertyDeclNode::create_property_decl_node($2, $4, $6, NULL); } 
 
-override_modifier:    OVERRIDE_KW SEMICOLON
+override_modifier:    OVERRIDE_KW SEMICOLON                     { $$ = modifier::override_modifier; }
 
-field_modifier:     STATIC_KW SEMICOLON
-                    | override_modifier
+field_modifier:     STATIC_KW SEMICOLON                         { $$ = modifier::static_modifier; }
+                    | override_modifier                         { $$ = $1; }
 
-field_modifier_list:    field_modifier
-                        | field_modifier_list field_modifier
+field_modifier_list:    field_modifier                          {
+                                                                    std::list<modifier> *res = new std::list<modifier>();
+                                                                    res->push_back($1);
+                                                                    $$ = res;
+                                                                }
+                        | field_modifier_list field_modifier    {
+                                                                    $1->push_back($2);
+                                                                    $$ = $1;
+                                                                }
 
-field_decl:             var_decl
-                        | var_decl field_modifier_list
+field_decl:             var_decl                                { fieldDeclNode::create_field_decl_node_without_field_modifiers($1); }
+                        | var_decl field_modifier_list          { fieldDeclNode::create_field_decl_node_with_field_modifiers($1, $2); }
 
 method_procedure_decl:  PROCEDURE_KW function_element SEMICOLON                { $$ = $2 }
                         | PROCEDURE_KW ID SEMICOLON                            { $$ = functionElementNode::create_fucntion_element($2, NULL); }
@@ -439,11 +452,18 @@ implementation_list:    implementation_element
 
 implementation_sect: IMPLEMENTATION_KW implementation_list
 
-method_modifier:    field_modifier
-                    | OVERLOAD_KW SEMICOLON
+method_modifier:    field_modifier                             { $$ = $1; }
+                    | OVERLOAD_KW SEMICOLON                    { $$ = modifier::overload_modifier; }
 
-method_modifier_list:   method_modifier
-                        | method_modifier_list method_modifier
+method_modifier_list:   method_modifier                         { 
+                                                                    std::list<modifier> *res = new std::list<modifier>();
+                                                                    res->push_back($1); 
+                                                                    $$->res; 
+                                                                }
+                        | method_modifier_list method_modifier  {
+                                                                    $1->push_back($2);
+                                                                    $$ = $1;
+                                                                }
 
 method_decl:            method_procedure_decl_with_modifier_NO
                         | method_function_decl_with_modifier_NO
