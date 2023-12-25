@@ -21,6 +21,7 @@
     #include "classes/procedureImplNode.h"
     #include "classes/functionImplNode.h"
     #include "classes/classDeclHeaderNode.h"
+    #include "classes/propertyDeclNode.h"
     #pragma once
 
     using namespace std;
@@ -64,6 +65,7 @@
     procedureImplNode* procedure_impl_union;
     functionImplNode* function_impl_union;
     classDeclHeaderNode* class_decl_header_union;
+    propertyDeclNode* property_decl_union;
 }
 
 %type <simple_type_union> simple_type
@@ -93,6 +95,7 @@
 %type <procedure_impl_union> procedure_impl
 %type <function_impl_union> function_impl
 %type <class_decl_header_union> class_decl_header
+%type <property_decl_union> property_decl
 
 %start start_symbol
 
@@ -380,8 +383,8 @@ enum_decl_list:     enum_decl                               { $$ = enumDeclNode:
 class_decl_header:      ID EQUALS CLASS_KW                                      { $$ = create_class_decl_node(NULL, $1); }
                         | ID EQUALS CLASS_KW OPEN_BRACKET ID CLOSE_BRACKET      { $$ = create_class_decl_node($5, $1); }
 
-property_decl:  PROPERTY_KW ID COLON type READ_KW ID WRITE_KW ID SEMICOLON
-                | PROPERTY_KW ID COLON type READ_KW ID SEMICOLON
+property_decl:  PROPERTY_KW ID COLON type READ_KW ID WRITE_KW ID SEMICOLON      { $$ = create_property_decl_node($2, $4, $6, $8); }
+                | PROPERTY_KW ID COLON type READ_KW ID SEMICOLON                { $$ = create_property_decl_node($2, $4, $6, NULL); } 
 
 override_modifier:    OVERRIDE_KW SEMICOLON
 
