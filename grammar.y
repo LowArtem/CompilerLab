@@ -10,7 +10,7 @@
     #include "classes/repeatStmtNode.h"
     #include "classes/caseStmtNode.h"
     #include "classes/caseElementNode.h"
-    #pragma once
+        #pragma once
 
     using namespace std;
 
@@ -48,6 +48,13 @@
     enumDeclNode* enum_decl_union;
     list<enumDeclNode*>* enum_decl_list_union;
     typeSectNode* type_sect_union;
+    paramListNode* param_list_union;
+    functionElementNode* function_element_union;
+    procedureImplNode* procedure_impl_union;
+    functionImplNode* function_impl_union;
+    modifier modifier_union;
+    list<modifier>* modifier_list_union;
+    fieldDeclNode* field_decl_union;
 }
 
 %type <simple_type_union> simple_type
@@ -67,11 +74,18 @@
 %type <while_stmt_union> while_stmt
 %type <for_stmt_union> for_stmt
 %type <with_stmt_union> with_stmt
-%type <var_decl_union> var_decl var_decl_list
+%type <var_decl_union> var_decl var_decl_list var_decl_sect
 %type <enum_param_list_union> enum_param_list
 %type <enum_decl_union> enum_decl
 %type <enum_decl_list_union> enum_decl_list
 %type <type_sect_union> type_sect
+%type <param_list_union> param_list param_list_E
+%type <function_element_union> function_element
+%type <procedure_impl_union> procedure_impl
+%type <function_impl_union> function_impl
+%type <modifier_union> override_modifier field_modifier method_modifier
+%type <modifier_list_union> field_modifier_list method_modifier_list
+%type <field_decl_union> field_decl
 
 %start start_symbol
 
@@ -283,39 +297,40 @@ var_decl:       id_list COLON type SEMICOLON                  { $$ = varDeclNode
 var_decl_list:  var_decl                                      { $$ = varDeclNode::create_var_decl_node_list_from_var_decl_node($1); }
                 | var_decl_list var_decl                      { $$ = varDeclNode::add_var_decl_node_to_var_decl_node_list($1, $2); }
 
-var_decl_sect:  VAR_KW var_decl_list
+var_decl_sect:  VAR_KW var_decl_list                          { $$ = $2 }
 
-param_list:     var_decl_list SEMICOLON
-                | var_decl_sect SEMICOLON
-                | CONST_KW var_decl_list SEMICOLON
-                | OUT_KW var_decl_list SEMICOLON
-                | param_list var_decl_list SEMICOLON
-                | param_list var_decl_sect SEMICOLON
-                | param_list CONST_KW var_decl_list SEMICOLON
-                | param_list OUT_KW var_decl_list SEMICOLON
+param_list:     var_decl_list SEMICOLON                       { $$ = paramListNode::create_param_list_node_list($1, paramListNodeTypeEnum::general_param); }
+                | var_decl_sect SEMICOLON                     { $$ = paramListNode::create_param_list_node_list($1, paramListNodeTypeEnum::reference_param); }
+                | CONST_KW var_decl_list SEMICOLON            { $$ = paramListNode::create_param_list_node_list($2, paramListNodeTypeEnum::const_param); }
+                | OUT_KW var_decl_list SEMICOLON              { $$ = paramListNode::create_param_list_node_list($2, paramListNodeTypeEnum::out_param); }
+                | param_list var_decl_list SEMICOLON          { $$ = paramListNode::add_param_list_node_to_param_list_node_list($1, $2, paramListNodeTypeEnum::general_param); }
+                | param_list var_decl_sect SEMICOLON          { $$ = paramListNode::add_param_list_node_to_param_list_node_list($1, $2, paramListNodeTypeEnum::reference_param); }
+                | param_list CONST_KW var_decl_list SEMICOLON { $$ = paramListNode::add_param_list_node_to_param_list_node_list($1, $3, paramListNodeTypeEnum::const_param); }
+                | param_list OUT_KW var_decl_list SEMICOLON   { $$ = paramListNode::add_param_list_node_to_param_list_node_list($1, $3, paramListNodeTypeEnum::out_param); }
 
-param_list_E:   param_list
-                | /*empty*/
+param_list_E:   param_list                                    { $$ = $1; }
+              | /*empty*/                                     { $$ = paramListNode::create_param_list_node_list(NULL, paramListNodeTypeEnum::general_param); }
 
-function_element:   ID OPEN_BRACKET param_list_E CLOSE_BRACKET
+function_element:   ID OPEN_BRACKET param_list_E CLOSE_BRACKET    { $$ = functionElementNode::create_function_element_node($1, $3); }
 
-procedure_impl:     PROCEDURE_KW function_element SEMICOLON stmt
-                    | PROCEDURE_KW ID SEMICOLON stmt
-                    | PROCEDURE_KW function_element SEMICOLON VAR_KW var_decl_list stmt
-                    | PROCEDURE_KW ID SEMICOLON VAR_KW var_decl_list stmt
-                    | PROCEDURE_KW ID DOT function_element SEMICOLON stmt
-                    | PROCEDURE_KW ID DOT ID SEMICOLON stmt
-                    | PROCEDURE_KW ID DOT function_element SEMICOLON VAR_KW var_decl_list stmt
-                    | PROCEDURE_KW ID DOT ID SEMICOLON VAR_KW var_decl_list stmt
+procedure_impl:     PROCEDURE_KW function_element SEMICOLON stmt                                { $$ = procedureImplNode::create_procedure_impl_node_with_params(NULL, $2, NULL, $4); }
+                    | PROCEDURE_KW ID SEMICOLON stmt                                            { $$ = procedureImplNode::create_procedure_impl_node_without_params(NULL, $2, NULL, $4); }
+                    | PROCEDURE_KW function_element SEMICOLON VAR_KW var_decl_list stmt         { $$ = procedureImplNode::create_procedure_impl_node_with_params(NULL, $2, $5, $7); }
+                    | PROCEDURE_KW ID SEMICOLON VAR_KW var_decl_list stmt                       { $$ = procedureImplNode::create_procedure_impl_node_without_params(NULL, $2, $5, $7); }
+                    | PROCEDURE_KW ID DOT function_element SEMICOLON stmt                       { $$ = procedureImplNode::create_procedure_impl_node_with_params($2, $4, NULL, $6); }
+                    | PROCEDURE_KW ID DOT ID SEMICOLON stmt                                     { $$ = procedureImplNode::create_procedure_impl_node_without_params($2, $4, NULL, $6); }
+                    | PROCEDURE_KW ID DOT function_element SEMICOLON VAR_KW var_decl_list stmt  { $$ = procedureImplNode::create_procedure_impl_node_with_params($2, $4, $7, $8); }
+                    | PROCEDURE_KW ID DOT ID SEMICOLON VAR_KW var_decl_list stmt                { $$ = procedureImplNode::create_procedure_impl_node_without_params($2, $4, $7, $8); }
 
-function_impl:      FUNCTION_KW function_element COLON type SEMICOLON stmt
-                    | FUNCTION_KW ID COLON type SEMICOLON stmt
-                    | FUNCTION_KW function_element COLON type SEMICOLON VAR_KW var_decl_list stmt
-                    | FUNCTION_KW ID COLON type SEMICOLON VAR_KW var_decl_list stmt
-                    | FUNCTION_KW ID DOT function_element COLON type SEMICOLON stmt
-                    | FUNCTION_KW ID DOT ID COLON type SEMICOLON stmt
-                    | FUNCTION_KW ID DOT function_element COLON type SEMICOLON VAR_KW var_decl_list stmt
-                    | FUNCTION_KW ID DOT ID COLON type SEMICOLON VAR_KW var_decl_list stmt
+function_impl:      FUNCTION_KW function_element COLON type SEMICOLON stmt                                { $$ = functionImplNode::create_function_impl_node_with_params(NULL, $2, NULL, $4, $6); }
+                    | FUNCTION_KW ID COLON type SEMICOLON stmt                                            { $$ = functionImplNode::create_function_impl_node_without_params(NULL, $2, NULL, $4, $6); }
+                    | FUNCTION_KW function_element COLON type SEMICOLON VAR_KW var_decl_list stmt         { $$ = functionImplNode::create_function_impl_node_with_params(NULL, $2, $7, $4, $8); }
+                    | FUNCTION_KW ID COLON type SEMICOLON VAR_KW var_decl_list stmt                       { $$ = functionImplNode::create_function_impl_node_without_params(NULL, $2, $7, $4, $8); }
+
+                    | FUNCTION_KW ID DOT function_element COLON type SEMICOLON stmt                       { $$ = functionImplNode::create_function_impl_node_with_params($2, $4, NULL, $6, $8); }
+                    | FUNCTION_KW ID DOT ID COLON type SEMICOLON stmt                                     { $$ = functionImplNode::create_function_impl_node_without_params($2, $4, NULL, $6, $8); }
+                    | FUNCTION_KW ID DOT function_element COLON type SEMICOLON VAR_KW var_decl_list stmt  { $$ = functionImplNode::create_function_impl_node_with_params($2, $4, $9, $6, $10); } 
+                    | FUNCTION_KW ID DOT ID COLON type SEMICOLON VAR_KW var_decl_list stmt                { $$ = functionImplNode::create_function_impl_node_without_params($2, $4, $9, $6, $10); }
 
 if_stmt:        IF_KW expr THEN_KW stmt                 { $$ = ifStmtNode::create_if_stmt_node($2, $4, NULL); }
                 | IF_KW expr THEN_KW stmt ELSE_KW stmt  { $$ = ifStmtNode::create_if_stmt_node($2, $4, $6); }
@@ -361,16 +376,23 @@ class_decl_header:      ID EQUALS CLASS_KW
 property_decl:  PROPERTY_KW ID COLON type READ_KW ID WRITE_KW ID SEMICOLON
                 | PROPERTY_KW ID COLON type READ_KW ID SEMICOLON
 
-override_modifier:    OVERRIDE_KW SEMICOLON
+override_modifier:    OVERRIDE_KW SEMICOLON                     { $$ = modifier::override_modifier; }
 
-field_modifier:     STATIC_KW SEMICOLON
-                    | override_modifier
+field_modifier:     STATIC_KW SEMICOLON                         { $$ = modifier::static_modifier; }
+                    | override_modifier                         { $$ = $1; }
 
-field_modifier_list:    field_modifier
-                        | field_modifier_list field_modifier
+field_modifier_list:    field_modifier                          {
+                                                                    std::list<modifier> *res = new std::list<modifier>();
+                                                                    res->push_back($1);
+                                                                    $$ = res;
+                                                                }
+                        | field_modifier_list field_modifier    {
+                                                                    $1->push_back($2);
+                                                                    $$ = $1;
+                                                                }
 
-field_decl:             var_decl
-                        | var_decl field_modifier_list
+field_decl:             var_decl                                { fieldDeclNode::create_field_decl_node_without_field_modifiers($1); }
+                        | var_decl field_modifier_list          { fieldDeclNode::create_field_decl_node_with_field_modifiers($1, $2); }
 
 method_procedure_decl:  PROCEDURE_KW function_element SEMICOLON
                         | PROCEDURE_KW ID SEMICOLON
@@ -411,11 +433,18 @@ implementation_list:    implementation_element
 
 implementation_sect: IMPLEMENTATION_KW implementation_list
 
-method_modifier:    field_modifier
-                    | OVERLOAD_KW SEMICOLON
+method_modifier:    field_modifier                             { $$ = $1; }
+                    | OVERLOAD_KW SEMICOLON                    { $$ = modifier::overload_modifier; }
 
-method_modifier_list:   method_modifier
-                        | method_modifier_list method_modifier
+method_modifier_list:   method_modifier                         { 
+                                                                    std::list<modifier> *res = new std::list<modifier>();
+                                                                    res->push_back($1); 
+                                                                    $$->res; 
+                                                                }
+                        | method_modifier_list method_modifier  {
+                                                                    $1->push_back($2);
+                                                                    $$ = $1;
+                                                                }
 
 method_decl:            method_procedure_decl_with_modifier_NO
                         | method_function_decl_with_modifier_NO
