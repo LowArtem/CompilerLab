@@ -73,6 +73,8 @@
     methodFunctionDeclNode* method_function_decl_union;
     implementationElementNode* implementation_element_union;
     list<implementationElementNode*>* implementation_list_union;
+    classDeclNode* class_decl_union;
+    list<classDeclNode*>* class_decl_list_union;
 }
 
 %type <simple_type_union> simple_type
@@ -109,6 +111,8 @@
 %type <method_function_decl_union> method_function_decl
 %type <implementation_element_union> implementation_element
 %type <implementation_list_union> implementation_list implementation_sect
+%type <class_decl_union> class_decl
+%type <class_decl_list_union> class_decl_list
 
 %start start_symbol
 
@@ -493,8 +497,8 @@ class_element_list: class_element
 
 class_decl:    class_decl_header class_element_list SEMICOLON END_KW SEMICOLON
 
-class_decl_list:    class_decl
-                    | class_decl_list class_decl
+class_decl_list:    class_decl                      { $$ = classDeclNode::create_class_decl_node_list_from_class_decl_node($1); }
+                    | class_decl_list class_decl    { $$ = classDeclNode::add_class_decl_node_to_class_decl_node_list($1, $2); }
 
 type_sect:  TYPE_KW class_decl_list         { $$ = create_type_sect_node_from_class_decl_list($2); }
             | TYPE_KW enum_decl_list        { $$ = create_type_sect_node_from_enum_decl_list($2); }
