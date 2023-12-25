@@ -23,6 +23,8 @@
     #include "classes/classDeclHeaderNode.h"
     #include "classes/propertyDeclNode.h"
     #include "classes/methodFunctionDeclNode.h"
+    #include "classes/methodFunctionDeclWithModifierNode.h"
+    #include "classes/methodProcedureDeclWithModifierNode.h"
     #pragma once
 
     using namespace std;
@@ -72,6 +74,7 @@
     propertyDeclNode* property_decl_union;
     methodFunctionDeclNode* method_function_decl_union;
     methodProcedureDeclWithModifierNode* method_procedure_decl_with_modifier_union;
+    methodFunctionDeclWithModifierNode* method_function_decl_with_modifier_union;
 }
 
 %type <simple_type_union> simple_type
@@ -107,6 +110,7 @@
 %type <property_decl_union> property_decl
 %type <method_function_decl_union> method_function_decl
 %type <method_procedure_decl_with_modifier_union> method_procedure_decl_with_modifier_NO
+%type <method_function_decl_with_modifier_union> method_function_decl_with_modifier_NO
 %start start_symbol
 
 %token <keyword_union> INTEGER_KW
@@ -423,8 +427,8 @@ method_procedure_decl_with_modifier_NO:     method_procedure_decl               
 method_function_decl:   FUNCTION_KW function_element COLON type SEMICOLON       { $$ = methodFunctionDeclNode::create_method_function_decl_node_with_params($2, $4); }
                         | FUNCTION_KW ID COLON type SEMICOLON                   { $$ = methodFunctionDeclNode::create_method_function_decl_node_without_params($2, $4); }
 
-method_function_decl_with_modifier_NO:      method_function_decl
-                                            | method_function_decl method_modifier_list
+method_function_decl_with_modifier_NO:      method_function_decl                        { $$ = methodFunctionDeclWithModifierNode::create_method_function_decl_with_modifier_node($1, NULL); }
+                                            | method_function_decl method_modifier_list { $$ = methodFunctionDeclWithModifierNode::create_method_function_decl_with_modifier_node($1, $2); }
 
 constructor_decl:   CONSTRUCTOR_KW function_element SEMICOLON
                     | CONSTRUCTOR_KW ID SEMICOLON
