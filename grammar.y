@@ -71,6 +71,8 @@
     classDeclHeaderNode* class_decl_header_union;
     propertyDeclNode* property_decl_union;
     methodFunctionDeclNode* method_function_decl_union;
+    implementationElementNode* implementation_element_union;
+    list<implementationElementNode*>* implementation_list_union;
 }
 
 %type <simple_type_union> simple_type
@@ -105,6 +107,8 @@
 %type <class_decl_header_union> class_decl_header
 %type <property_decl_union> property_decl
 %type <method_function_decl_union> method_function_decl
+%type <implementation_element_union> implementation_element
+%type <implementation_list_union> implementation_list implementation_sect
 
 %start start_symbol
 
@@ -442,15 +446,15 @@ destructor_decl:    DESTRUCTOR_KW ID SEMICOLON
 destructor_impl:    DESTRUCTOR_KW ID DOT ID SEMICOLON stmt
                     | DESTRUCTOR_KW ID DOT ID SEMICOLON override_modifier stmt
 
-implementation_element:  constructor_impl SEMICOLON
-                        | destructor_impl SEMICOLON
-                        | procedure_impl SEMICOLON
-                        | function_impl SEMICOLON
+implementation_element:  constructor_impl SEMICOLON { $$ = implementationElementNode::create_implementation_element_node_from_constructor_impl($1); }
+                        | destructor_impl SEMICOLON { $$ = implementationElementNode::create_implementation_element_node_from_destructor_impl($1); }
+                        | procedure_impl SEMICOLON  { $$ = implementationElementNode::create_implementation_element_node_from_procedure_impl($1); }
+                        | function_impl SEMICOLON   { $$ = implementationElementNode::create_implementation_element_node_from_function_impl($1); }
 
-implementation_list:    implementation_element
-                        | implementation_list implementation_element
+implementation_list:    implementation_element                          { $$ = implementationElementNode::create_implementation_element_node_list_from_implementation_element_node($1); }
+                        | implementation_list implementation_element    { $$ = implementationElementNode::add_implementation_element_node_to_implementation_element_node_list($1, $2); }
 
-implementation_sect: IMPLEMENTATION_KW implementation_list
+implementation_sect: IMPLEMENTATION_KW implementation_list              { $$ = $2; }
 
 method_modifier:    field_modifier                             { $$ = $1; }
                     | OVERLOAD_KW SEMICOLON                    { $$ = modifier::overload_modifier; }
