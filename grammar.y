@@ -20,6 +20,7 @@
     #include "classes/functionElementNode.h"
     #include "classes/procedureImplNode.h"
     #include "classes/functionImplNode.h"
+    #include "classes/classDeclHeaderNode.h"
     #pragma once
 
     using namespace std;
@@ -62,6 +63,7 @@
     functionElementNode* function_element_union;
     procedureImplNode* procedure_impl_union;
     functionImplNode* function_impl_union;
+    classDeclHeaderNode* class_decl_header_union;
 }
 
 %type <simple_type_union> simple_type
@@ -90,6 +92,7 @@
 %type <function_element_union> function_element
 %type <procedure_impl_union> procedure_impl
 %type <function_impl_union> function_impl
+%type <class_decl_header_union> class_decl_header
 
 %start start_symbol
 
@@ -374,8 +377,8 @@ enum_decl:          ID EQUALS OPEN_BRACKET enum_param_list CLOSE_BRACKET SEMICOL
 enum_decl_list:     enum_decl                               { $$ = enumDeclNode::create_enum_decl_node_list_from_enum_decl_node($1); }
                     | enum_decl_list enum_decl              { $$ = enumDeclNode::add_enum_decl_node_to_enum_decl_node_list($1, $2); }
 
-class_decl_header:      ID EQUALS CLASS_KW
-                        | ID EQUALS CLASS_KW OPEN_BRACKET ID CLOSE_BRACKET
+class_decl_header:      ID EQUALS CLASS_KW                                      { $$ = create_class_decl_node(NULL, $1); }
+                        | ID EQUALS CLASS_KW OPEN_BRACKET ID CLOSE_BRACKET      { $$ = create_class_decl_node($5, $1); }
 
 property_decl:  PROPERTY_KW ID COLON type READ_KW ID WRITE_KW ID SEMICOLON
                 | PROPERTY_KW ID COLON type READ_KW ID SEMICOLON
