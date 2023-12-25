@@ -501,6 +501,7 @@ class_element:  PRIVATE_KW method_field_property_list SEMICOLON
 class_element_list: class_element
                     | class_element_list class_element
 
+// TODO: доделать класс (Максим начал)
 class_decl:    class_decl_header class_element_list SEMICOLON END_KW SEMICOLON
 
 class_decl_list:    class_decl                      { $$ = classDeclNode::create_class_decl_node_list_from_class_decl_node($1); }
