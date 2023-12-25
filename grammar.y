@@ -91,7 +91,7 @@
 %type <enum_decl_list_union> enum_decl_list
 %type <type_sect_union> type_sect
 %type <param_list_union> param_list param_list_E
-%type <function_element_union> function_element
+%type <function_element_union> function_element method_procedure_decl
 %type <procedure_impl_union> procedure_impl
 %type <function_impl_union> function_impl
 %type <class_decl_header_union> class_decl_header
@@ -380,11 +380,11 @@ enum_decl:          ID EQUALS OPEN_BRACKET enum_param_list CLOSE_BRACKET SEMICOL
 enum_decl_list:     enum_decl                               { $$ = enumDeclNode::create_enum_decl_node_list_from_enum_decl_node($1); }
                     | enum_decl_list enum_decl              { $$ = enumDeclNode::add_enum_decl_node_to_enum_decl_node_list($1, $2); }
 
-class_decl_header:      ID EQUALS CLASS_KW                                      { $$ = create_class_decl_node(NULL, $1); }
-                        | ID EQUALS CLASS_KW OPEN_BRACKET ID CLOSE_BRACKET      { $$ = create_class_decl_node($5, $1); }
+class_decl_header:      ID EQUALS CLASS_KW                                      { $$ = classDeclHeaderNode::create_class_decl_node(NULL, $1); }
+                        | ID EQUALS CLASS_KW OPEN_BRACKET ID CLOSE_BRACKET      { $$ = classDeclHeaderNode::create_class_decl_node($5, $1); }
 
-property_decl:  PROPERTY_KW ID COLON type READ_KW ID WRITE_KW ID SEMICOLON      { $$ = create_property_decl_node($2, $4, $6, $8); }
-                | PROPERTY_KW ID COLON type READ_KW ID SEMICOLON                { $$ = create_property_decl_node($2, $4, $6, NULL); } 
+property_decl:  PROPERTY_KW ID COLON type READ_KW ID WRITE_KW ID SEMICOLON      { $$ = propertyDeclNode::create_property_decl_node($2, $4, $6, $8); }
+                | PROPERTY_KW ID COLON type READ_KW ID SEMICOLON                { $$ = propertyDeclNode::create_property_decl_node($2, $4, $6, NULL); } 
 
 override_modifier:    OVERRIDE_KW SEMICOLON
 
@@ -397,8 +397,8 @@ field_modifier_list:    field_modifier
 field_decl:             var_decl
                         | var_decl field_modifier_list
 
-method_procedure_decl:  PROCEDURE_KW function_element SEMICOLON
-                        | PROCEDURE_KW ID SEMICOLON
+method_procedure_decl:  PROCEDURE_KW function_element SEMICOLON                { $$ = $2 }
+                        | PROCEDURE_KW ID SEMICOLON                            { $$ = functionElementNode::create_fucntion_element($2, NULL); }
 
 method_procedure_decl_with_modifier_NO:     method_procedure_decl
                                             | method_procedure_decl method_modifier_list
