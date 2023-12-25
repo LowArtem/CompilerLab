@@ -71,6 +71,7 @@
     classDeclHeaderNode* class_decl_header_union;
     propertyDeclNode* property_decl_union;
     methodFunctionDeclNode* method_function_decl_union;
+    methodProcedureDeclWithModifierNode* method_procedure_decl_with_modifier_union;
 }
 
 %type <simple_type_union> simple_type
@@ -105,7 +106,7 @@
 %type <class_decl_header_union> class_decl_header
 %type <property_decl_union> property_decl
 %type <method_function_decl_union> method_function_decl
-
+%type <method_procedure_decl_with_modifier_union> method_procedure_decl_with_modifier_NO
 %start start_symbol
 
 %token <keyword_union> INTEGER_KW
@@ -416,8 +417,8 @@ field_decl:             var_decl                                { fieldDeclNode:
 method_procedure_decl:  PROCEDURE_KW function_element SEMICOLON                { $$ = $2 }
                         | PROCEDURE_KW ID SEMICOLON                            { $$ = functionElementNode::create_fucntion_element($2, NULL); }
 
-method_procedure_decl_with_modifier_NO:     method_procedure_decl
-                                            | method_procedure_decl method_modifier_list
+method_procedure_decl_with_modifier_NO:     method_procedure_decl                           { $$ = methodProcedureDeclWithModifierNode::create_method_procedure_decl_with_modifier_node($1, NULL); }
+                                            | method_procedure_decl method_modifier_list    { $$ = methodProcedureDeclWithModifierNode::create_method_procedure_decl_with_modifier_node($1, $2); }
 
 method_function_decl:   FUNCTION_KW function_element COLON type SEMICOLON       { $$ = methodFunctionDeclNode::create_method_function_decl_node_with_params($2, $4); }
                         | FUNCTION_KW ID COLON type SEMICOLON                   { $$ = methodFunctionDeclNode::create_method_function_decl_node_without_params($2, $4); }
