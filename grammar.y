@@ -25,6 +25,7 @@
     #include "classes/methodFunctionDeclNode.h"
     #include "classes/methodFunctionDeclWithModifierNode.h"
     #include "classes/methodProcedureDeclWithModifierNode.h"
+    #include "classes/constructorDeclNode.h"
     #pragma once
 
     using namespace std;
@@ -79,6 +80,7 @@
     list<classDeclNode*>* class_decl_list_union;
     methodProcedureDeclWithModifierNode* method_procedure_decl_with_modifier_union;
     methodFunctionDeclWithModifierNode* method_function_decl_with_modifier_union;
+    constructorDeclNode* constructor_decl_union;
 }
 
 %type <simple_type_union> simple_type
@@ -119,6 +121,7 @@
 %type <method_function_decl_with_modifier_union> method_function_decl_with_modifier_NO
 %type <class_decl_union> class_decl
 %type <class_decl_list_union> class_decl_list
+%type <constructor_decl_union> constructor_decl
 
 %start start_symbol
 
@@ -439,8 +442,8 @@ method_function_decl:   FUNCTION_KW function_element COLON type SEMICOLON       
 method_function_decl_with_modifier_NO:      method_function_decl                        { $$ = methodFunctionDeclWithModifierNode::create_method_function_decl_with_modifier_node($1, NULL); }
                                             | method_function_decl method_modifier_list { $$ = methodFunctionDeclWithModifierNode::create_method_function_decl_with_modifier_node($1, $2); }
 
-constructor_decl:   CONSTRUCTOR_KW function_element SEMICOLON
-                    | CONSTRUCTOR_KW ID SEMICOLON
+constructor_decl:   CONSTRUCTOR_KW function_element SEMICOLON                           { $$ = constructorDeclNode::create_constructor_decl_node_with_params($2); }
+                    | CONSTRUCTOR_KW ID SEMICOLON                                       { $$ = constructorDeclNode::create_constructor_decl_node_without_params($2); }
 
 constructor_decl_with_modifier_NO:      constructor_decl
                                         | constructor_decl override_modifier
