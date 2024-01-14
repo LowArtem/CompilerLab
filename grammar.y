@@ -31,6 +31,7 @@
     #include "classes/destructorDeclNode.h"
     #include "classes/destructorImplNode.h"
     #include "classes/methodDeclNode.h"
+    #include "classes/methodFieldPropertyListNode.h"
     #pragma once
 
     using namespace std;
@@ -91,6 +92,7 @@
     destructorDeclNode* destructor_decl_union;
     destructorImplNode* destructor_impl_union;
     methodDeclNode* method_decl_union;
+    list<methodFieldPropertyListNode*>* method_field_property_list_list_union;
 }
 
 %type <simple_type_union> simple_type
@@ -137,6 +139,7 @@
 %type <destructor_decl_union> destructor_decl
 %type <destructor_impl_union> destructor_impl
 %type <method_decl_union> method_decl
+%type <method_field_property_list_list_union> method_field_property_list
 
 %start start_symbol
 
@@ -500,16 +503,46 @@ method_modifier_list:   method_modifier                         {
 method_decl:            method_procedure_decl_with_modifier_NO      { $$ = methodDeclNode::create_method_decl_node_from_procedure($1) }
                         | method_function_decl_with_modifier_NO     { $$ = methodDeclNode::create_method_decl_node_from_function($1) }
 
-method_field_property_list: constructor_decl_with_modifier_NO
-                            | destructor_decl
-                            | field_decl
-                            | property_decl
-                            | method_decl
-                            | method_field_property_list constructor_decl_with_modifier_NO
-                            | method_field_property_list destructor_decl
-                            | method_field_property_list field_decl
-                            | method_field_property_list property_decl
-                            | method_field_property_list method_decl
+method_field_property_list: constructor_decl_with_modifier_NO                                   { 
+                                                                                                    auto node = methodFieldPropertyListNode::create_method_field_property_list_node_from_constructor($1);
+                                                                                                    $$ = methodFieldPropertyListNode::create_method_field_property_node_list_from_method_field_property_node(node);
+                                                                                                }
+                            | destructor_decl                                                   {
+                                                                                                    auto node = methodFieldPropertyListNode::create_method_field_property_list_node_from_destructor($1);
+                                                                                                    $$ = methodFieldPropertyListNode::create_method_field_property_node_list_from_method_field_property_node(node);
+                                                                                                }
+                            | field_decl                                                        {
+                                                                                                    auto node = methodFieldPropertyListNode::create_method_field_property_list_node_from_field($1);
+                                                                                                    $$ = methodFieldPropertyListNode::create_method_field_property_node_list_from_method_field_property_node(node);
+                                                                                                }
+                            | property_decl                                                     {
+                                                                                                    auto node = methodFieldPropertyListNode::create_method_field_property_list_node_from_property($1);
+                                                                                                    $$ = methodFieldPropertyListNode::create_method_field_property_node_list_from_method_field_property_node(node);
+                                                                                                }
+                            | method_decl                                                       {
+                                                                                                    auto node = methodFieldPropertyListNode::create_method_field_property_list_node_from_method($1);
+                                                                                                    $$ = methodFieldPropertyListNode::create_method_field_property_node_list_from_method_field_property_node(node);
+                                                                                                }
+                            | method_field_property_list constructor_decl_with_modifier_NO      {
+                                                                                                    auto node = methodFieldPropertyListNode::create_method_field_property_list_node_from_constructor($2);
+                                                                                                    $$ = methodFieldPropertyListNode::add_method_field_property_node_to_method_field_property_node_list($1, node);
+                                                                                                }
+                            | method_field_property_list destructor_decl                        {
+                                                                                                    auto node = methodFieldPropertyListNode::create_method_field_property_list_node_from_destructor($2);
+                                                                                                    $$ = methodFieldPropertyListNode::add_method_field_property_node_to_method_field_property_node_list($1, node);
+                                                                                                }
+                            | method_field_property_list field_decl                             {
+                                                                                                    auto node = methodFieldPropertyListNode::create_method_field_property_list_node_from_field($2);
+                                                                                                    $$ = methodFieldPropertyListNode::add_method_field_property_node_to_method_field_property_node_list($1, node);
+                                                                                                }
+                            | method_field_property_list property_decl                          {
+                                                                                                    auto node = methodFieldPropertyListNode::create_method_field_property_list_node_from_property($2);
+                                                                                                    $$ = methodFieldPropertyListNode::add_method_field_property_node_to_method_field_property_node_list($1, node);
+                                                                                                }
+                            | method_field_property_list method_decl                            {
+                                                                                                    auto node = methodFieldPropertyListNode::create_method_field_property_list_node_from_method($2);
+                                                                                                    $$ = methodFieldPropertyListNode::add_method_field_property_node_to_method_field_property_node_list($1, node);
+                                                                                                }
 
 class_element:  PRIVATE_KW method_field_property_list SEMICOLON
                 | PUBLIC_KW method_field_property_list SEMICOLON

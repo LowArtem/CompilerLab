@@ -1,5 +1,5 @@
 #include "varDeclNode.h"
-#include "fieldModifierEnum.h"
+#include "modifierEnum.h"
 #include "node.h"
 #include <list>
 
