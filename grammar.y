@@ -32,6 +32,8 @@
     #include "classes/destructorImplNode.h"
     #include "classes/methodDeclNode.h"
     #include "classes/methodFieldPropertyListNode.h"
+    #include "classes/accessModifierEnum.h"
+    #include "classes/classElementNode.h"
     #pragma once
 
     using namespace std;
@@ -93,6 +95,7 @@
     destructorImplNode* destructor_impl_union;
     methodDeclNode* method_decl_union;
     list<methodFieldPropertyListNode*>* method_field_property_list_list_union;
+    classElementNode* class_element_union;
 }
 
 %type <simple_type_union> simple_type
@@ -140,6 +143,7 @@
 %type <destructor_impl_union> destructor_impl
 %type <method_decl_union> method_decl
 %type <method_field_property_list_list_union> method_field_property_list
+%type <class_element_union> class_element
 
 %start start_symbol
 
@@ -544,10 +548,10 @@ method_field_property_list: constructor_decl_with_modifier_NO                   
                                                                                                     $$ = methodFieldPropertyListNode::add_method_field_property_node_to_method_field_property_node_list($1, node);
                                                                                                 }
 
-class_element:  PRIVATE_KW method_field_property_list SEMICOLON
-                | PUBLIC_KW method_field_property_list SEMICOLON
-                | PROTECTED_KW method_field_property_list SEMICOLON
-                | method_field_property_list SEMICOLON
+class_element:  PRIVATE_KW method_field_property_list SEMICOLON                                 { $$ = classElementNode::create_class_element_node($2, accessModifier::private_access_modifier); }
+                | PUBLIC_KW method_field_property_list SEMICOLON                                { $$ = classElementNode::create_class_element_node($2, accessModifier::public_access_modifier); }
+                | PROTECTED_KW method_field_property_list SEMICOLON                             { $$ = classElementNode::create_class_element_node($2, accessModifier::protected_access_modifier); }
+                | method_field_property_list SEMICOLON                                          { $$ = classElementNode::create_class_element_node($1, accessModifier::public_access_modifier); }
 
 class_element_list: class_element
                     | class_element_list class_element
