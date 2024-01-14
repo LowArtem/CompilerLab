@@ -96,6 +96,7 @@
     methodDeclNode* method_decl_union;
     list<methodFieldPropertyListNode*>* method_field_property_list_list_union;
     classElementNode* class_element_union;
+    list<classElementNode*>* class_element_list_union;
 }
 
 %type <simple_type_union> simple_type
@@ -144,6 +145,7 @@
 %type <method_decl_union> method_decl
 %type <method_field_property_list_list_union> method_field_property_list
 %type <class_element_union> class_element
+%type <class_element_list_union> class_element_list
 
 %start start_symbol
 
@@ -553,8 +555,8 @@ class_element:  PRIVATE_KW method_field_property_list SEMICOLON                 
                 | PROTECTED_KW method_field_property_list SEMICOLON                             { $$ = classElementNode::create_class_element_node($2, accessModifier::protected_access_modifier); }
                 | method_field_property_list SEMICOLON                                          { $$ = classElementNode::create_class_element_node($1, accessModifier::public_access_modifier); }
 
-class_element_list: class_element
-                    | class_element_list class_element
+class_element_list: class_element                                                               { $$ = classElementNode::create_class_element_node_list_from_class_element_node($1); }
+                    | class_element_list class_element                                          { $$ = classElementNode::add_class_element_node_to_class_element_node_list($1, $2); }
 
 // TODO: доделать класс (Максим начал)
 class_decl:    class_decl_header class_element_list SEMICOLON END_KW SEMICOLON

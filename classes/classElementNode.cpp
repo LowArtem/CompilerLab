@@ -11,3 +11,16 @@ classElementNode *classElementNode::create_class_element_node(std::list<methodFi
     class_element_node->access_modifier_enum = access_modifier_enum;
     return class_element_node;
 }
+
+std::list<classElementNode *> *classElementNode::create_class_element_node_list_from_class_element_node(classElementNode *class_element_node)
+{
+    std::list<classElementNode *> *class_element_node_list = new std::list<classElementNode *>;
+    class_element_node_list->push_back(class_element_node);
+    return class_element_node_list;
+}
+
+std::list<classElementNode *> *classElementNode::add_class_element_node_to_class_element_node_list(std::list<classElementNode *> *class_element_node_list, classElementNode *class_element_node)
+{
+    class_element_node_list->push_back(class_element_node);
+    return class_element_node_list;
+}
