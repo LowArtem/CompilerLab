@@ -558,8 +558,7 @@ class_element:  PRIVATE_KW method_field_property_list SEMICOLON                 
 class_element_list: class_element                                                               { $$ = classElementNode::create_class_element_node_list_from_class_element_node($1); }
                     | class_element_list class_element                                          { $$ = classElementNode::add_class_element_node_to_class_element_node_list($1, $2); }
 
-// TODO: доделать класс (Максим начал)
-class_decl:    class_decl_header class_element_list SEMICOLON END_KW SEMICOLON
+class_decl:    class_decl_header class_element_list SEMICOLON END_KW SEMICOLON                  { $$ = classDeclNode::create_class_decl_node($1, $2); }
 
 class_decl_list:    class_decl                      { $$ = classDeclNode::create_class_decl_node_list_from_class_decl_node($1); }
                     | class_decl_list class_decl    { $$ = classDeclNode::add_class_decl_node_to_class_decl_node_list($1, $2); }
