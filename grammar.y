@@ -28,6 +28,7 @@
     #include "classes/constructorDeclNode.h"
     #include "classes/constructorDeclWithModifierNoNode.h"
     #include "classes/constructorImplNode.h"
+    #include "classes/destructorDeclNode.h"
     #pragma once
 
     using namespace std;
@@ -85,6 +86,7 @@
     constructorDeclNode* constructor_decl_union;
     constructorDeclWithModifierNoNode* constructor_decl_with_modifier_no_union;
     constructorImplNode* constructor_impl_union;
+    destructorDeclNode* destructor_decl_union;
 }
 
 %type <simple_type_union> simple_type
@@ -128,6 +130,7 @@
 %type <constructor_decl_union> constructor_decl
 %type <constructor_decl_with_modifier_no_union> constructor_decl_with_modifier_NO
 %type <constructor_impl_union> constructor_impl
+%type <destructor_decl_union> destructor_decl
 
 %start start_symbol
 
@@ -459,8 +462,8 @@ constructor_impl:   CONSTRUCTOR_KW ID DOT function_element SEMICOLON stmt       
                     | CONSTRUCTOR_KW ID DOT ID SEMICOLON stmt                                   { $$ = constructorImplNode::create_constructor_impl_node($4, $2, NULL, false, $6); }
                     | CONSTRUCTOR_KW ID DOT ID SEMICOLON override_modifier stmt                 { $$ = constructorImplNode::create_constructor_impl_node($4, $2, NULL, true, $6); }
 
-destructor_decl:    DESTRUCTOR_KW ID SEMICOLON
-                    | DESTRUCTOR_KW ID SEMICOLON override_modifier
+destructor_decl:    DESTRUCTOR_KW ID SEMICOLON                         { $$ = destructorDeclNode::create_destructor_decl_node($2, false); }
+                    | DESTRUCTOR_KW ID SEMICOLON override_modifier     { $$ = destructorDeclNode::create_destructor_decl_node($2, true); }
 
 destructor_impl:    DESTRUCTOR_KW ID DOT ID SEMICOLON stmt
                     | DESTRUCTOR_KW ID DOT ID SEMICOLON override_modifier stmt
