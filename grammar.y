@@ -30,6 +30,7 @@
     #include "classes/constructorImplNode.h"
     #include "classes/destructorDeclNode.h"
     #include "classes/destructorImplNode.h"
+    #include "classes/methodDeclNode.h"
     #pragma once
 
     using namespace std;
@@ -89,6 +90,7 @@
     constructorImplNode* constructor_impl_union;
     destructorDeclNode* destructor_decl_union;
     destructorImplNode* destructor_impl_union;
+    methodDeclNode* method_decl_union;
 }
 
 %type <simple_type_union> simple_type
@@ -134,6 +136,7 @@
 %type <constructor_impl_union> constructor_impl
 %type <destructor_decl_union> destructor_decl
 %type <destructor_impl_union> destructor_impl
+%type <method_decl_union> method_decl
 
 %start start_symbol
 
@@ -494,8 +497,8 @@ method_modifier_list:   method_modifier                         {
                                                                     $$ = $1;
                                                                 }
 
-method_decl:            method_procedure_decl_with_modifier_NO
-                        | method_function_decl_with_modifier_NO
+method_decl:            method_procedure_decl_with_modifier_NO      { $$ = methodDeclNode::create_method_decl_node_from_procedure($1) }
+                        | method_function_decl_with_modifier_NO     { $$ = methodDeclNode::create_method_decl_node_from_function($1) }
 
 method_field_property_list: constructor_decl_with_modifier_NO
                             | destructor_decl
