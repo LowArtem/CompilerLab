@@ -1,6 +1,7 @@
+#pragma once
+#include <string>
 #include "node.h"
 #include "typeNode.h"
-#include <string>
 
 /**
  * Класс объявления свойства

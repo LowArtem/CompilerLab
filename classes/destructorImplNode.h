@@ -1,5 +1,6 @@
-#include "node.h"
+#pragma once
 #include <string>
+#include "node.h"
 #include "stmtNode.h"
 
 using namespace std;

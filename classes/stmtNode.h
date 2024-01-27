@@ -1,14 +1,15 @@
+#pragma once
 #include <list>
-#include "exprNode.h"
 #include <string>
-#include "stmtBlockNode.h"
-#include "ifStmtNode.h"
 #include "caseStmtNode.h"
-#include "repeatStmtNode.h"
-#include "whileStmtNode.h"
+#include "exprNode.h"
 #include "forStmtNode.h"
-#include "withStmtNode.h"
+#include "ifStmtNode.h"
 #include "node.h"
+#include "repeatStmtNode.h"
+#include "stmtBlockNode.h"
+#include "whileStmtNode.h"
+#include "withStmtNode.h"
 
 using namespace std;
 

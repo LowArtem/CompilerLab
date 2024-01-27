@@ -1,6 +1,7 @@
+#pragma once
 #include "exprNode.h"
-#include "stmtNode.h"
 #include "node.h"
+#include "stmtNode.h"
 
 /**
  * Класс инструкции repeat .. until

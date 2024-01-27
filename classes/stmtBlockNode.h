@@ -1,6 +1,7 @@
+#pragma once
 #include <list>
-#include "stmtNode.h"
 #include "node.h"
+#include "stmtNode.h"
 
 using namespace std;
 

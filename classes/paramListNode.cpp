@@ -4,7 +4,7 @@ paramListNode::paramListNode()
 {
 }
 
-static paramListNode *create_param_list_node(std::list<varDeclNode *> *var_decl_list, paramListNodeTypeEnum param_list_node_type)
+paramListNode *paramListNode::create_param_list_node(std::list<varDeclNode *> *var_decl_list, paramListNodeTypeEnum param_list_node_type)
 {
     paramListNode *res = new paramListNode();
     res->var_decl_list = var_decl_list;
@@ -12,7 +12,7 @@ static paramListNode *create_param_list_node(std::list<varDeclNode *> *var_decl_
     return res;
 }
 
-static std::list<paramListNode *> *create_param_list_node_list_from_param_list_node(std::list<varDeclNode *> *var_decl_list, paramListNodeTypeEnum param_list_node_type)
+std::list<paramListNode *> *paramListNode::create_param_list_node_list(std::list<varDeclNode *> *var_decl_list, paramListNodeTypeEnum param_list_node_type)
 {
     paramListNode *param_list_node = create_param_list_node(var_decl_list, param_list_node_type);
 
@@ -21,7 +21,7 @@ static std::list<paramListNode *> *create_param_list_node_list_from_param_list_n
     return res;
 }
 
-static std::list<paramListNode *> *add_param_list_node_to_param_list_node_list(std::list<paramListNode *> *param_list_node_list, std::list<varDeclNode *> *var_decl_list, paramListNodeTypeEnum param_list_node_type)
+std::list<paramListNode *> *paramListNode::add_param_list_node_to_param_list_node_list(std::list<paramListNode *> *param_list_node_list, std::list<varDeclNode *> *var_decl_list, paramListNodeTypeEnum param_list_node_type)
 {
     paramListNode *param_list_node = create_param_list_node(var_decl_list, param_list_node_type);
 

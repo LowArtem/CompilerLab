@@ -1,7 +1,8 @@
-#include "typeNode.h"
+#pragma once
+#include <list>
 #include "exprNode.h"
 #include "node.h"
-#include <list>
+#include "typeNode.h"
 
 /**
  * Класс объявления переменной

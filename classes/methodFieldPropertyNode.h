@@ -1,10 +1,11 @@
-#include "node.h"
+#pragma once
+#include <list>
 #include "constructorDeclWithModifierNoNode.h"
 #include "destructorDeclNode.h"
 #include "fieldDeclNode.h"
-#include "propertyDeclNode.h"
 #include "methodDeclNode.h"
-#include <list>
+#include "node.h"
+#include "propertyDeclNode.h"
 
 class methodFieldPropertyNode : public node
 {

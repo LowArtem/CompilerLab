@@ -1,8 +1,9 @@
+#pragma once
+#include <list>
+#include <string>
 #include "node.h"
 #include "sectionNode.h"
 #include "stmtBlockNode.h"
-#include <string>
-#include <list>
 
 using namespace std;
 

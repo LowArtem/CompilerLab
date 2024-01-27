@@ -1,9 +1,9 @@
-#include "simpleTypeEnum.h"
-#include "arrayDimensionNode.h"
-#include "exprNode.h"
-#include "node.h"
-#include <string>
+#pragma once
 #include <list>
+#include <string>
+#include "arrayDimensionNode.h"
+#include "node.h"
+#include "simpleTypeEnum.h"
 
 using namespace std;
 

@@ -1,3 +1,4 @@
+#pragma once
 #include "constructorImplNode.h"
 #include "destructorImplNode.h"
 #include "procedureImplNode.h"

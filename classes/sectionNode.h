@@ -1,10 +1,9 @@
+#pragma once
 #include <list>
-#include "exprNode.h"
-#include <string>
-#include "varDeclNode.h"
-#include "typeSectNode.h"
 #include "implementationElementNode.h"
 #include "node.h"
+#include "typeSectNode.h"
+#include "varDeclNode.h"
 
 using namespace std;
 

@@ -4,7 +4,7 @@ methodFunctionDeclNode::methodFunctionDeclNode()
 {
 }
 
-methodFunctionDeclNode *create_method_function_decl_node_with_params(functionElementNode *function_element, typeNode *type)
+methodFunctionDeclNode *methodFunctionDeclNode::create_method_function_decl_node_with_params(functionElementNode *function_element, typeNode *type)
 {
     methodFunctionDeclNode *res = new methodFunctionDeclNode();
     res->id = function_element->id;
@@ -13,7 +13,7 @@ methodFunctionDeclNode *create_method_function_decl_node_with_params(functionEle
     return res;
 }
 
-methodFunctionDeclNode *create_method_function_decl_node_without_params(std::string id, typeNode *type)
+methodFunctionDeclNode *methodFunctionDeclNode::create_method_function_decl_node_without_params(std::string id, typeNode *type)
 {
     methodFunctionDeclNode *res = new methodFunctionDeclNode();
     res->id = id;

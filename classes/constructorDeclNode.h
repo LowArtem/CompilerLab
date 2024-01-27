@@ -1,6 +1,7 @@
+#pragma once
 #include <string>
-#include "node.h"
 #include "functionElementNode.h"
+#include "node.h"
 
 using namespace std;
 

@@ -1,7 +1,8 @@
-#include "paramListNode.h"
-#include "node.h"
+#pragma once
 #include <list>
 #include <string>
+#include "node.h"
+#include "paramListNode.h"
 
 /**
  * Класс параметров функции

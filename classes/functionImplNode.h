@@ -1,10 +1,11 @@
-#include "node.h"
+#pragma once
+#include <list>
+#include <string>
 #include "functionElementNode.h"
-#include "varDeclNode.h"
+#include "node.h"
 #include "stmtNode.h"
 #include "typeNode.h"
-#include <string>
-#include <list>
+#include "varDeclNode.h"
 
 /**
  * Класс реализации функции

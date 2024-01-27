@@ -1,9 +1,10 @@
-#include "paramListNode.h"
-#include "node.h"
+#pragma once
 #include <list>
 #include <string>
-#include "typeNode.h"
 #include "functionElementNode.h"
+#include "node.h"
+#include "paramListNode.h"
+#include "typeNode.h"
 
 class methodFunctionDeclNode : public node
 {

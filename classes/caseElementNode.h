@@ -1,7 +1,8 @@
-#include "exprNode.h"
-#include "stmtNode.h"
-#include "node.h"
+#pragma once
 #include <list>
+#include "exprNode.h"
+#include "node.h"
+#include "stmtNode.h"
 
 /**
  * Класс элемента инструкции case

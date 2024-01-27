@@ -1,7 +1,8 @@
-#include "varDeclNode.h"
+#pragma once
+#include <list>
 #include "modifierEnum.h"
 #include "node.h"
-#include <list>
+#include "varDeclNode.h"
 
 using namespace std;
 

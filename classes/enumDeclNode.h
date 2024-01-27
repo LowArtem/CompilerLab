@@ -1,7 +1,8 @@
+#pragma once
 #include <list>
 #include <string>
-#include "node.h"
 #include "enumParamNode.h"
+#include "node.h"
 
 using namespace std;
 

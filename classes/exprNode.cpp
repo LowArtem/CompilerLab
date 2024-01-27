@@ -17,7 +17,7 @@ exprNode *exprNode::create_expr_node_from_string(string &value)
 exprNode *exprNode::create_expr_node_from_id(string &id)
 {
     exprNode *res = new exprNode();
-    res->type = exprType::id_type;
+    res->type = exprType::id_type_expr;
     res->id = id;
     return res;
 }
@@ -42,7 +42,7 @@ exprNode *exprNode::create_expr_node_from_unary_operation(exprType type, exprNod
 exprNode *exprNode::create_expr_node_from_function_call(string &id, list<exprNode *> *params)
 {
     exprNode *res = new exprNode();
-    res->type = exprType::function_call_type;
+    res->type = exprType::function_call_type_expr;
     res->id = id;
     res->params = params;
     return res;

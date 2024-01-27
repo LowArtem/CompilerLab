@@ -1,7 +1,8 @@
-#include "node.h"
-#include "accessModifierEnum.h"
+#pragma once
 #include <list>
+#include "accessModifierEnum.h"
 #include "methodFieldPropertyNode.h"
+#include "node.h"
 
 using namespace std;
 

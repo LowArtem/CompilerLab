@@ -1,9 +1,10 @@
-#include "node.h"
-#include "functionElementNode.h"
-#include "varDeclNode.h"
-#include "stmtNode.h"
-#include <string>
+#pragma once
 #include <list>
+#include <string>
+#include "functionElementNode.h"
+#include "node.h"
+#include "stmtNode.h"
+#include "varDeclNode.h"
 
 /**
  * Класс реализации процедуры

@@ -1,3 +1,4 @@
+#pragma once
 /**
  * Перечисление accessModifier определяет три модификатора доступа (public, private, protected) для полей и методов
  */

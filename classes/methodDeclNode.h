@@ -1,3 +1,4 @@
+#pragma once
 #include "node.h"
 #include "methodProcedureDeclWithModifierNode.h"
 #include "methodFunctionDeclWithModifierNode.h"

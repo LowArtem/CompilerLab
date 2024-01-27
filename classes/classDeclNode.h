@@ -1,7 +1,8 @@
-#include "node.h"
+#pragma once
 #include <list>
 #include "classDeclHeaderNode.h"
 #include "classElementNode.h"
+#include "node.h"
 
 using namespace std;
 

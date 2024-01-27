@@ -1,6 +1,7 @@
-#include "varDeclNode.h"
+#pragma once
 #include <list>
 #include "node.h"
+#include "varDeclNode.h"
 
 /**
  * Тип листа параметров

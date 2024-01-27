@@ -1,5 +1,5 @@
+#pragma once
 #include <list>
-#include <string>
 #include "node.h"
 #include "classDeclNode.h"
 #include "enumDeclNode.h"

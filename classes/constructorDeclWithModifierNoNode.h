@@ -1,3 +1,4 @@
+#pragma once
 #include "constructorDeclNode.h"
 #include "node.h"
 

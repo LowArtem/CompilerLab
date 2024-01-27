@@ -1,8 +1,9 @@
-#include <string>
+#pragma once
 #include <list>
-#include "simpleTypeEnum.h"
+#include <string>
 #include "literalNode.h"
 #include "node.h"
+#include "simpleTypeEnum.h"
 
 using namespace std;
 
@@ -12,12 +13,12 @@ using namespace std;
  */
 enum exprType
 {
-    int_type,
-    real_type,
-    boolean_type,
-    char_type,
+    int_type_expr,
+    real_type_expr,
+    boolean_type_expr,
+    char_type_expr,
+    id_type_expr,
     string_type,
-    id_type,
     plus_type,
     minus_type,
     multiplication_type,
@@ -39,7 +40,7 @@ enum exprType
     not_type,
     uminus_type,
     uplus_type,
-    function_call_type,
+    function_call_type_expr,
     method_function_call_type,
     field_access_type,
     type_casting_type,

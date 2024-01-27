@@ -1,9 +1,8 @@
-#include "node.h"
-#include "modifierEnum.h"
-#include "functionElementNode.h"
-#include "typeNode.h"
-#include "methodFunctionDeclNode.h"
+#pragma once
 #include <list>
+#include "methodFunctionDeclNode.h"
+#include "modifierEnum.h"
+#include "node.h"
 
 class methodFunctionDeclWithModifierNode : public node
 {

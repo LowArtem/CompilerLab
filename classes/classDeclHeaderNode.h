@@ -1,5 +1,6 @@
-#include "node.h"
+#pragma once
 #include <string>
+#include "node.h"
 
 /**
  * Класс объявления заголовка класса

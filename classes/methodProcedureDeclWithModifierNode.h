@@ -1,6 +1,7 @@
-#include "node.h"
-#include "modifierEnum.h"
+#pragma once
 #include "functionElementNode.h"
+#include "modifierEnum.h"
+#include "node.h"
 
 class methodProcedureDeclWithModifierNode : public node
 {
