@@ -1,0 +1,100 @@
+cmake_minimum_required(VERSION 3.26)
+project(CompilerLab)
+
+set(CMAKE_EXE_LINKER_FLAGS "-static")
+set(CMAKE_CXX_STANDARD 14)
+file(GLOB_RECURSE CFILES "${CMAKE_SOURCE_DIR}/*.c")
+file(GLOB_RECURSE CFILES "../${CMAKE_SOURCE_DIR}/*.c")
+SET_SOURCE_FILES_PROPERTIES(${CFILES} PROPERTIES LANGUAGE CXX)
+
+include_directories(.)
+include_directories(classes)
+
+add_executable(CompilerLab
+        ../bison_new/FlexLexer.h
+        ../lex.yy.c
+        main.cpp
+        classes/accessModifierEnum.h
+        classes/arrayDimensionNode.cpp
+        classes/arrayDimensionNode.h
+        classes/caseElementNode.cpp
+        classes/caseElementNode.h
+        classes/caseStmtNode.cpp
+        classes/caseStmtNode.h
+        classes/classDeclHeaderNode.cpp
+        classes/classDeclHeaderNode.h
+        classes/classDeclNode.cpp
+        classes/classDeclNode.h
+        classes/classElementNode.cpp
+        classes/classElementNode.h
+        classes/constructorDeclNode.cpp
+        classes/constructorDeclNode.h
+        classes/constructorDeclWithModifierNoNode.cpp
+        classes/constructorDeclWithModifierNoNode.h
+        classes/constructorImplNode.cpp
+        classes/constructorImplNode.h
+        classes/destructorDeclNode.cpp
+        classes/destructorDeclNode.h
+        classes/destructorImplNode.cpp
+        classes/destructorImplNode.h
+        classes/enumDeclNode.cpp
+        classes/enumDeclNode.h
+        classes/enumParamNode.cpp
+        classes/enumParamNode.h
+        classes/exprNode.cpp
+        classes/exprNode.h
+        classes/fieldDeclNode.cpp
+        classes/fieldDeclNode.h
+        classes/forStmtNode.cpp
+        classes/forStmtNode.h
+        classes/functionElementNode.cpp
+        classes/functionElementNode.h
+        classes/functionImplNode.cpp
+        classes/functionImplNode.h
+        classes/ifStmtNode.cpp
+        classes/ifStmtNode.h
+        classes/implementationElementNode.cpp
+        classes/implementationElementNode.h
+        classes/literalNode.cpp
+        classes/literalNode.h
+        classes/methodDeclNode.cpp
+        classes/methodDeclNode.h
+        classes/methodFieldPropertyNode.cpp
+        classes/methodFieldPropertyNode.h
+        classes/methodFunctionDeclNode.cpp
+        classes/methodFunctionDeclNode.h
+        classes/methodFunctionDeclWithModifierNode.cpp
+        classes/methodFunctionDeclWithModifierNode.h
+        classes/methodProcedureDeclWithModifierNode.cpp
+        classes/methodProcedureDeclWithModifierNode.h
+        classes/modifierEnum.h
+        classes/node.h
+        classes/paramListNode.cpp
+        classes/paramListNode.h
+        classes/procedureImplNode.cpp
+        classes/procedureImplNode.h
+        classes/propertyDeclNode.cpp
+        classes/propertyDeclNode.h
+        classes/repeatStmtNode.cpp
+        classes/repeatStmtNode.h
+        classes/sectionNode.cpp
+        classes/sectionNode.h
+        classes/simpleTypeEnum.h
+        classes/startSymbolNode.cpp
+        classes/startSymbolNode.h
+        classes/stmtBlockNode.cpp
+        classes/stmtBlockNode.h
+        classes/stmtNode.cpp
+        classes/stmtNode.h
+        classes/typeNode.h
+        classes/typeSectNode.cpp
+        classes/typeSectNode.h
+        classes/varDeclNode.cpp
+        classes/varDeclNode.h
+        classes/whileStmtNode.cpp
+        classes/whileStmtNode.h
+        classes/withStmtNode.cpp
+        classes/withStmtNode.h
+        ../grammar.tab.h
+        ../grammar.tab.c
+)
