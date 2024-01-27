@@ -9,6 +9,7 @@ SET_SOURCE_FILES_PROPERTIES(${CFILES} PROPERTIES LANGUAGE CXX)
 
 include_directories(.)
 include_directories(classes)
+include_directories(tree)
 
 add_executable(CompilerLab
         ../bison_new/FlexLexer.h
@@ -97,4 +98,6 @@ add_executable(CompilerLab
         classes/withStmtNode.h
         ../grammar.tab.h
         ../grammar.tab.c
+        tree/treePrinter.cpp
+        tree/treePrinter.h
 )

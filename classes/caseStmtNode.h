@@ -1,9 +1,10 @@
 #pragma once
 #include <list>
-#include "caseElementNode.h"
 #include "exprNode.h"
 #include "node.h"
-#include "stmtNode.h"
+
+class stmtNode;
+class caseElementNode;
 
 /**
  * Класс инструкции case

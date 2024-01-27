@@ -1,7 +1,8 @@
 #pragma once
 #include "exprNode.h"
 #include "node.h"
-#include "stmtNode.h"
+
+class stmtNode;
 
 /**
  * Класс инструкции if .. then .. else

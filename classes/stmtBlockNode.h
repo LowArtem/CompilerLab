@@ -1,9 +1,10 @@
 #pragma once
 #include <list>
 #include "node.h"
-#include "stmtNode.h"
 
 using namespace std;
+
+class stmtNode;
 
 /**
  * Класс представляющий блок инструкций
