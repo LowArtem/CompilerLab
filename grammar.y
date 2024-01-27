@@ -36,6 +36,7 @@
     #include "classes/classElementNode.h"
     #include "classes/sectionNode.h"
     #include "classes/startSymbolNode.h"
+    #include "../grammar.tab.h"
     #pragma once
 
     using namespace std;
@@ -266,11 +267,11 @@ sect_list:      section                         { $$ = create_section_node_list_
 start_symbol:   PROGRAM_KW ID SEMICOLON stmt_block DOT                          { $$ = startSymbolNode::create_start_symbol_node($2, $4, NULL); }
                 | PROGRAM_KW ID SEMICOLON sect_list SEMICOLON stmt_block DOT    { $$ = startSymbolNode::create_start_symbol_node($2, $6, $4); }
 
-simple_type:    INTEGER_KW          { $$ = simpleType::int_type; }
-                | REAL_KW           { $$ = simpleType::real_type; }
-                | BOOLEAN_KW        { $$ = simpleType::boolean_type; }
-                | STRING_KW         { $$ = simpleType::string_type; }
-                | CHAR_KW           { $$ = simpleType::char_type; }
+simple_type:    INTEGER_KW          { $$ = simpleType::int_type_simple; }
+                | REAL_KW           { $$ = simpleType::real_type_simple; }
+                | BOOLEAN_KW        { $$ = simpleType::boolean_type_simple; }
+                | STRING_KW         { $$ = simpleType::string_type_simple; }
+                | CHAR_KW           { $$ = simpleType::char_type_simple; }
 
 literal:        INTEGER             { $$ = literalNode::create_literal_node_from_int($1); }
                 | REAL              { $$ = literalNode::create_literal_node_from_real($1); }
@@ -383,8 +384,8 @@ function_element:   ID OPEN_BRACKET param_list_E CLOSE_BRACKET    { $$ = functio
 
 procedure_impl:     PROCEDURE_KW function_element SEMICOLON stmt                                { $$ = procedureImplNode::create_procedure_impl_node_with_params(NULL, $2, NULL, $4); }
                     | PROCEDURE_KW ID SEMICOLON stmt                                            { $$ = procedureImplNode::create_procedure_impl_node_without_params(NULL, $2, NULL, $4); }
-                    | PROCEDURE_KW function_element SEMICOLON VAR_KW var_decl_list stmt         { $$ = procedureImplNode::create_procedure_impl_node_with_params(NULL, $2, $5, $7); }
-                    | PROCEDURE_KW ID SEMICOLON VAR_KW var_decl_list stmt                       { $$ = procedureImplNode::create_procedure_impl_node_without_params(NULL, $2, $5, $7); }
+                    | PROCEDURE_KW function_element SEMICOLON VAR_KW var_decl_list stmt         { $$ = procedureImplNode::create_procedure_impl_node_with_params(NULL, $2, $5, $6); }
+                    | PROCEDURE_KW ID SEMICOLON VAR_KW var_decl_list stmt                       { $$ = procedureImplNode::create_procedure_impl_node_without_params(NULL, $2, $5, $6); }
                     | PROCEDURE_KW ID DOT function_element SEMICOLON stmt                       { $$ = procedureImplNode::create_procedure_impl_node_with_params($2, $4, NULL, $6); }
                     | PROCEDURE_KW ID DOT ID SEMICOLON stmt                                     { $$ = procedureImplNode::create_procedure_impl_node_without_params($2, $4, NULL, $6); }
                     | PROCEDURE_KW ID DOT function_element SEMICOLON VAR_KW var_decl_list stmt  { $$ = procedureImplNode::create_procedure_impl_node_with_params($2, $4, $7, $8); }
