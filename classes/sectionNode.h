@@ -8,12 +8,20 @@
 
 using namespace std;
 
+enum sectionType
+{
+    var_decl_sect,
+    type_sect,
+    implementation_sect
+};
+
 /**
  * Класс секции
  */
 class sectionNode : public node
 {
 public:
+    sectionType type;
     varDeclNode *var_decl;
     typeSectNode *type_sect;
     list<implementationElementNode *> *implementation_element_list;
