@@ -184,7 +184,7 @@ false               { return FALSE_KW; }
 <STRING>[^'\n]+     { strcat(string_arr, yytext); }
 <STRING>\'\'        { strcat(string_arr, "\'"); }
 <STRING>\'          { 
-                        yylval.string_union = string_arr;
+                        yylval.string_union = (char*)malloc(strlen(string_arr) + 1);
                         return STRING;
                         BEGIN(INITIAL);
                     }
@@ -236,7 +236,7 @@ false               { return FALSE_KW; }
                                             char* id;
                                             strcpy(id, yytext);
 
-                                            yylval.string_union = id;
+                                            yylval.string_union = (char*)malloc(strlen(id) + 1);
                                             return ID;
                                         }
 

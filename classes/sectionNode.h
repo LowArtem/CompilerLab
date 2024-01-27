@@ -36,4 +36,4 @@ public:
     static list<sectionNode *> *create_section_node_list_from_section_node(sectionNode *section_node);
 
     static list<sectionNode *> *add_section_node_to_section_node_list(list<sectionNode *> *section_node_list, sectionNode *section_node);
-}
+};

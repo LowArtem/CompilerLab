@@ -3,7 +3,6 @@ project(CompilerLab)
 
 set(CMAKE_EXE_LINKER_FLAGS "-static")
 set(CMAKE_CXX_STANDARD 14)
-file(GLOB_RECURSE CFILES "${CMAKE_SOURCE_DIR}/*.c")
 file(GLOB_RECURSE CFILES "../${CMAKE_SOURCE_DIR}/*.c")
 SET_SOURCE_FILES_PROPERTIES(${CFILES} PROPERTIES LANGUAGE CXX)
 
@@ -13,7 +12,7 @@ include_directories(tree)
 
 add_executable(CompilerLab
         ../bison_new/FlexLexer.h
-        ../lex.yy.c
+        ../lex.yy.cpp
         main.cpp
         classes/accessModifierEnum.h
         classes/arrayDimensionNode.cpp
@@ -97,7 +96,7 @@ add_executable(CompilerLab
         classes/withStmtNode.cpp
         classes/withStmtNode.h
         ../grammar.tab.h
-        ../grammar.tab.c
+        ../grammar.tab.cpp
         tree/treePrinter.cpp
         tree/treePrinter.h
 )
