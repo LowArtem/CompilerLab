@@ -757,15 +757,15 @@ void treePrinter::printMethodFunctionDeclWithModifierNode(methodFunctionDeclWith
         {
             if (*it == modifier::override_modifier)
             {
-                outfile << "methodFunctionDeclWithModifier_" << node->id_node << " -> override_" << node->id_node << "_" << std::distance(node->modifier_list->begin(), it) << ";\n";
+                outfile << "methodFunctionDeclWithModifier_" << node->id_node << " -> override_" << node->id_node << "_" << distance(node->modifier_list->begin(), it) << ";\n";
             }
             if (*it == modifier::static_modifier)
             {
-                outfile << "methodFunctionDeclWithModifier_" << node->id_node << " -> static_" << node->id_node << "_" << std::distance(node->modifier_list->begin(), it) << ";\n";
+                outfile << "methodFunctionDeclWithModifier_" << node->id_node << " -> static_" << node->id_node << "_" << distance(node->modifier_list->begin(), it) << ";\n";
             }
             if (*it == modifier::overload_modifier)
             {
-                outfile << "methodFunctionDeclWithModifier_" << node->id_node << " -> overload_" << node->id_node << "_" << std::distance(node->modifier_list->begin(), it) << ";\n";
+                outfile << "methodFunctionDeclWithModifier_" << node->id_node << " -> overload_" << node->id_node << "_" << distance(node->modifier_list->begin(), it) << ";\n";
             }
         }
 
@@ -782,17 +782,17 @@ void treePrinter::printMethodProcedureDeclWithModifierNode(methodProcedureDeclWi
         {
             if (*it == modifier::override_modifier)
             {
-                outfile << "methodProcedureDeclWithModifier_" << node->id_node << " -> override_" << node->id_node << "_" << std::distance(node->modifier_list->begin(), it) << ";\n";
+                outfile << "methodProcedureDeclWithModifier_" << node->id_node << " -> override_" << node->id_node << "_" << distance(node->modifier_list->begin(), it) << ";\n";
             }
 
             if (*it == modifier::static_modifier)
             {
-                outfile << "methodProcedureDeclWithModifier_" << node->id_node << " -> static_" << node->id_node << "_" << std::distance(node->modifier_list->begin(), it) << ";\n";
+                outfile << "methodProcedureDeclWithModifier_" << node->id_node << " -> static_" << node->id_node << "_" << distance(node->modifier_list->begin(), it) << ";\n";
             }
 
             if (*it == modifier::overload_modifier)
             {
-                outfile << "methodProcedureDeclWithModifier_" << node->id_node << " -> overload_" << node->id_node << "_" << std::distance(node->modifier_list->begin(), it) << ";\n";
+                outfile << "methodProcedureDeclWithModifier_" << node->id_node << " -> overload_" << node->id_node << "_" << distance(node->modifier_list->begin(), it) << ";\n";
             }
         }
 
@@ -1023,17 +1023,17 @@ void treePrinter::printFieldDeclNode(fieldDeclNode *node)
             {
                 if (*it == modifier::override_modifier)
                 {
-                    outfile << "fieldDecl_" << node->id_node << " -> override_" << node->id_node << "_" << std::distance(node->field_modifier_list->begin(), it) << ";\n";
+                    outfile << "fieldDecl_" << node->id_node << " -> override_" << node->id_node << "_" << distance(node->field_modifier_list->begin(), it) << ";\n";
                 }
 
                 if (*it == modifier::static_modifier)
                 {
-                    outfile << "fieldDecl_" << node->id_node << " -> static_" << node->id_node << "_" << std::distance(node->field_modifier_list->begin(), it) << ";\n";
+                    outfile << "fieldDecl_" << node->id_node << " -> static_" << node->id_node << "_" << distance(node->field_modifier_list->begin(), it) << ";\n";
                 }
 
                 if (*it == modifier::overload_modifier)
                 {
-                    outfile << "fieldDecl_" << node->id_node << " -> overload_" << node->id_node << "_" << std::distance(node->field_modifier_list->begin(), it) << ";\n";
+                    outfile << "fieldDecl_" << node->id_node << " -> overload_" << node->id_node << "_" << distance(node->field_modifier_list->begin(), it) << ";\n";
                 }
             }
     }
