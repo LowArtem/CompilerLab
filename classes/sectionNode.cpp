@@ -7,6 +7,7 @@ sectionNode::sectionNode()
 sectionNode *sectionNode::create_section_node_from_var_decl(varDeclNode *var_decl)
 {
     sectionNode *res = new sectionNode();
+    res->type = sectionType::var_decl_sect;
     res->var_decl = var_decl;
     return res;
 }
@@ -14,6 +15,7 @@ sectionNode *sectionNode::create_section_node_from_var_decl(varDeclNode *var_dec
 sectionNode *sectionNode::create_section_node_from_type_sect(typeSectNode *type_sect)
 {
     sectionNode *res = new sectionNode();
+    res->type = sectionType::type_sect;
     res->type_sect = type_sect;
     return res;
 }
@@ -21,6 +23,7 @@ sectionNode *sectionNode::create_section_node_from_type_sect(typeSectNode *type_
 sectionNode *sectionNode::create_section_node_from_implementation_sect(list<implementationElementNode *> *implementation_element_list)
 {
     sectionNode *res = new sectionNode();
+    res->type = sectionType::implementation_sect;
     res->implementation_element_list = implementation_element_list;
     return res;
 }
