@@ -70,17 +70,128 @@ void treePrinter::printConstructorDeclNode(constructorDeclNode *node);
 
 void treePrinter::printConstructorDeclWithModifierNoNode(constructorDeclWithModifierNoNode *node);
 
-void treePrinter::printConstructorImplNode(constructorImplNode *node);
+void treePrinter::printConstructorImplNode(constructorImplNode *node)
+{
+    if (node != nullptr)
+    {
+        outfile << "constructorImpl_" << node->id_node << " -> " << node->id << ";\n";
+        outfile << "constructorImpl_" << node->id_node << " -> parent_" << node->id_node << ";\n";
+        outfile << "parent_" << node->id_node << " -> " << node->parent_id << ";\n";
+        outfile << "constructorImpl_" << node->id_node << " -> functionElement_" << node->function_element->id_node << ";\n";
+        outfile << "constructorImpl_" << node->id_node << " -> stmt_" << node->stmt_node->id_node << ";\n";
+        if (node->has_override)
+        {
+            outfile << "constructorImpl_" << node->id_node << " -> override_" << node->id_node << ";\n";
+        }
+    }
+}
 
-void treePrinter::printDestructorDeclNode(destructorDeclNode *node);
+void treePrinter::printDestructorDeclNode(destructorDeclNode *node)
+{
+    if (node != nullptr)
+    {
+        outfile << "destructorDecl_" << node->id_node << " -> " << node->id << ";\n";
+        if (node->has_override)
+        {
+            outfile << "destructorDecl_" << node->id_node << " -> override_" << node->id_node << ";\n";
+        }
+    }
+}
 
-void treePrinter::printDestructorImplNode(destructorImplNode *node);
+void treePrinter::printDestructorImplNode(destructorImplNode *node)
+{
+    if (node != nullptr)
+    {
+        outfile << "destructorImpl_" << node->id_node << " -> " << node->id << ";\n";
+        outfile << "destructorImpl_" << node->id_node << " -> parent_" << node->id_node << ";\n";
+        outfile << "parent_" << node->id_node << " -> " << node->parent_id << ";\n";
+        outfile << "destructorImpl_" << node->id_node << " -> stmt_" << node->stmt_node->id_node << ";\n";
+        if (node->has_override)
+        {
+            outfile << "destructorImpl_" << node->id_node << " -> override_" << node->id_node << ";\n";
+        }
 
-void treePrinter::printMethodDeclNode(methodDeclNode *node);
+        printStmtNode(node->stmt_node);
+    }
+}
 
-void treePrinter::printMethodFieldPropertyNode(methodFieldPropertyNode *node);
+void treePrinter::printMethodDeclNode(methodDeclNode *node)
+{
+    if (node != nullptr)
+    {
+        if (node->method_function_decl_with_modifier_node != nullptr)
+        {
+            outfile << "methodDecl_" << node->id_node << " -> methodFunctionDeclWithModifier_" << node->method_function_decl_with_modifier_node->id_node << ";\n";
+            printMethodFunctionDeclWithModifierNode(node->method_function_decl_with_modifier_node);
+        }
+        else if (node->method_procedure_decl_with_modifier_node != nullptr)
+        {
+            outfile << "methodDecl_" << node->id_node << " -> methodProcedureDeclWithModifier_" << node->method_procedure_decl_with_modifier_node->id_node << ";\n";
+            printMethodProcedureDeclWithModifierNode(node->method_procedure_decl_with_modifier_node);
+        }
+    }
+}
 
-void treePrinter::printClassElementNode(classElementNode *node);
+void treePrinter::printMethodFieldPropertyNode(methodFieldPropertyNode *node)
+{
+    if (node != nullptr)
+    {
+        if (node->method_decl_node != nullptr)
+        {
+            outfile << "methodFieldProperty_" << node->id_node << " -> methodDecl_" << node->method_decl_node->id_node << ";\n";
+            printMethodDeclNode(node->method_decl_node);
+        }
+        else if (node->property_decl_node != nullptr)
+        {
+            outfile << "methodFieldProperty_" << node->id_node << " -> propertyDecl_" << node->property_decl_node->id_node << ";\n";
+            printPropertyDeclNode(node->property_decl_node);
+        }
+        else if (node->field_decl_node != nullptr)
+        {
+            outfile << "methodFieldProperty_" << node->id_node << " -> fieldDecl_" << node->field_decl_node->id_node << ";\n";
+            printFieldDeclNode(node->field_decl_node);
+        }
+        else if (node->constructor_decl_with_modifier_no_node != nullptr)
+        {
+            outfile << "methodFieldProperty_" << node->id_node << " -> constructorDeclWithModifierNo_" << node->constructor_decl_with_modifier_no_node->id_node << ";\n";
+            printConstructorDeclWithModifierNoNode(node->constructor_decl_with_modifier_no_node);
+        }
+        else if (node->destructor_decl_node != nullptr)
+        {
+            outfile << "methodFieldProperty_" << node->id_node << " -> destructorDecl_" << node->destructor_decl_node->id_node << ";\n";
+            printDestructorDeclNode(node->destructor_decl_node);
+        }
+    }
+}
+
+void treePrinter::printClassElementNode(classElementNode *node)
+{
+
+    if (node != nullptr)
+    {
+        for (auto it = node->method_field_property_node_list->begin(); it != node->method_field_property_node_list->end(); it++)
+        {
+            outfile << "classElement_" << node->id_node << " -> methodFieldProperty_" << (*it)->id_node << ";\n";
+            printMethodFieldPropertyNode(*it);
+        }
+
+        if (node->access_modifier_enum != nullptr)
+        {
+            if (node->access_modifier_enum == accessModifier::public_access_modifier)
+            {
+                outfile << "classElement_" << node->id_node << " -> public_" << node->id_node << ";\n";
+            }
+            else if (node->access_modifier_enum == accessModifier::private_access_modifier)
+            {
+                outfile << "classElement_" << node->id_node << " -> private_" << node->id_node << ";\n";
+            }
+            else if (node->access_modifier_enum == accessModifier::protected_access_modifier)
+            {
+                outfile << "classElement_" << node->id_node << " -> protected_" << node->id_node << ";\n";
+            }
+        }
+    }
+}
 
 void treePrinter::printSectionNode(sectionNode *node)
 {
@@ -149,17 +260,17 @@ void treePrinter::printFieldDeclNode(fieldDeclNode *node)
             {
                 if (*it == modifier::override_modifier)
                 {
-                    outfile << "fieldDecl_" << node->id_node << " -> override_modifier" << node->id_node << "_" << it - node->field_modifier_list->begin() << ";\n";
+                    outfile << "fieldDecl_" << node->id_node << " -> override_" << node->id_node << "_" << it - node->field_modifier_list->begin() << ";\n";
                 }
 
                 if (*it == modifier::static_modifier)
                 {
-                    outfile << "fieldDecl_" << node->id_node << " -> static_modifier" << node->id_node << "_" << it - node->field_modifier_list->begin() << ";\n";
+                    outfile << "fieldDecl_" << node->id_node << " -> static_" << node->id_node << "_" << it - node->field_modifier_list->begin() << ";\n";
                 }
 
                 if (*it == modifier::overload_modifier)
                 {
-                    outfile << "fieldDecl_" << node->id_node << " -> overload_modifier" << node->id_node << "_" << it - node->field_modifier_list->begin() << ";\n";
+                    outfile << "fieldDecl_" << node->id_node << " -> overload_" << node->id_node << "_" << it - node->field_modifier_list->begin() << ";\n";
                 }
             }
     }
