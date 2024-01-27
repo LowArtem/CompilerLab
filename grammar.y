@@ -34,6 +34,7 @@
     #include "classes/methodFieldPropertyListNode.h"
     #include "classes/accessModifierEnum.h"
     #include "classes/classElementNode.h"
+    #include "classes/startSymbolNode.h"
     #pragma once
 
     using namespace std;
@@ -97,6 +98,7 @@
     list<methodFieldPropertyListNode*>* method_field_property_list_list_union;
     classElementNode* class_element_union;
     list<classElementNode*>* class_element_list_union;
+    startSymbolNode* start_symbol_union;
 }
 
 %type <simple_type_union> simple_type
@@ -146,6 +148,7 @@
 %type <method_field_property_list_list_union> method_field_property_list
 %type <class_element_union> class_element
 %type <class_element_list_union> class_element_list
+%type <start_symbol_union> start_symbol
 
 %start start_symbol
 
@@ -255,8 +258,8 @@ section:        var_decl_sect
 sect_list:      section
                 | sect_list SEMICOLON section
 
-start_symbol:   PROGRAM_KW ID SEMICOLON stmt_block DOT
-                | PROGRAM_KW ID SEMICOLON sect_list SEMICOLON stmt_block DOT
+start_symbol:   PROGRAM_KW ID SEMICOLON stmt_block DOT                          { $$ = startSymbolNode::create_start_symbol_node($2, $4, NULL); }
+                | PROGRAM_KW ID SEMICOLON sect_list SEMICOLON stmt_block DOT    { $$ = startSymbolNode::create_start_symbol_node($2, $6, $4); }
 
 simple_type:    INTEGER_KW          { $$ = simpleType::int_type; }
                 | REAL_KW           { $$ = simpleType::real_type; }
