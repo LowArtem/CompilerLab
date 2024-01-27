@@ -82,23 +82,134 @@ void treePrinter::printMethodFieldPropertyNode(methodFieldPropertyNode *node);
 
 void treePrinter::printClassElementNode(classElementNode *node);
 
-void treePrinter::printSectionNode(sectionNode *node);
-
-void treePrinter::printEnumDeclNode(enumDeclNode *node);
-
-void treePrinter::printEnumParamNode(enumParamNode *node);
-
-void treePrinter::printFieldDeclNode(fieldDeclNode *node);
-
-void treePrinter::printImplementationElementNode(implementationElementNode *node);
-
-void treePrinter::printTypeSectNode(typeSectNode *node);
-
-void treePrinter::printStartSymbolNode(startSymbolNode *node)
+void treePrinter::printSectionNode(sectionNode *node)
 {
     if (node != nullptr)
     {
-        outfile << "startSymbol [shape=Mdiamond];\n";
+        if (node->type == sectionType::var_decl_sect)
+        {
+            outfile << "section_" << node->id_node << " -> varDecl_" << node->var_decl->id_node << ";\n";
+            printVarDeclNode(node->var_decl);
+        }
+        else if (node->type == sectionType::type_sect)
+        {
+            outfile << "section_" << node->id_node << " -> typeSect_" << node->type_sect->id_node << ";\n";
+            printTypeSectNode(node->type_sect);
+        }
+        else if (node->type == sectionType::implementation_sect)
+        {
+            for (auto it = node->implementation_element_list->begin(); it != node->implementation_element_list->end(); it++)
+            {
+                outfile << "section_" << node->id_node << " -> implementationElement_" << (*it)->id_node << ";\n";
+                printImplementationElementNode(*it);
+            }
+        }
+    }
+}
+
+void treePrinter::printEnumDeclNode(enumDeclNode *node)
+{
+    if (node != nullptr)
+    {
+        outfile << "enumDecl_" << node->id_node << " -> " << node->id << ";\n";
+
+        for (auto it = node->enum_param_list->begin(); it != node->enum_param_list->end(); it++)
+        {
+            outfile << "enumDecl_" << node->id_node << " -> enumParam_" << (*it)->id_node << ";\n";
+            printEnumParamNode(*it);
+        }
+    }
+}
+
+void treePrinter::printEnumParamNode(enumParamNode *node)
+{
+    if (node != nullptr)
+    {
+        outfile << "enumParam_" << node->id_node << " -> " << node->id << ";\n";
+
+        if (node->expr_node != nullptr)
+        {
+            outfile << "enumParam_" << node->id_node << " -> expr_" << node->expr_node->id_node << ";\n";
+            printExprNode(node->expr_node);
+        }
+    }
+}
+
+void treePrinter::printFieldDeclNode(fieldDeclNode *node)
+{
+    if (node != nullptr)
+    {
+        if (node->var_decl_node != nullptr)
+        {
+            outfile << "fieldDecl_" << node->id_node << " -> varDecl_" << node->var_decl_node->id_node << ";\n";
+            printVarDeclNode(node->var_decl_node);
+        }
+        if (node->field_modifier_list != nullptr)
+            for (auto it = node->field_modifier_list->begin(); it != node->field_modifier_list->end(); it++)
+            {
+                if (*it == modifier::override_modifier)
+                {
+                    outfile << "fieldDecl_" << node->id_node << " -> override_modifier" << node->id_node << "_" << it - node->field_modifier_list->begin() << ";\n";
+                }
+
+                if (*it == modifier::static_modifier)
+                {
+                    outfile << "fieldDecl_" << node->id_node << " -> static_modifier" << node->id_node << "_" << it - node->field_modifier_list->begin() << ";\n";
+                }
+
+                if (*it == modifier::overload_modifier)
+                {
+                    outfile << "fieldDecl_" << node->id_node << " -> overload_modifier" << node->id_node << "_" << it - node->field_modifier_list->begin() << ";\n";
+                }
+            }
+    }
+}
+
+void treePrinter::printImplementationElementNode(implementationElementNode *node)
+{
+    if (node != nullptr)
+    {
+        if (node->type == implementationElementType::constructor_impl_type && node->constructor_impl_node != nullptr)
+        {
+            outfile << "implementationElement_" << node->id_node << " -> constructorImpl_" << node->constructor_impl_node->id_node << ";\n";
+            printConstructorImplNode(node->constructor_impl_node);
+        }
+        else if (node->type == implementationElementType::destructor_impl_type && node->destructor_impl_node != nullptr)
+        {
+            outfile << "implementationElement_" << node->id_node << " -> destructorImpl_" << node->destructor_impl_node->id_node << ";\n";
+            printDestructorImplNode(node->destructor_impl_node);
+        }
+        else if (node->type == implementationElementType::procedure_impl_type && node->procedure_impl_node != nullptr)
+        {
+            outfile << "implementationElement_" << node->id_node << " -> procedureImpl_" << node->procedure_impl_node->id_node << ";\n";
+            printProcedureImplNode(node->procedure_impl_node);
+        }
+        else if (node->type == implementationElementType::function_impl_type && node->function_impl_node != nullptr)
+        {
+            outfile << "implementationElement_" << node->id_node << " -> functionImpl_" << node->function_impl_node->id_node << ";\n";
+            printFunctionImplNode(node->function_impl_node);
+        }
+    }
+}
+
+void treePrinter::printTypeSectNode(typeSectNode *node)
+{
+    if (node != nullptr)
+    {
+        if (node->type == typeSectType::class_decl_type && node->class_decl_node_list != nullptr)
+            for (auto it = node->class_decl_node_list->begin(); it != node->class_decl_node_list->end(); it++)
+            {
+                outfile << "typeSect_" << node->id_node << " -> classDecl_" << (*it)->id_node << ";\n";
+                printClassDeclNode(*it);
+            }
+        else if (node->type == typeSectType::enum_decl_type && node->enum_decl_node_list != nullptr)
+            for (auto it = node->enum_decl_node_list->begin(); it != node->enum_decl_node_list->end(); it++)
+            {
+                outfile << "typeSect_" << node->id_node << " -> enumDecl_" << (*it)->id_node << ";\n";
+                printEnumDeclNode(*it);
+            }
+    }
+}
 
 void treePrinter::printStartSymbolNode(startSymbolNode *node)
 {
