@@ -34,6 +34,7 @@
     #include "classes/methodFieldPropertyListNode.h"
     #include "classes/accessModifierEnum.h"
     #include "classes/classElementNode.h"
+    #include "classes/sectionNode.h"
     #pragma once
 
     using namespace std;
@@ -97,6 +98,8 @@
     list<methodFieldPropertyListNode*>* method_field_property_list_list_union;
     classElementNode* class_element_union;
     list<classElementNode*>* class_element_list_union;
+    sectionNode* section_union;
+    list<sectionNode*>* section_list_union;
 }
 
 %type <simple_type_union> simple_type
@@ -146,6 +149,8 @@
 %type <method_field_property_list_list_union> method_field_property_list
 %type <class_element_union> class_element
 %type <class_element_list_union> class_element_list
+%type <section_union> section
+%type <section_list_union> sect_list
 
 %start start_symbol
 
@@ -248,12 +253,12 @@
 
 %%
 
-section:        var_decl_sect
-                | type_sect
-                | implementation_sect
+section:        var_decl_sect           { $$ = create_section_node_from_var_decl($1); }
+                | type_sect             { $$ = create_section_node_from_type_sect($1); }
+                | implementation_sect   { $$ = create_section_node_from_implementation_sect($1); }
 
-sect_list:      section
-                | sect_list SEMICOLON section
+sect_list:      section                         { $$ = create_section_node_list_from_section_node($1); }
+                | sect_list SEMICOLON section   { $$ = add_section_node_to_section_node_list($1, $3); }
 
 start_symbol:   PROGRAM_KW ID SEMICOLON stmt_block DOT
                 | PROGRAM_KW ID SEMICOLON sect_list SEMICOLON stmt_block DOT
