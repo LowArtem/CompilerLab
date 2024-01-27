@@ -4,7 +4,7 @@ repeatStmtNode::repeatStmtNode()
 {
 }
 
-repeatStmtNode *repeatStmtNode::create_repeat_stmt_node(stmtNode *body, exprNode *condition)
+repeatStmtNode *repeatStmtNode::create_repeat_stmt_node(list<stmtNode *> *body, exprNode *condition)
 {
     repeatStmtNode *res = new repeatStmtNode();
     res->body = body;
