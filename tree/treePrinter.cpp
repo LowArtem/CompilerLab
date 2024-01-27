@@ -100,6 +100,10 @@ void treePrinter::printStartSymbolNode(startSymbolNode *node)
     {
         outfile << "startSymbol [shape=Mdiamond];\n";
 
+void treePrinter::printStartSymbolNode(startSymbolNode *node)
+{
+    if (node != nullptr)
+    {
         if (node->id != "")
             outfile << "startSymbol -> " << node->id << ";\n";
         if (node->stmt_block != nullptr)
@@ -110,10 +114,10 @@ void treePrinter::printStartSymbolNode(startSymbolNode *node)
         if (node->section_node_list != nullptr)
             for (auto it = node->section_node_list->begin(); it != node->section_node_list->end(); it++)
             {
-                outfile << "startSymbol -> sectionNodeList_" << (*it)->id_node << ";\n";
+                outfile << "startSymbol -> section_" << (*it)->id_node << ";\n";
                 printSectionNode(*it);
             }
         else
-            outfile << "startSymbol;\n";
+            outfile << "startSymbol [shape=Mdiamond];\n";
     }
 }
