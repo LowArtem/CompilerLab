@@ -1,5 +1,4 @@
 #include "treePrinter.h"
-#include <fstream>
 
 using namespace std;
 
@@ -9,7 +8,7 @@ treePrinter::treePrinter()
 
 void treePrinter::printTree(startSymbolNode *root)
 {
-    std::ofstream outfile("tree.dot");
+    outfile = ofstream("tree.dot");
     outfile << "digraph Tree {\n";
 
     printStartSymbolNode(root);
@@ -175,7 +174,10 @@ void treePrinter::printClassElementNode(classElementNode *node)
             printMethodFieldPropertyNode(*it);
         }
 
-        if (node->access_modifier_enum != nullptr)
+        if (
+            node->access_modifier_enum == accessModifier::public_access_modifier ||
+            node->access_modifier_enum == accessModifier::private_access_modifier ||
+            node->access_modifier_enum == accessModifier::protected_access_modifier)
         {
             if (node->access_modifier_enum == accessModifier::public_access_modifier)
             {
@@ -224,7 +226,7 @@ void treePrinter::printEnumDeclNode(enumDeclNode *node)
     {
         outfile << "enumDecl_" << node->id_node << " -> " << node->id << ";\n";
 
-        for (auto it = node->enum_param_list->begin(); it != node->enum_param_list->end(); it++)
+        for (auto it = node->param_list->begin(); it != node->param_list->end(); it++)
         {
             outfile << "enumDecl_" << node->id_node << " -> enumParam_" << (*it)->id_node << ";\n";
             printEnumParamNode(*it);
@@ -238,10 +240,10 @@ void treePrinter::printEnumParamNode(enumParamNode *node)
     {
         outfile << "enumParam_" << node->id_node << " -> " << node->id << ";\n";
 
-        if (node->expr_node != nullptr)
+        if (node->value != nullptr)
         {
-            outfile << "enumParam_" << node->id_node << " -> expr_" << node->expr_node->id_node << ";\n";
-            printExprNode(node->expr_node);
+            outfile << "enumParam_" << node->id_node << " -> expr_" << node->value->id_node << ";\n";
+            printExprNode(node->value);
         }
     }
 }
@@ -260,17 +262,17 @@ void treePrinter::printFieldDeclNode(fieldDeclNode *node)
             {
                 if (*it == modifier::override_modifier)
                 {
-                    outfile << "fieldDecl_" << node->id_node << " -> override_" << node->id_node << "_" << it - node->field_modifier_list->begin() << ";\n";
+                    outfile << "fieldDecl_" << node->id_node << " -> override_" << node->id_node << "_" << std::distance(node->field_modifier_list->begin(), it) << ";\n";
                 }
 
                 if (*it == modifier::static_modifier)
                 {
-                    outfile << "fieldDecl_" << node->id_node << " -> static_" << node->id_node << "_" << it - node->field_modifier_list->begin() << ";\n";
+                    outfile << "fieldDecl_" << node->id_node << " -> static_" << node->id_node << "_" << std::distance(node->field_modifier_list->begin(), it) << ";\n";
                 }
 
                 if (*it == modifier::overload_modifier)
                 {
-                    outfile << "fieldDecl_" << node->id_node << " -> overload_" << node->id_node << "_" << it - node->field_modifier_list->begin() << ";\n";
+                    outfile << "fieldDecl_" << node->id_node << " -> overload_" << node->id_node << "_" << std::distance(node->field_modifier_list->begin(), it) << ";\n";
                 }
             }
     }

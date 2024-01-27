@@ -43,11 +43,15 @@
 #include "classes/simpleTypeEnum.h"
 #include "classes/typeSectNode.h"
 #include "classes/startSymbolNode.h"
+#include <fstream>
 
 using namespace std;
 
 class treePrinter
 {
+private:
+    ofstream outfile;
+
 public:
     startSymbolNode *root = nullptr;
 
@@ -132,4 +136,4 @@ public:
     void printTypeSectNode(typeSectNode *node);
 
     void printStartSymbolNode(startSymbolNode *node);
-}
+};
