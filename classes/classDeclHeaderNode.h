@@ -13,4 +13,4 @@ public:
     classDeclHeaderNode();
 
     static classDeclHeaderNode *create_class_decl_header_node(std::string parentId, std::string id);
-}
+};
