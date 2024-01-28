@@ -463,8 +463,11 @@ void treePrinter::printCaseElementNode(caseElementNode *node)
 {
     if (node != nullptr)
     {
-        outfile << "caseElement_" << node->id_node << " -> expr_" << node->condition->id_node << ";\n";
-        printExprNode(node->condition);
+        for (auto it = node->condition->begin(); it != node->condition->end(); it++)
+        {
+            outfile << "caseElement_" << node->id_node << " -> expr_" << (*it)->id_node << ";\n";
+            printExprNode(*it);
+        }
         outfile << "caseElement_" << node->id_node << " -> stmt_" << node->body->id_node << ";\n";
         printStmtNode(node->body);
     }
@@ -962,8 +965,11 @@ void treePrinter::printSectionNode(sectionNode *node)
     {
         if (node->type == sectionType::var_decl_sect)
         {
-            outfile << "section_" << node->id_node << " -> varDecl_" << node->var_decl_list->id_node << ";\n";
-            printVarDeclNode(node->var_decl_list);
+            for (auto it = node->var_decl_list->begin(); it != node->var_decl_list->end(); it++)
+            {
+                outfile << "section_" << node->id_node << " -> varDecl_" << (*it)->id_node << ";\n";
+                printVarDeclNode(*it);
+            }
         }
         else if (node->type == sectionType::type_sect)
         {
