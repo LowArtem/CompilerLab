@@ -100,4 +100,5 @@ add_executable(CompilerLab
         tree/treePrinter.cpp
         tree/treePrinter.h
         classes/typeNode.cpp
+        classes/node.cpp
 )

@@ -54,6 +54,8 @@
     #pragma once
 
     using namespace std;
+
+    extern startSymbolNode* root;
  }
 
 %union {
@@ -278,8 +280,14 @@ section:        var_decl_sect           { $$ = sectionNode::create_section_node_
 sect_list:      section                         { $$ = sectionNode::create_section_node_list_from_section_node($1); }
                 | sect_list SEMICOLON section   { $$ = sectionNode::add_section_node_to_section_node_list($1, $3); }
 
-start_symbol:   PROGRAM_KW ID SEMICOLON stmt_block DOT                          { $$ = startSymbolNode::create_start_symbol_node($2, $4, NULL); }
-                | PROGRAM_KW ID SEMICOLON sect_list SEMICOLON stmt_block DOT    { $$ = startSymbolNode::create_start_symbol_node($2, $6, $4); }
+start_symbol:   PROGRAM_KW ID SEMICOLON stmt_block DOT                          {
+                                                                                    root = startSymbolNode::create_start_symbol_node($2, $4, NULL);
+                                                                                    $$ =  root;
+                                                                                }
+                | PROGRAM_KW ID SEMICOLON sect_list SEMICOLON stmt_block DOT    {
+                                                                                    root = startSymbolNode::create_start_symbol_node($2, $6, $4);
+                                                                                    $$ = root;
+                                                                                }
 
 simple_type:    INTEGER_KW          { $$ = simpleType::int_type_simple; }
                 | REAL_KW           { $$ = simpleType::real_type_simple; }

@@ -47,13 +47,13 @@
 
 using namespace std;
 
+
 class treePrinter
 {
 private:
     ofstream outfile;
 
 public:
-    startSymbolNode *root = nullptr;
 
     treePrinter();
 

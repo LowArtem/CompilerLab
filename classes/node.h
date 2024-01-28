@@ -17,11 +17,3 @@ public:
     node();
 };
 
-/**
- * Конструктор (устанавливает уникальный идентификатор узла)
- * @return void
- */
-inline node::node()
-{
-    id_node = ++node::max_id;
-}
