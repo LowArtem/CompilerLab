@@ -962,8 +962,8 @@ void treePrinter::printSectionNode(sectionNode *node)
     {
         if (node->type == sectionType::var_decl_sect)
         {
-            outfile << "section_" << node->id_node << " -> varDecl_" << node->var_decl->id_node << ";\n";
-            printVarDeclNode(node->var_decl);
+            outfile << "section_" << node->id_node << " -> varDecl_" << node->var_decl_list->id_node << ";\n";
+            printVarDeclNode(node->var_decl_list);
         }
         else if (node->type == sectionType::type_sect)
         {

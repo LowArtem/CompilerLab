@@ -1,5 +1,5 @@
 %{
-    #include "../grammar.tab.h"
+    #include "../grammar.tab.hpp"
 
     extern int yylex(void);
 %}
@@ -82,11 +82,12 @@
     list<caseElementNode*>* case_element_list_union;
     stmtBlockNode* stmt_block_union;
     varDeclNode* var_decl_union;
+    list<varDeclNode*>* var_decl_list_union;
     list<enumParamNode*>* enum_param_list_union;
     enumDeclNode* enum_decl_union;
     list<enumDeclNode*>* enum_decl_list_union;
     typeSectNode* type_sect_union;
-    paramListNode* param_list_union;
+    list<paramListNode*>* param_list_union;
     functionElementNode* function_element_union;
     procedureImplNode* procedure_impl_union;
     functionImplNode* function_impl_union;
@@ -133,7 +134,8 @@
 %type <while_stmt_union> while_stmt
 %type <for_stmt_union> for_stmt
 %type <with_stmt_union> with_stmt
-%type <var_decl_union> var_decl var_decl_list var_decl_sect
+%type <var_decl_union> var_decl
+%type <var_decl_list_union> var_decl_list var_decl_sect
 %type <enum_param_list_union> enum_param_list
 %type <enum_decl_union> enum_decl
 %type <enum_decl_list_union> enum_decl_list
@@ -268,12 +270,12 @@
 
 %%
 
-section:        var_decl_sect           { $$ = create_section_node_from_var_decl($1); }
-                | type_sect             { $$ = create_section_node_from_type_sect($1); }
-                | implementation_sect   { $$ = create_section_node_from_implementation_sect($1); }
+section:        var_decl_sect           { $$ = sectionNode::create_section_node_from_var_decl($1); }
+                | type_sect             { $$ = sectionNode::create_section_node_from_type_sect($1); }
+                | implementation_sect   { $$ = sectionNode::create_section_node_from_implementation_sect($1); }
 
-sect_list:      section                         { $$ = create_section_node_list_from_section_node($1); }
-                | sect_list SEMICOLON section   { $$ = add_section_node_to_section_node_list($1, $3); }
+sect_list:      section                         { $$ = sectionNode::create_section_node_list_from_section_node($1); }
+                | sect_list SEMICOLON section   { $$ = sectionNode::add_section_node_to_section_node_list($1, $3); }
 
 start_symbol:   PROGRAM_KW ID SEMICOLON stmt_block DOT                          { $$ = startSymbolNode::create_start_symbol_node($2, $4, NULL); }
                 | PROGRAM_KW ID SEMICOLON sect_list SEMICOLON stmt_block DOT    { $$ = startSymbolNode::create_start_symbol_node($2, $6, $4); }
@@ -286,8 +288,8 @@ simple_type:    INTEGER_KW          { $$ = simpleType::int_type_simple; }
 
 literal:        INTEGER             { $$ = literalNode::create_literal_node_from_int($1); }
                 | REAL              { $$ = literalNode::create_literal_node_from_real($1); }
-                | TRUE_KW           { $$ = literalNode::create_literal_node_from_bool(true); }
-                | FALSE_KW          { $$ = literalNode::create_literal_node_from_bool(false); }
+                | TRUE_KW           { $$ = literalNode::create_literal_node_from_boolean(true); }
+                | FALSE_KW          { $$ = literalNode::create_literal_node_from_boolean(false); }
                 | CHAR              { $$ = literalNode::create_literal_node_from_char($1); }
 
 array_dimension:    literal DOUBLE_DOT literal  { $$ = arrayDimensionNode::create_array_dimension_node($1, $3); }
@@ -330,7 +332,7 @@ expr:           literal                       { $$ = exprNode::create_expr_node_
                 | ID OPEN_BRACKET expr_list_E CLOSE_BRACKET               { $$ = exprNode::create_expr_node_from_function_call($1, $3); }
                 | expr DOT ID OPEN_BRACKET expr_list_E CLOSE_BRACKET      { $$ = exprNode::create_expr_node_from_method_function_call($1, $3, $5); }
                 | expr DOT ID                                             { $$ = exprNode::create_expr_node_from_field_access($1, $3); }
-                | simple_type OPEN_BRACKET expr CLOSE_BRACKET             { $$ = exprNode::create_expr_from_type_casting($1, $3); }
+                | simple_type OPEN_BRACKET expr CLOSE_BRACKET             { $$ = exprNode::create_expr_node_from_type_casting($1, $3); }
                 | SELF_KW                                                 { $$ = exprNode::create_expr_node_from_self(); }
                 | INHERITED_KW ID OPEN_BRACKET expr_list_E CLOSE_BRACKET  { $$ = exprNode::create_expr_node_from_inherited_call($2, $4); }               
                 | expr OPEN_SQUARE_BRACKET expr_list CLOSE_SQUARE_BRACKET { $$ = exprNode::create_expr_node_from_array_access($1, $3); }
@@ -347,7 +349,7 @@ expr_list_E:    expr_list                   { $$ = $1; }
 
 stmt:           expr ASSIGNMENT expr                            { $$ = stmtNode::create_stmt_node_from_assignment($1, $3); }
                 | ID OPEN_BRACKET expr_list_E CLOSE_BRACKET     { $$ = stmtNode::create_stmt_node_from_function_call($1, $3); }
-                | INHERITED_KW                                  { $$ = stmtNode::create_stmt_node_from_inherited(); }
+                | INHERITED_KW                                  { $$ = stmtNode::create_stmt_node_from_inherited_call(); }
                 | stmt_block                                    { $$ = stmtNode::create_stmt_node_from_stmt_block($1); }
                 | if_stmt                                       { $$ = stmtNode::create_stmt_node_from_if_stmt($1); }
                 | case_stmt                                     { $$ = stmtNode::create_stmt_node_from_case_stmt($1); }
@@ -377,7 +379,7 @@ var_decl:       id_list COLON type SEMICOLON                  { $$ = varDeclNode
 var_decl_list:  var_decl                                      { $$ = varDeclNode::create_var_decl_node_list_from_var_decl_node($1); }
                 | var_decl_list var_decl                      { $$ = varDeclNode::add_var_decl_node_to_var_decl_node_list($1, $2); }
 
-var_decl_sect:  VAR_KW var_decl_list                          { $$ = $2 }
+var_decl_sect:  VAR_KW var_decl_list                          { $$ = $2; }
 
 param_list:     var_decl_list SEMICOLON                       { $$ = paramListNode::create_param_list_node_list($1, paramListNodeTypeEnum::general_param); }
                 | var_decl_sect SEMICOLON                     { $$ = paramListNode::create_param_list_node_list($1, paramListNodeTypeEnum::reference_param); }
@@ -391,7 +393,7 @@ param_list:     var_decl_list SEMICOLON                       { $$ = paramListNo
 param_list_E:   param_list                                    { $$ = $1; }
               | /*empty*/                                     { $$ = paramListNode::create_param_list_node_list(NULL, paramListNodeTypeEnum::general_param); }
 
-function_element:   ID OPEN_BRACKET param_list_E CLOSE_BRACKET    { $$ = functionElementNode::create_function_element_node($1, $3); }
+function_element:   ID OPEN_BRACKET param_list_E CLOSE_BRACKET    { $$ = functionElementNode::create_function_element($1, $3); }
 
 procedure_impl:     PROCEDURE_KW function_element SEMICOLON stmt                                { $$ = procedureImplNode::create_procedure_impl_node_with_params(NULL, $2, NULL, $4); }
                     | PROCEDURE_KW ID SEMICOLON stmt                                            { $$ = procedureImplNode::create_procedure_impl_node_without_params(NULL, $2, NULL, $4); }
@@ -421,12 +423,18 @@ case_list:      expr_list COLON stmt SEMICOLON                          { $$ = c
 case_stmt:      CASE_KW expr OF_KW case_list END_KW                     { $$ = caseStmtNode::create_case_node($2, $4, NULL); }
                 | CASE_KW expr OF_KW case_list ELSE_KW stmt END_KW      { $$ = caseStmtNode::create_case_node($2, $4, $6); }
 
-repeat_stmt:    REPEAT_KW stmt_list UNTIL_KW expr       { $$ = repeatStmtNode::create_repeat_stmt_node($4, $2); }
+repeat_stmt:    REPEAT_KW stmt_list UNTIL_KW expr       { $$ = repeatStmtNode::create_repeat_stmt_node($2, $4); }
 
 while_stmt:     WHILE_KW expr DO_KW stmt                { $$ = whileStmtNode::create_while_stmt_node($4, $2); }
 
-for_stmt:       FOR_KW ID ASSIGNMENT expr TO_KW expr DO_KW stmt         { $$ = forStmtNode::create_for_stmt_node($2, $4, $6, $8, false); }
-                | FOR_KW ID ASSIGNMENT expr DOWNTO_KW expr DO_KW stmt   { $$ = forStmtNode::create_for_stmt_node($2, $4, $6, $8, true); }
+for_stmt:       FOR_KW ID ASSIGNMENT expr TO_KW expr DO_KW stmt         {
+                                                                            exprNode* exprN = exprNode::create_expr_node_from_id($2);
+                                                                            $$ = forStmtNode::create_for_stmt_node(exprN, $4, $6, $8, false);
+                                                                        }
+                | FOR_KW ID ASSIGNMENT expr DOWNTO_KW expr DO_KW stmt   {
+                                                                            exprNode* exprN = exprNode::create_expr_node_from_id($2);
+                                                                            $$ = forStmtNode::create_for_stmt_node(exprN, $4, $6, $8, true);
+                                                                        }
 
 enum_param_list:    ID                                      { 
                                                                 auto tmp = enumParamNode::create_enum_param_node_without_value($1); 
@@ -445,13 +453,13 @@ enum_param_list:    ID                                      {
                                                                 $$ = enumParamNode::add_enum_param_node_to_enum_param_node_list($1, tmp);
                                                             }
 
-enum_decl:          ID EQUALS OPEN_BRACKET enum_param_list CLOSE_BRACKET SEMICOLON  { $$ = create_enum_decl_node($1, $4);}
+enum_decl:          ID EQUALS OPEN_BRACKET enum_param_list CLOSE_BRACKET SEMICOLON  { $$ = enumDeclNode::create_enum_decl_node($1, $4);}
 
 enum_decl_list:     enum_decl                               { $$ = enumDeclNode::create_enum_decl_node_list_from_enum_decl_node($1); }
                     | enum_decl_list enum_decl              { $$ = enumDeclNode::add_enum_decl_node_to_enum_decl_node_list($1, $2); }
 
-class_decl_header:      ID EQUALS CLASS_KW                                      { $$ = classDeclHeaderNode::create_class_decl_node(NULL, $1); }
-                        | ID EQUALS CLASS_KW OPEN_BRACKET ID CLOSE_BRACKET      { $$ = classDeclHeaderNode::create_class_decl_node($5, $1); }
+class_decl_header:      ID EQUALS CLASS_KW                                      { $$ = classDeclHeaderNode::create_class_decl_header_node(NULL, $1); }
+                        | ID EQUALS CLASS_KW OPEN_BRACKET ID CLOSE_BRACKET      { $$ = classDeclHeaderNode::create_class_decl_header_node($5, $1); }
 
 property_decl:  PROPERTY_KW ID COLON type READ_KW ID WRITE_KW ID SEMICOLON      { $$ = propertyDeclNode::create_property_decl_node($2, $4, $6, $8); }
                 | PROPERTY_KW ID COLON type READ_KW ID SEMICOLON                { $$ = propertyDeclNode::create_property_decl_node($2, $4, $6, NULL); } 
@@ -474,8 +482,8 @@ field_modifier_list:    field_modifier                          {
 field_decl:             var_decl                                { fieldDeclNode::create_field_decl_node_without_field_modifiers($1); }
                         | var_decl field_modifier_list          { fieldDeclNode::create_field_decl_node_with_field_modifiers($1, $2); }
 
-method_procedure_decl:  PROCEDURE_KW function_element SEMICOLON                { $$ = $2 }
-                        | PROCEDURE_KW ID SEMICOLON                            { $$ = functionElementNode::create_fucntion_element($2, NULL); }
+method_procedure_decl:  PROCEDURE_KW function_element SEMICOLON                { $$ = $2; }
+                        | PROCEDURE_KW ID SEMICOLON                            { $$ = functionElementNode::create_function_element($2, NULL); }
 
 method_procedure_decl_with_modifier_NO:     method_procedure_decl                           { $$ = methodProcedureDeclWithModifierNode::create_method_procedure_decl_with_modifier_node($1, NULL); }
                                             | method_procedure_decl method_modifier_list    { $$ = methodProcedureDeclWithModifierNode::create_method_procedure_decl_with_modifier_node($1, $2); }
@@ -500,8 +508,8 @@ constructor_impl:   CONSTRUCTOR_KW ID DOT function_element SEMICOLON stmt       
 destructor_decl:    DESTRUCTOR_KW ID SEMICOLON                         { $$ = destructorDeclNode::create_destructor_decl_node($2, false); }
                     | DESTRUCTOR_KW ID SEMICOLON override_modifier     { $$ = destructorDeclNode::create_destructor_decl_node($2, true); }
 
-destructor_impl:    DESTRUCTOR_KW ID DOT ID SEMICOLON stmt                      { $$ = destructorImplNode::create_destructor_impl_node($4, $2, false, $6); }
-                    | DESTRUCTOR_KW ID DOT ID SEMICOLON override_modifier stmt  { $$ = destructorImplNode::create_destructor_impl_node($4, $2, true, $7); }
+destructor_impl:    DESTRUCTOR_KW ID DOT ID SEMICOLON stmt                      { $$ = destructorImplNode::create_destructor_impl_node($4, $2, $6, false); }
+                    | DESTRUCTOR_KW ID DOT ID SEMICOLON override_modifier stmt  { $$ = destructorImplNode::create_destructor_impl_node($4, $2, $7, true); }
 
 implementation_element:  constructor_impl SEMICOLON { $$ = implementationElementNode::create_implementation_element_node_from_constructor_impl($1); }
                         | destructor_impl SEMICOLON { $$ = implementationElementNode::create_implementation_element_node_from_destructor_impl($1); }
@@ -519,7 +527,7 @@ method_modifier:    field_modifier                             { $$ = $1; }
 method_modifier_list:   method_modifier                         { 
                                                                     std::list<modifier> *res = new std::list<modifier>();
                                                                     res->push_back($1); 
-                                                                    $$->res; 
+                                                                    $$ = res;
                                                                 }
                         | method_modifier_list method_modifier  {
                                                                     $1->push_back($2);
@@ -530,43 +538,43 @@ method_decl:            method_procedure_decl_with_modifier_NO      { $$ = metho
                         | method_function_decl_with_modifier_NO     { $$ = methodDeclNode::create_method_decl_node_from_function($1); }
 
 method_field_property_list: constructor_decl_with_modifier_NO                                   { 
-                                                                                                    auto node = methodFieldPropertyNode::create_method_field_property_list_node_from_constructor($1);
+                                                                                                    auto node = methodFieldPropertyNode::create_method_field_property_node_from_constructor($1);
                                                                                                     $$ = methodFieldPropertyNode::create_method_field_property_node_list_from_method_field_property_node(node);
                                                                                                 }
                             | destructor_decl                                                   {
-                                                                                                    auto node = methodFieldPropertyNode::create_method_field_property_list_node_from_destructor($1);
+                                                                                                    auto node = methodFieldPropertyNode::create_method_field_property_node_from_destructor($1);
                                                                                                     $$ = methodFieldPropertyNode::create_method_field_property_node_list_from_method_field_property_node(node);
                                                                                                 }
                             | field_decl                                                        {
-                                                                                                    auto node = methodFieldPropertyNode::create_method_field_property_list_node_from_field($1);
+                                                                                                    auto node = methodFieldPropertyNode::create_method_field_property_node_from_field($1);
                                                                                                     $$ = methodFieldPropertyNode::create_method_field_property_node_list_from_method_field_property_node(node);
                                                                                                 }
                             | property_decl                                                     {
-                                                                                                    auto node = methodFieldPropertyNode::create_method_field_property_list_node_from_property($1);
+                                                                                                    auto node = methodFieldPropertyNode::create_method_field_property_node_from_property($1);
                                                                                                     $$ = methodFieldPropertyNode::create_method_field_property_node_list_from_method_field_property_node(node);
                                                                                                 }
                             | method_decl                                                       {
-                                                                                                    auto node = methodFieldPropertyNode::create_method_field_property_list_node_from_method($1);
+                                                                                                    auto node = methodFieldPropertyNode::create_method_field_property_node_from_method($1);
                                                                                                     $$ = methodFieldPropertyNode::create_method_field_property_node_list_from_method_field_property_node(node);
                                                                                                 }
                             | method_field_property_list constructor_decl_with_modifier_NO      {
-                                                                                                    auto node = methodFieldPropertyNode::create_method_field_property_list_node_from_constructor($2);
+                                                                                                    auto node = methodFieldPropertyNode::create_method_field_property_node_from_constructor($2);
                                                                                                     $$ = methodFieldPropertyNode::add_method_field_property_node_to_method_field_property_node_list($1, node);
                                                                                                 }
                             | method_field_property_list destructor_decl                        {
-                                                                                                    auto node = methodFieldPropertyNode::create_method_field_property_list_node_from_destructor($2);
+                                                                                                    auto node = methodFieldPropertyNode::create_method_field_property_node_from_destructor($2);
                                                                                                     $$ = methodFieldPropertyNode::add_method_field_property_node_to_method_field_property_node_list($1, node);
                                                                                                 }
                             | method_field_property_list field_decl                             {
-                                                                                                    auto node = methodFieldPropertyNode::create_method_field_property_list_node_from_field($2);
+                                                                                                    auto node = methodFieldPropertyNode::create_method_field_property_node_from_field($2);
                                                                                                     $$ = methodFieldPropertyNode::add_method_field_property_node_to_method_field_property_node_list($1, node);
                                                                                                 }
                             | method_field_property_list property_decl                          {
-                                                                                                    auto node = methodFieldPropertyNode::create_method_field_property_list_node_from_property($2);
+                                                                                                    auto node = methodFieldPropertyNode::create_method_field_property_node_from_property($2);
                                                                                                     $$ = methodFieldPropertyNode::add_method_field_property_node_to_method_field_property_node_list($1, node);
                                                                                                 }
                             | method_field_property_list method_decl                            {
-                                                                                                    auto node = methodFieldPropertyNode::create_method_field_property_list_node_from_method($2);
+                                                                                                    auto node = methodFieldPropertyNode::create_method_field_property_node_from_method($2);
                                                                                                     $$ = methodFieldPropertyNode::add_method_field_property_node_to_method_field_property_node_list($1, node);
                                                                                                 }
 
@@ -583,8 +591,8 @@ class_decl:    class_decl_header class_element_list SEMICOLON END_KW SEMICOLON  
 class_decl_list:    class_decl                      { $$ = classDeclNode::create_class_decl_node_list_from_class_decl_node($1); }
                     | class_decl_list class_decl    { $$ = classDeclNode::add_class_decl_node_to_class_decl_node_list($1, $2); }
 
-type_sect:  TYPE_KW class_decl_list         { $$ = create_type_sect_node_from_class_decl_list($2); }
-            | TYPE_KW enum_decl_list        { $$ = create_type_sect_node_from_enum_decl_list($2); }
+type_sect:  TYPE_KW class_decl_list         { $$ = typeSectNode::create_type_sect_node_from_class_decl_list($2); }
+            | TYPE_KW enum_decl_list        { $$ = typeSectNode::create_type_sect_node_from_enum_decl_list($2); }
 
 with_stmt:  WITH_KW id_list DO_KW stmt      { $$ = withStmtNode::create_with_stmt_node($2, $4); }
 

@@ -21,13 +21,13 @@ class sectionNode : public node
 {
 public:
     sectionType type;
-    varDeclNode *var_decl;
+    list<varDeclNode *> *var_decl_list;
     typeSectNode *type_sect;
     list<implementationElementNode *> *implementation_element_list;
 
     sectionNode();
 
-    static sectionNode *create_section_node_from_var_decl(varDeclNode *var_decl);
+    static sectionNode *create_section_node_from_var_decl(list<varDeclNode *> *var_decl_list);
 
     static sectionNode *create_section_node_from_type_sect(typeSectNode *type_sect);
 

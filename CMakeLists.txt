@@ -11,7 +11,7 @@ include_directories(classes)
 include_directories(tree)
 
 add_executable(CompilerLab
-        ../bison_new/FlexLexer.h
+        ../FlexLexer.h
         ../lex.yy.cpp
         main.cpp
         classes/accessModifierEnum.h
@@ -95,7 +95,7 @@ add_executable(CompilerLab
         classes/whileStmtNode.h
         classes/withStmtNode.cpp
         classes/withStmtNode.h
-        ../grammar.tab.h
+        ../grammar.tab.hpp
         ../grammar.tab.cpp
         tree/treePrinter.cpp
         tree/treePrinter.h

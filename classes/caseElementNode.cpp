@@ -4,7 +4,7 @@ caseElementNode::caseElementNode()
 {
 }
 
-std::list<caseElementNode *> *caseElementNode::create_case_element_list_node(exprNode *condition, stmtNode *body)
+std::list<caseElementNode *> *caseElementNode::create_case_element_list_node(list<exprNode *> *condition, stmtNode *body)
 {
     caseElementNode *case_element_node = new caseElementNode();
     case_element_node->condition = condition;
@@ -15,7 +15,7 @@ std::list<caseElementNode *> *caseElementNode::create_case_element_list_node(exp
     return res;
 }
 
-std::list<caseElementNode *> *caseElementNode::add_case_element_to_list_node(std::list<caseElementNode *> *list_node, exprNode *condition, stmtNode *body)
+std::list<caseElementNode *> *caseElementNode::add_case_element_to_list_node(std::list<caseElementNode *> *list_node, list<exprNode *> *condition, stmtNode *body)
 {
     caseElementNode *case_element_node = new caseElementNode();
     case_element_node->condition = condition;

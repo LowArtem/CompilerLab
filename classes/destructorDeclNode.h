@@ -12,5 +12,5 @@ public:
 
     destructorDeclNode();
 
-    destructorDeclNode *create_destructor_decl_node(string id, bool has_override);
+    static destructorDeclNode *create_destructor_decl_node(string id, bool has_override);
 };

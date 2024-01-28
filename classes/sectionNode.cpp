@@ -4,11 +4,11 @@ sectionNode::sectionNode()
 {
 }
 
-sectionNode *sectionNode::create_section_node_from_var_decl(varDeclNode *var_decl)
+sectionNode *sectionNode::create_section_node_from_var_decl(list<varDeclNode *> *var_decl_list)
 {
     sectionNode *res = new sectionNode();
     res->type = sectionType::var_decl_sect;
-    res->var_decl = var_decl;
+    res->var_decl_list = var_decl_list;
     return res;
 }
 

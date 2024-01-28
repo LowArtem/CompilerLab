@@ -15,5 +15,5 @@ public:
 
     destructorImplNode();
 
-    destructorImplNode *create_destructor_impl_node(string id, string parent_id, stmtNode *stmt_node, bool has_override);
+    static destructorImplNode *create_destructor_impl_node(string id, string parent_id, stmtNode *stmt_node, bool has_override);
 };

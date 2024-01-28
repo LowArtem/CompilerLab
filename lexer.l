@@ -6,7 +6,7 @@
 	#include <stdio.h>
     #include <stdlib.h>
     #include <string.h>
-    #include "../grammar.tab.h"
+    #include "../grammar.tab.hpp"
     extern int yyparse(void);
 %}
 
