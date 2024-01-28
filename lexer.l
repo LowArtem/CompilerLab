@@ -6,6 +6,7 @@
 	#include <stdio.h>
     #include <stdlib.h>
     #include <string.h>
+    #include <string>
     #include "../grammar.tab.hpp"
     extern int yyparse(void);
 %}
@@ -27,13 +28,13 @@ NUMBER_ALPHA_UNDERSCORE [a-zA-Z0-9_]
     char string_arr[10000];
 %}
 
-and                 { return AND_KW; }
+and                 { printf("and"); return AND_KW; }
 array               { printf("ERROR: unexpected symbol: \"%s\"", yytext); }
-as                  { return AS_KW; }
+as                  { printf("as"); return AS_KW; }
 asm                 { printf("ERROR: unexpected symbol: \"%s\"", yytext); }
 begin               { return BEGIN_KW; }
 case                { return CASE_KW; }
-class               { return CLASS_KW; }
+class               { printf("class"); return CLASS_KW; }
 const               { return CONST_KW; }
 constructor         { return CONSTRUCTOR_KW; }
 destructor          { return DESTRUCTOR_KW; }
@@ -69,7 +70,7 @@ or                  { return OR_KW; }
 out                 { return OUT_KW; }
 packed              { printf("ERROR: unexpected symbol: \"%s\"", yytext); }
 procedure           { return PROCEDURE_KW; }
-program             { return PROGRAM_KW; }
+program             { printf("HERE IS PROGRAM"); return PROGRAM_KW; }
 property            { return PROPERTY_KW; }
 raise               { printf("ERROR: unexpected symbol: \"%s\"", yytext); }
 record              { printf("ERROR: unexpected symbol: \"%s\"", yytext); }
@@ -81,7 +82,7 @@ string              { printf("ERROR: unexpected symbol: \"%s\"", yytext); }
 then                { return THEN_KW; }
 to                  { return TO_KW; }
 try                 { printf("ERROR: unexpected symbol: \"%s\"", yytext); }
-type                { return TYPE_KW; }
+type                { printf("type"); return TYPE_KW; }
 unit                { printf("ERROR: unexpected symbol: \"%s\"", yytext); }
 until               { return UNTIL_KW; }
 uses                { printf("ERROR: unexpected symbol: \"%s\"", yytext); }
@@ -109,7 +110,7 @@ near                { printf("ERROR: unexpected symbol: \"%s\"", yytext); }
 nodefault           { printf("ERROR: unexpected symbol: \"%s\"", yytext); }
 override            { return OVERRIDE_KW; }
 overload            { return OVERLOAD_KW; }
-private             { return PRIVATE_KW; }
+private             { printf("private"); return PRIVATE_KW; }
 protected           { return PROTECTED_KW; }
 public              { return PUBLIC_KW; }
 read                { return READ_KW; }
@@ -221,8 +222,8 @@ false               { return FALSE_KW; }
 <ML_COMMENT_2>[^*]+     {}
 <ML_COMMENT_2>\*+[^)]   {}
 
-";"                 { return SEMICOLON; }
-":"                 { return COLON; }
+";"                 { printf(";"); return SEMICOLON; }
+":"                 { printf(":"); return COLON; }
 ".."                { return DOUBLE_DOT; }
 "."                 { return DOT; }
 ","                 { return COMMA; }
@@ -237,6 +238,9 @@ false               { return FALSE_KW; }
                                             strcpy(id, yytext);
 
                                             yylval.id_union = new std::string(id);
+
+                                            printf("ID, name: %s\n", id);
+
                                             return ID;
                                         }
 
