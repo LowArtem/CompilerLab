@@ -60,10 +60,10 @@
     double real_union;
     bool boolean_union;
     char char_union;
-    string string_union;
-    string keyword_union;
-    string service_symbol_union;
-    string id_union;
+    string* string_union;
+    string* keyword_union;
+    string* service_symbol_union;
+    string* id_union;
     simpleType simple_type_union;
     literalNode* literal_union;
     arrayDimensionNode* array_dimension_union;
