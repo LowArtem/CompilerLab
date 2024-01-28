@@ -4,7 +4,7 @@ destructorDeclNode::destructorDeclNode()
 {
 }
 
-destructorDeclNode *destructorDeclNode::create_destructor_decl_node(string id, bool has_override)
+destructorDeclNode *destructorDeclNode::create_destructor_decl_node(string *id, bool has_override)
 {
     destructorDeclNode *node = new destructorDeclNode();
     node->id = id;

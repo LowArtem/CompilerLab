@@ -23,5 +23,5 @@ public:
  */
 inline node::node()
 {
-    id_node = ++max_id;
+    id_node = ++node::max_id;
 }

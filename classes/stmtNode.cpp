@@ -27,7 +27,7 @@ stmtNode *stmtNode::create_stmt_node_from_assignment(exprNode *left_operand, exp
     return res;
 }
 
-stmtNode *stmtNode::create_stmt_node_from_function_call(string &id, list<exprNode *> *params)
+stmtNode *stmtNode::create_stmt_node_from_function_call(string *id, list<exprNode *> *params)
 {
     stmtNode *res = new stmtNode();
     res->type = stmtType::function_call_type;

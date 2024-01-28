@@ -6,7 +6,7 @@ exprNode::exprNode()
 {
 }
 
-exprNode *exprNode::create_expr_node_from_string(string &value)
+exprNode *exprNode::create_expr_node_from_string(string *value)
 {
     exprNode *res = new exprNode();
     res->type = exprType::string_type;
@@ -14,7 +14,7 @@ exprNode *exprNode::create_expr_node_from_string(string &value)
     return res;
 }
 
-exprNode *exprNode::create_expr_node_from_id(string &id)
+exprNode *exprNode::create_expr_node_from_id(string *id)
 {
     exprNode *res = new exprNode();
     res->type = exprType::id_type_expr;
@@ -39,7 +39,7 @@ exprNode *exprNode::create_expr_node_from_unary_operation(exprType type, exprNod
     return res;
 }
 
-exprNode *exprNode::create_expr_node_from_function_call(string &id, list<exprNode *> *params)
+exprNode *exprNode::create_expr_node_from_function_call(string *id, list<exprNode *> *params)
 {
     exprNode *res = new exprNode();
     res->type = exprType::function_call_type_expr;
@@ -48,7 +48,7 @@ exprNode *exprNode::create_expr_node_from_function_call(string &id, list<exprNod
     return res;
 }
 
-exprNode *exprNode::create_expr_node_from_method_function_call(exprNode *left_operand, string &id, list<exprNode *> *params)
+exprNode *exprNode::create_expr_node_from_method_function_call(exprNode *left_operand, string *id, list<exprNode *> *params)
 {
     exprNode *res = new exprNode();
     res->type = exprType::method_function_call_type;
@@ -58,7 +58,7 @@ exprNode *exprNode::create_expr_node_from_method_function_call(exprNode *left_op
     return res;
 }
 
-exprNode *exprNode::create_expr_node_from_field_access(exprNode *left_operand, string &id)
+exprNode *exprNode::create_expr_node_from_field_access(exprNode *left_operand, string *id)
 {
     exprNode *res = new exprNode();
     res->type = exprType::field_access_type;
@@ -83,7 +83,7 @@ exprNode *exprNode::create_expr_node_from_self()
     return res;
 }
 
-exprNode *exprNode::create_expr_node_from_inherited_call(string &id, list<exprNode *> *params)
+exprNode *exprNode::create_expr_node_from_inherited_call(string *id, list<exprNode *> *params)
 {
     exprNode *res = new exprNode();
     res->type = exprType::inherited_call_type;

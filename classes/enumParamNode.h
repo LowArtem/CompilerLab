@@ -12,14 +12,14 @@ using namespace std;
 class enumParamNode : public node
 {
 public:
-    string id;
+    string *id;
     exprNode *value;
 
     enumParamNode();
 
-    static enumParamNode *create_enum_param_node_without_value(string &id);
+    static enumParamNode *create_enum_param_node_without_value(string *id);
 
-    static enumParamNode *create_enum_param_node_with_value(string &id, exprNode *value);
+    static enumParamNode *create_enum_param_node_with_value(string *id, exprNode *value);
 
     static list<enumParamNode *> *create_enum_param_node_list_from_enum_param_node(enumParamNode *enum_param_node);
 

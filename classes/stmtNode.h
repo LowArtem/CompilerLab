@@ -40,7 +40,7 @@ public:
     stmtType type;
     exprNode *left_operand;
     exprNode *right_operand;
-    string id;
+    string *id;
     list<exprNode *> *params;
     stmtBlockNode *stmt_block;
     ifStmtNode *if_stmt;
@@ -58,7 +58,7 @@ public:
 
     static stmtNode *create_stmt_node_from_assignment(exprNode *left_operand, exprNode *right_operand);
 
-    static stmtNode *create_stmt_node_from_function_call(string &id, list<exprNode *> *params);
+    static stmtNode *create_stmt_node_from_function_call(string *id, list<exprNode *> *params);
 
     static stmtNode *create_stmt_node_from_inherited_call();
 

@@ -62,8 +62,8 @@ public:
     double real_value;
     bool boolean_value;
     char char_value;
-    string string_value;
-    string id;
+    string *string_value;
+    string *id;
     exprNode *left_operand;
     exprNode *right_operand;
     list<exprNode *> *params;
@@ -72,25 +72,25 @@ public:
 
     exprNode();
 
-    static exprNode *create_expr_node_from_string(string &value);
+    static exprNode *create_expr_node_from_string(string *value);
 
-    static exprNode *create_expr_node_from_id(string &id);
+    static exprNode *create_expr_node_from_id(string *id);
 
     static exprNode *create_expr_node_from_binary_operation(exprType type, exprNode *left_operand, exprNode *right_operand);
 
     static exprNode *create_expr_node_from_unary_operation(exprType type, exprNode *operand);
 
-    static exprNode *create_expr_node_from_function_call(string &id, list<exprNode *> *params);
+    static exprNode *create_expr_node_from_function_call(string *id, list<exprNode *> *params);
 
-    static exprNode *create_expr_node_from_method_function_call(exprNode *left_operand, string &id, list<exprNode *> *params);
+    static exprNode *create_expr_node_from_method_function_call(exprNode *left_operand, string *id, list<exprNode *> *params);
 
-    static exprNode *create_expr_node_from_field_access(exprNode *left_operand, string &id);
+    static exprNode *create_expr_node_from_field_access(exprNode *left_operand, string *id);
 
     static exprNode *create_expr_node_from_type_casting(simpleType simple_type, exprNode *operand);
 
     static exprNode *create_expr_node_from_self();
 
-    static exprNode *create_expr_node_from_inherited_call(string &id, list<exprNode *> *params);
+    static exprNode *create_expr_node_from_inherited_call(string *id, list<exprNode *> *params);
 
     static exprNode *create_expr_node_from_array_access(exprNode *left_operand, list<exprNode *> *params);
 

@@ -631,7 +631,7 @@ void treePrinter::printProcedureImplNode(procedureImplNode *node)
     {
         outfile << "functionImpl_" << node->id_node << " -> " << node->id << ";\n";
 
-        if (node->parentId.empty())
+        if (node->parentId != nullptr)
         {
             outfile << "functionImpl_" << node->id_node << " -> parent_" << node->id_node << ";\n";
             outfile << "parent_" << node->id_node << " -> " << node->parentId << ";\n";
@@ -667,7 +667,7 @@ void treePrinter::printFunctionImplNode(functionImplNode *node)
 
         outfile << "functionImpl_" << node->id_node << " -> " << node->id << ";\n";
 
-        if (node->parentId.empty())
+        if (node->parentId != nullptr)
         {
             outfile << "functionImpl_" << node->id_node << " -> parent_" << node->id_node << ";\n";
             outfile << "parent_" << node->id_node << " -> " << node->parentId << ";\n";
@@ -1095,7 +1095,7 @@ void treePrinter::printStartSymbolNode(startSymbolNode *node)
 {
     if (node != nullptr)
     {
-        if (node->id != "")
+        if (node->id != nullptr)
             outfile << "startSymbol -> " << node->id << ";\n";
         if (node->stmt_block != nullptr)
         {

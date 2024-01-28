@@ -4,7 +4,7 @@ startSymbolNode::startSymbolNode()
 {
 }
 
-startSymbolNode *startSymbolNode::create_start_symbol_node(string id, stmtBlockNode *stmt_block, list<sectionNode *> *section_node_list)
+startSymbolNode *startSymbolNode::create_start_symbol_node(string *id, stmtBlockNode *stmt_block, list<sectionNode *> *section_node_list)
 {
     startSymbolNode *start_symbol_node = new startSymbolNode();
     start_symbol_node->id = id;

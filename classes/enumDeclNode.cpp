@@ -4,7 +4,7 @@ enumDeclNode::enumDeclNode()
 {
 }
 
-enumDeclNode *enumDeclNode::create_enum_decl_node(string &id, list<enumParamNode *> *param_list)
+enumDeclNode *enumDeclNode::create_enum_decl_node(string *id, list<enumParamNode *> *param_list)
 {
     enumDeclNode *res = new enumDeclNode();
     res->id = id;

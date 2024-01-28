@@ -12,7 +12,7 @@ constructorDeclNode *constructorDeclNode::create_constructor_decl_node_with_para
     return res;
 }
 
-constructorDeclNode *constructorDeclNode::create_constructor_decl_node_without_params(string id)
+constructorDeclNode *constructorDeclNode::create_constructor_decl_node_without_params(string *id)
 {
     constructorDeclNode *res = new constructorDeclNode();
     res->id = id;

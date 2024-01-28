@@ -4,7 +4,7 @@ classDeclHeaderNode::classDeclHeaderNode()
 {
 }
 
-classDeclHeaderNode *classDeclHeaderNode::create_class_decl_header_node(std::string parentId, std::string id)
+classDeclHeaderNode *classDeclHeaderNode::create_class_decl_header_node(std::string *parentId, std::string *id)
 {
     classDeclHeaderNode *res = new classDeclHeaderNode();
     res->parentId = parentId;

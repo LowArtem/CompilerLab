@@ -10,10 +10,10 @@
 class functionElementNode : public node
 {
 public:
-    string id;
+    string *id;
     std::list<paramListNode *> *param_list_node_list;
 
     functionElementNode();
 
-    static functionElementNode *create_function_element(string id, std::list<paramListNode *> *param_list_node_list);
+    static functionElementNode *create_function_element(string *id, std::list<paramListNode *> *param_list_node_list);
 };

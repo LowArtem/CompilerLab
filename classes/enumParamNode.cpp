@@ -5,14 +5,14 @@ enumParamNode::enumParamNode()
 {
 }
 
-enumParamNode *enumParamNode::create_enum_param_node_without_value(string &id)
+enumParamNode *enumParamNode::create_enum_param_node_without_value(string *id)
 {
     enumParamNode *res = new enumParamNode();
     res->id = id;
     return res;
 }
 
-enumParamNode *enumParamNode::create_enum_param_node_with_value(string &id, exprNode *value)
+enumParamNode *enumParamNode::create_enum_param_node_with_value(string *id, exprNode *value)
 {
     enumParamNode *res = new enumParamNode();
     res->id = id;

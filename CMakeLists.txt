@@ -99,4 +99,5 @@ add_executable(CompilerLab
         ../grammar.tab.cpp
         tree/treePrinter.cpp
         tree/treePrinter.h
+        classes/typeNode.cpp
 )

@@ -9,12 +9,12 @@
 class propertyDeclNode : public node
 {
 public:
-    std::string id;
+    std::string *id;
     typeNode *type;
-    std::string readId;
-    std::string writeId;
+    std::string *readId;
+    std::string *writeId;
 
     propertyDeclNode();
 
-    static propertyDeclNode *create_property_decl_node(std::string id, typeNode *type, std::string readId, std::string writeId);
+    static propertyDeclNode *create_property_decl_node(std::string *id, typeNode *type, std::string *readId, std::string *writeId);
 };

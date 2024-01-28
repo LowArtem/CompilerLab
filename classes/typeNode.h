@@ -25,7 +25,7 @@ class typeNode : public node
 public:
     typeType type;
     simpleType simple_type;
-    string id;
+    string *id;
     list<arrayDimensionNode *> *array_dimension_node_list;
     typeNode *array_type;
 
@@ -33,7 +33,7 @@ public:
 
     static typeNode *create_type_node_from_simple_type(simpleType simple_type);
 
-    static typeNode *create_type_node_from_id(string &id);
+    static typeNode *create_type_node_from_id(string *id);
 
     static typeNode *create_type_node_from_array_without_dimension(typeNode *array_type);
 

@@ -4,7 +4,7 @@ constructorImplNode::constructorImplNode()
 {
 }
 
-constructorImplNode *constructorImplNode::create_constructor_impl_node(string id, string parent_id, functionElementNode *function_element, bool has_override, stmtNode *stmt_node)
+constructorImplNode *constructorImplNode::create_constructor_impl_node(string *id, string *parent_id, functionElementNode *function_element, bool has_override, stmtNode *stmt_node)
 {
     constructorImplNode *res = new constructorImplNode();
     res->id = id;

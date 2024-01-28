@@ -4,7 +4,7 @@ procedureImplNode::procedureImplNode()
 {
 }
 
-procedureImplNode *procedureImplNode::create_procedure_impl_node_with_params(std::string parentId, functionElementNode *function_element, std::list<varDeclNode *> *var_decl_node_list, stmtNode *stmt_node)
+procedureImplNode *procedureImplNode::create_procedure_impl_node_with_params(std::string *parentId, functionElementNode *function_element, std::list<varDeclNode *> *var_decl_node_list, stmtNode *stmt_node)
 {
     procedureImplNode *res = new procedureImplNode();
     res->parentId = parentId;
@@ -15,7 +15,7 @@ procedureImplNode *procedureImplNode::create_procedure_impl_node_with_params(std
     return res;
 }
 
-procedureImplNode *procedureImplNode::create_procedure_impl_node_without_params(std::string parentId, std::string id, std::list<varDeclNode *> *var_decl_node_list, stmtNode *stmt_node)
+procedureImplNode *procedureImplNode::create_procedure_impl_node_without_params(std::string *parentId, std::string *id, std::list<varDeclNode *> *var_decl_node_list, stmtNode *stmt_node)
 {
     procedureImplNode *res = new procedureImplNode();
     res->parentId = parentId;

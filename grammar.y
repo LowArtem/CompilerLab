@@ -2,6 +2,7 @@
     #include "../grammar.tab.hpp"
 
     extern int yylex(void);
+    void yyerror(char* str);
 %}
 
 %code requires {
@@ -597,3 +598,7 @@ type_sect:  TYPE_KW class_decl_list         { $$ = typeSectNode::create_type_sec
 with_stmt:  WITH_KW id_list DO_KW stmt      { $$ = withStmtNode::create_with_stmt_node($2, $4); }
 
 %%
+
+void yyerror(char* str) {
+        fprintf(stderr, "ERROR: %s\n", str);
+}

@@ -12,12 +12,12 @@ using namespace std;
 class enumDeclNode : public node
 {
 public:
-    string id;
+    string *id;
     list<enumParamNode *> *param_list;
 
     enumDeclNode();
 
-    static enumDeclNode *create_enum_decl_node(string &id, list<enumParamNode *> *param_list);
+    static enumDeclNode *create_enum_decl_node(string *id, list<enumParamNode *> *param_list);
 
     static list<enumDeclNode *> *create_enum_decl_node_list_from_enum_decl_node(enumDeclNode *enum_decl_node);
 

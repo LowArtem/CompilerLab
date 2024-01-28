@@ -13,7 +13,7 @@ methodFunctionDeclNode *methodFunctionDeclNode::create_method_function_decl_node
     return res;
 }
 
-methodFunctionDeclNode *methodFunctionDeclNode::create_method_function_decl_node_without_params(std::string id, typeNode *type)
+methodFunctionDeclNode *methodFunctionDeclNode::create_method_function_decl_node_without_params(std::string *id, typeNode *type)
 {
     methodFunctionDeclNode *res = new methodFunctionDeclNode();
     res->id = id;

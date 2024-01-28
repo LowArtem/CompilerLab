@@ -4,7 +4,7 @@ propertyDeclNode::propertyDeclNode()
 {
 }
 
-propertyDeclNode *propertyDeclNode::create_property_decl_node(std::string id, typeNode *type, std::string readId, std::string writeId)
+propertyDeclNode *propertyDeclNode::create_property_decl_node(std::string *id, typeNode *type, std::string *readId, std::string *writeId)
 {
     propertyDeclNode *node = new propertyDeclNode();
     node->id = id;
