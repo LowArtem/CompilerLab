@@ -2,6 +2,8 @@
 
 using namespace std;
 
+startSymbolNode *root;
+
 treePrinter::treePrinter()
 {
 }
