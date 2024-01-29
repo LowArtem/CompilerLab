@@ -282,7 +282,7 @@ sect_list:      section                         { $$ = sectionNode::create_secti
 
 start_symbol:   PROGRAM_KW ID SEMICOLON stmt_block DOT                          {
                                                                                     printf("Ultra END.");
-                                                                                    root = startSymbolNode::create_start_symbol_node($2, $4, NULL);
+                                                                                    root = startSymbolNode::create_start_symbol_node($2, $4, nullptr);
                                                                                     $$ =  root;
                                                                                 }
                 | PROGRAM_KW ID SEMICOLON sect_list stmt_block DOT              {
@@ -356,7 +356,7 @@ expr_list:      expr                        { $$ = exprNode::create_expr_node_li
                 | expr_list COMMA expr      { $$ = exprNode::add_expr_node_to_expr_node_list($1, $3); }
 
 expr_list_E:    expr_list                   { $$ = $1; }
-                | /*empty*/                 { $$ = exprNode::create_expr_node_list_from_expr_node(NULL); }
+                | /*empty*/                 { $$ = exprNode::create_expr_node_list_from_expr_node(nullptr); }
 
 stmt:           expr ASSIGNMENT expr                            { $$ = stmtNode::create_stmt_node_from_assignment($1, $3); }
                 | ID OPEN_BRACKET expr_list_E CLOSE_BRACKET     { $$ = stmtNode::create_stmt_node_from_function_call($1, $3); }
@@ -385,7 +385,7 @@ id_list:        ID                              {
                                                     $$ = exprNode::add_expr_node_to_expr_node_list($1, id);
                                                 }
 
-var_decl:       id_list COLON type SEMICOLON                  { $$ = varDeclNode::create_var_decl_node($1, $3, NULL); }
+var_decl:       id_list COLON type SEMICOLON                  { $$ = varDeclNode::create_var_decl_node($1, $3, nullptr); }
                 | id_list COLON type EQUALS expr SEMICOLON    { $$ = varDeclNode::create_var_decl_node($1, $3, $5); }
 
 var_decl_list:  var_decl                                      { $$ = varDeclNode::create_var_decl_node_list_from_var_decl_node($1); }
@@ -403,36 +403,36 @@ param_list:     var_decl_list SEMICOLON                       { $$ = paramListNo
                 | param_list OUT_KW var_decl_list SEMICOLON   { $$ = paramListNode::add_param_list_node_to_param_list_node_list($1, $3, paramListNodeTypeEnum::out_param); }
 
 param_list_E:   param_list                                    { $$ = $1; }
-              | /*empty*/                                     { $$ = paramListNode::create_param_list_node_list(NULL, paramListNodeTypeEnum::general_param); }
+              | /*empty*/                                     { $$ = paramListNode::create_param_list_node_list(nullptr, paramListNodeTypeEnum::general_param); }
 
 function_element:   ID OPEN_BRACKET param_list_E CLOSE_BRACKET    { $$ = functionElementNode::create_function_element($1, $3); }
 
-procedure_impl:     PROCEDURE_KW function_element SEMICOLON stmt                                { $$ = procedureImplNode::create_procedure_impl_node_with_params(NULL, $2, NULL, $4); }
-                    | PROCEDURE_KW ID SEMICOLON stmt                                            { $$ = procedureImplNode::create_procedure_impl_node_without_params(NULL, $2, NULL, $4); }
-                    | PROCEDURE_KW function_element SEMICOLON VAR_KW var_decl_list stmt         { $$ = procedureImplNode::create_procedure_impl_node_with_params(NULL, $2, $5, $6); }
-                    | PROCEDURE_KW ID SEMICOLON VAR_KW var_decl_list stmt                       { $$ = procedureImplNode::create_procedure_impl_node_without_params(NULL, $2, $5, $6); }
-                    | PROCEDURE_KW ID DOT function_element SEMICOLON stmt                       { $$ = procedureImplNode::create_procedure_impl_node_with_params($2, $4, NULL, $6); }
-                    | PROCEDURE_KW ID DOT ID SEMICOLON stmt                                     { $$ = procedureImplNode::create_procedure_impl_node_without_params($2, $4, NULL, $6); }
+procedure_impl:     PROCEDURE_KW function_element SEMICOLON stmt                                { $$ = procedureImplNode::create_procedure_impl_node_with_params(nullptr, $2, nullptr, $4); }
+                    | PROCEDURE_KW ID SEMICOLON stmt                                            { $$ = procedureImplNode::create_procedure_impl_node_without_params(nullptr, $2, nullptr, $4); }
+                    | PROCEDURE_KW function_element SEMICOLON VAR_KW var_decl_list stmt         { $$ = procedureImplNode::create_procedure_impl_node_with_params(nullptr, $2, $5, $6); }
+                    | PROCEDURE_KW ID SEMICOLON VAR_KW var_decl_list stmt                       { $$ = procedureImplNode::create_procedure_impl_node_without_params(nullptr, $2, $5, $6); }
+                    | PROCEDURE_KW ID DOT function_element SEMICOLON stmt                       { $$ = procedureImplNode::create_procedure_impl_node_with_params($2, $4, nullptr, $6); }
+                    | PROCEDURE_KW ID DOT ID SEMICOLON stmt                                     { $$ = procedureImplNode::create_procedure_impl_node_without_params($2, $4, nullptr, $6); }
                     | PROCEDURE_KW ID DOT function_element SEMICOLON VAR_KW var_decl_list stmt  { $$ = procedureImplNode::create_procedure_impl_node_with_params($2, $4, $7, $8); }
                     | PROCEDURE_KW ID DOT ID SEMICOLON VAR_KW var_decl_list stmt                { $$ = procedureImplNode::create_procedure_impl_node_without_params($2, $4, $7, $8); }
 
-function_impl:      FUNCTION_KW function_element COLON type SEMICOLON stmt                                { $$ = functionImplNode::create_function_impl_node_with_params(NULL, $2, NULL, $4, $6); }
-                    | FUNCTION_KW ID COLON type SEMICOLON stmt                                            { $$ = functionImplNode::create_function_impl_node_without_params(NULL, $2, NULL, $4, $6); }
-                    | FUNCTION_KW function_element COLON type SEMICOLON VAR_KW var_decl_list stmt         { $$ = functionImplNode::create_function_impl_node_with_params(NULL, $2, $7, $4, $8); }
-                    | FUNCTION_KW ID COLON type SEMICOLON VAR_KW var_decl_list stmt                       { $$ = functionImplNode::create_function_impl_node_without_params(NULL, $2, $7, $4, $8); }
+function_impl:      FUNCTION_KW function_element COLON type SEMICOLON stmt                                { $$ = functionImplNode::create_function_impl_node_with_params(nullptr, $2, nullptr, $4, $6); }
+                    | FUNCTION_KW ID COLON type SEMICOLON stmt                                            { $$ = functionImplNode::create_function_impl_node_without_params(nullptr, $2, nullptr, $4, $6); }
+                    | FUNCTION_KW function_element COLON type SEMICOLON VAR_KW var_decl_list stmt         { $$ = functionImplNode::create_function_impl_node_with_params(nullptr, $2, $7, $4, $8); }
+                    | FUNCTION_KW ID COLON type SEMICOLON VAR_KW var_decl_list stmt                       { $$ = functionImplNode::create_function_impl_node_without_params(nullptr, $2, $7, $4, $8); }
 
-                    | FUNCTION_KW ID DOT function_element COLON type SEMICOLON stmt                       { $$ = functionImplNode::create_function_impl_node_with_params($2, $4, NULL, $6, $8); }
-                    | FUNCTION_KW ID DOT ID COLON type SEMICOLON stmt                                     { $$ = functionImplNode::create_function_impl_node_without_params($2, $4, NULL, $6, $8); }
+                    | FUNCTION_KW ID DOT function_element COLON type SEMICOLON stmt                       { $$ = functionImplNode::create_function_impl_node_with_params($2, $4, nullptr, $6, $8); }
+                    | FUNCTION_KW ID DOT ID COLON type SEMICOLON stmt                                     { $$ = functionImplNode::create_function_impl_node_without_params($2, $4, nullptr, $6, $8); }
                     | FUNCTION_KW ID DOT function_element COLON type SEMICOLON VAR_KW var_decl_list stmt  { $$ = functionImplNode::create_function_impl_node_with_params($2, $4, $9, $6, $10); } 
                     | FUNCTION_KW ID DOT ID COLON type SEMICOLON VAR_KW var_decl_list stmt                { $$ = functionImplNode::create_function_impl_node_without_params($2, $4, $9, $6, $10); }
 
-if_stmt:        IF_KW expr THEN_KW stmt                 { $$ = ifStmtNode::create_if_stmt_node($2, $4, NULL); }
+if_stmt:        IF_KW expr THEN_KW stmt                 { $$ = ifStmtNode::create_if_stmt_node($2, $4, nullptr); }
                 | IF_KW expr THEN_KW stmt ELSE_KW stmt  { $$ = ifStmtNode::create_if_stmt_node($2, $4, $6); }
 
 case_list:      expr_list COLON stmt SEMICOLON                          { $$ = caseElementNode::create_case_element_list_node($1, $3); }
                 | case_list expr_list COLON stmt SEMICOLON              { $$ = caseElementNode::add_case_element_to_list_node($1, $2, $4); }
 
-case_stmt:      CASE_KW expr OF_KW case_list END_KW                     { $$ = caseStmtNode::create_case_node($2, $4, NULL); }
+case_stmt:      CASE_KW expr OF_KW case_list END_KW                     { $$ = caseStmtNode::create_case_node($2, $4, nullptr); }
                 | CASE_KW expr OF_KW case_list ELSE_KW stmt END_KW      { $$ = caseStmtNode::create_case_node($2, $4, $6); }
 
 repeat_stmt:    REPEAT_KW stmt_list UNTIL_KW expr       { $$ = repeatStmtNode::create_repeat_stmt_node($2, $4); }
@@ -470,11 +470,11 @@ enum_decl:          ID EQUALS OPEN_BRACKET enum_param_list CLOSE_BRACKET SEMICOL
 enum_decl_list:     enum_decl                               { $$ = enumDeclNode::create_enum_decl_node_list_from_enum_decl_node($1); }
                     | enum_decl_list enum_decl              { $$ = enumDeclNode::add_enum_decl_node_to_enum_decl_node_list($1, $2); }
 
-class_decl_header:      ID EQUALS CLASS_KW                                      { $$ = classDeclHeaderNode::create_class_decl_header_node(NULL, $1); }
+class_decl_header:      ID EQUALS CLASS_KW                                      { $$ = classDeclHeaderNode::create_class_decl_header_node(nullptr, $1); }
                         | ID EQUALS CLASS_KW OPEN_BRACKET ID CLOSE_BRACKET      { $$ = classDeclHeaderNode::create_class_decl_header_node($5, $1); }
 
 property_decl:  PROPERTY_KW ID COLON type READ_KW ID WRITE_KW ID SEMICOLON      { $$ = propertyDeclNode::create_property_decl_node($2, $4, $6, $8); }
-                | PROPERTY_KW ID COLON type READ_KW ID SEMICOLON                { $$ = propertyDeclNode::create_property_decl_node($2, $4, $6, NULL); } 
+                | PROPERTY_KW ID COLON type READ_KW ID SEMICOLON                { $$ = propertyDeclNode::create_property_decl_node($2, $4, $6, nullptr); } 
 
 override_modifier:    OVERRIDE_KW SEMICOLON                     { $$ = modifier::override_modifier; }
 
@@ -495,15 +495,15 @@ field_decl:             var_decl                                { fieldDeclNode:
                         | var_decl field_modifier_list          { fieldDeclNode::create_field_decl_node_with_field_modifiers($1, $2); }
 
 method_procedure_decl:  PROCEDURE_KW function_element SEMICOLON                { $$ = $2; }
-                        | PROCEDURE_KW ID SEMICOLON                            { $$ = functionElementNode::create_function_element($2, NULL); }
+                        | PROCEDURE_KW ID SEMICOLON                            { $$ = functionElementNode::create_function_element($2, nullptr); }
 
-method_procedure_decl_with_modifier_NO:     method_procedure_decl                           { $$ = methodProcedureDeclWithModifierNode::create_method_procedure_decl_with_modifier_node($1, NULL); }
+method_procedure_decl_with_modifier_NO:     method_procedure_decl                           { $$ = methodProcedureDeclWithModifierNode::create_method_procedure_decl_with_modifier_node($1, nullptr); }
                                             | method_procedure_decl method_modifier_list    { $$ = methodProcedureDeclWithModifierNode::create_method_procedure_decl_with_modifier_node($1, $2); }
 
 method_function_decl:   FUNCTION_KW function_element COLON type SEMICOLON       { $$ = methodFunctionDeclNode::create_method_function_decl_node_with_params($2, $4); }
                         | FUNCTION_KW ID COLON type SEMICOLON                   { $$ = methodFunctionDeclNode::create_method_function_decl_node_without_params($2, $4); }
 
-method_function_decl_with_modifier_NO:      method_function_decl                        { $$ = methodFunctionDeclWithModifierNode::create_method_function_decl_with_modifier_node($1, NULL); }
+method_function_decl_with_modifier_NO:      method_function_decl                        { $$ = methodFunctionDeclWithModifierNode::create_method_function_decl_with_modifier_node($1, nullptr); }
                                             | method_function_decl method_modifier_list { $$ = methodFunctionDeclWithModifierNode::create_method_function_decl_with_modifier_node($1, $2); }
 
 constructor_decl:   CONSTRUCTOR_KW function_element SEMICOLON                           { $$ = constructorDeclNode::create_constructor_decl_node_with_params($2); }
@@ -512,10 +512,10 @@ constructor_decl:   CONSTRUCTOR_KW function_element SEMICOLON                   
 constructor_decl_with_modifier_NO:      constructor_decl                                { $$ = constructorDeclWithModifierNoNode::create_constructor_decl_with_modifier_node($1, false); }
                                         | constructor_decl override_modifier            { $$ = constructorDeclWithModifierNoNode::create_constructor_decl_with_modifier_node($1, true); }
 
-constructor_impl:   CONSTRUCTOR_KW ID DOT function_element SEMICOLON stmt                       { $$ = constructorImplNode::create_constructor_impl_node(NULL, $2, $4, false, $6); }
-                    | CONSTRUCTOR_KW ID DOT function_element SEMICOLON override_modifier stmt   { $$ = constructorImplNode::create_constructor_impl_node(NULL, $2, $4, true, $7); }
-                    | CONSTRUCTOR_KW ID DOT ID SEMICOLON stmt                                   { $$ = constructorImplNode::create_constructor_impl_node($4, $2, NULL, false, $6); }
-                    | CONSTRUCTOR_KW ID DOT ID SEMICOLON override_modifier stmt                 { $$ = constructorImplNode::create_constructor_impl_node($4, $2, NULL, true, $7); }
+constructor_impl:   CONSTRUCTOR_KW ID DOT function_element SEMICOLON stmt                       { $$ = constructorImplNode::create_constructor_impl_node(nullptr, $2, $4, false, $6); }
+                    | CONSTRUCTOR_KW ID DOT function_element SEMICOLON override_modifier stmt   { $$ = constructorImplNode::create_constructor_impl_node(nullptr, $2, $4, true, $7); }
+                    | CONSTRUCTOR_KW ID DOT ID SEMICOLON stmt                                   { $$ = constructorImplNode::create_constructor_impl_node($4, $2, nullptr, false, $6); }
+                    | CONSTRUCTOR_KW ID DOT ID SEMICOLON override_modifier stmt                 { $$ = constructorImplNode::create_constructor_impl_node($4, $2, nullptr, true, $7); }
 
 destructor_decl:    DESTRUCTOR_KW ID SEMICOLON                         { $$ = destructorDeclNode::create_destructor_decl_node($2, false); }
                     | DESTRUCTOR_KW ID SEMICOLON override_modifier     { $$ = destructorDeclNode::create_destructor_decl_node($2, true); }

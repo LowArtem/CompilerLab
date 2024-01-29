@@ -363,12 +363,14 @@ void treePrinter::printStmtNode(stmtNode *node)
 
             outfile << "stmt_" << node->id_node << " -> " << node->id << ";\n";
 
-            if (node->params != nullptr && node->params->size() > 0)
+            if (node->params != nullptr)
             {
                 for (auto it = node->params->begin(); it != node->params->end(); ++it)
                 {
-                    outfile << "stmt_" << node->id_node << " -> expr_" << (*it)->id_node << ";\n";
-                    printExprNode(*it);
+                    if (*it != nullptr) {
+                        outfile << "stmt_" << node->id_node << " -> expr_" << (*it)->id_node << ";\n";
+                        printExprNode(*it);
+                    }
                 }
             }
         }
