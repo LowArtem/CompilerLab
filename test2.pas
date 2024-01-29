@@ -1,42 +1,44 @@
 
 program Example;
 
-// type
-//   TMyClass = class
-//   private
-//     privateField: Integer;
-//   protected
-//     newField: Integer;
-//     protectedField: String;
-//   public
-//     constructor Create;
-//     destructor Destroy; override;
-//     procedure MyProcedure;
-//     function MyFunction(a: Integer): String;
-//     property MyProperty: Integer read privateField write privateField;
-//   end;
+type
+  TMyClass = class
+  private
+    privateField: Integer;
+  protected
+    newField: Integer;
+    protectedField: String;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    procedure MyProcedure;
+    function MyFunction(var a: Integer;): String;
+    property MyProperty: Integer read privateField write privateField;
+  end;
 
-// constructor TMyClass.Create;
-// begin
-//   privateField := 0;
-//   protectedField := 'Default';
-// end;
+implementation
 
-// destructor TMyClass.Destroy;
-// begin
-//   // Дополнительные действия при уничтожении объекта
-//   inherited Destroy;
-// end;
+constructor TMyClass.Create;
+begin
+  privateField := 0;
+  protectedField := 'Default';
+end;
 
-// procedure TMyClass.MyProcedure;
-// begin
-//   writeln('Executing procedure...');
-// end;
+destructor TMyClass.Destroy;
+begin
+  // Дополнительные действия при уничтожении объекта
+  inherited;
+end;
 
-// function TMyClass.MyFunction(a: Integer): String;
-// begin
-//   Result := 'Result: ' + IntToStr(a);
-// end;
+procedure TMyClass.MyProcedure;
+begin
+  writeln('Executing procedure...');
+end;
+
+function TMyClass.MyFunction(var a: Integer;): String;
+begin
+  Result := 'Result: ' + IntToStr(a);
+end;
 
 var
   i: Integer;

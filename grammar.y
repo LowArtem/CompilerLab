@@ -393,14 +393,14 @@ var_decl_list:  var_decl                                      { $$ = varDeclNode
 
 var_decl_sect:  VAR_KW var_decl_list                          { $$ = $2; }
 
-param_list:     var_decl_list SEMICOLON                       { $$ = paramListNode::create_param_list_node_list($1, paramListNodeTypeEnum::general_param); }
-                | var_decl_sect SEMICOLON                     { $$ = paramListNode::create_param_list_node_list($1, paramListNodeTypeEnum::reference_param); }
-                | CONST_KW var_decl_list SEMICOLON            { $$ = paramListNode::create_param_list_node_list($2, paramListNodeTypeEnum::const_param); }
-                | OUT_KW var_decl_list SEMICOLON              { $$ = paramListNode::create_param_list_node_list($2, paramListNodeTypeEnum::out_param); }
-                | param_list var_decl_list SEMICOLON          { $$ = paramListNode::add_param_list_node_to_param_list_node_list($1, $2, paramListNodeTypeEnum::general_param); }
-                | param_list var_decl_sect SEMICOLON          { $$ = paramListNode::add_param_list_node_to_param_list_node_list($1, $2, paramListNodeTypeEnum::reference_param); }
-                | param_list CONST_KW var_decl_list SEMICOLON { $$ = paramListNode::add_param_list_node_to_param_list_node_list($1, $3, paramListNodeTypeEnum::const_param); }
-                | param_list OUT_KW var_decl_list SEMICOLON   { $$ = paramListNode::add_param_list_node_to_param_list_node_list($1, $3, paramListNodeTypeEnum::out_param); }
+param_list:     var_decl_list                       { $$ = paramListNode::create_param_list_node_list($1, paramListNodeTypeEnum::general_param); }
+                | var_decl_sect                     { $$ = paramListNode::create_param_list_node_list($1, paramListNodeTypeEnum::reference_param); }
+                | CONST_KW var_decl_list            { $$ = paramListNode::create_param_list_node_list($2, paramListNodeTypeEnum::const_param); }
+                | OUT_KW var_decl_list              { $$ = paramListNode::create_param_list_node_list($2, paramListNodeTypeEnum::out_param); }
+                | param_list SEMICOLON var_decl_list          { $$ = paramListNode::add_param_list_node_to_param_list_node_list($1, $3, paramListNodeTypeEnum::general_param); }
+                | param_list SEMICOLON var_decl_sect          { $$ = paramListNode::add_param_list_node_to_param_list_node_list($1, $3, paramListNodeTypeEnum::reference_param); }
+                | param_list SEMICOLON CONST_KW var_decl_list { $$ = paramListNode::add_param_list_node_to_param_list_node_list($1, $4, paramListNodeTypeEnum::const_param); }
+                | param_list SEMICOLON OUT_KW var_decl_list   { $$ = paramListNode::add_param_list_node_to_param_list_node_list($1, $4, paramListNodeTypeEnum::out_param); }
 
 param_list_E:   param_list                                    { $$ = $1; }
               | /*empty*/                                     { $$ = paramListNode::create_param_list_node_list(nullptr, paramListNodeTypeEnum::general_param); }
@@ -590,15 +590,15 @@ method_field_property_list: constructor_decl_with_modifier_NO                   
                                                                                                     $$ = methodFieldPropertyNode::add_method_field_property_node_to_method_field_property_node_list($1, node);
                                                                                                 }
 
-class_element:  PRIVATE_KW method_field_property_list SEMICOLON                                 { $$ = classElementNode::create_class_element_node($2, accessModifier::private_access_modifier); }
-                | PUBLIC_KW method_field_property_list SEMICOLON                                { $$ = classElementNode::create_class_element_node($2, accessModifier::public_access_modifier); }
-                | PROTECTED_KW method_field_property_list SEMICOLON                             { $$ = classElementNode::create_class_element_node($2, accessModifier::protected_access_modifier); }
-                | method_field_property_list SEMICOLON                                          { $$ = classElementNode::create_class_element_node($1, accessModifier::public_access_modifier); }
+class_element:  PRIVATE_KW method_field_property_list                                 { $$ = classElementNode::create_class_element_node($2, accessModifier::private_access_modifier); }
+                | PUBLIC_KW method_field_property_list                                { $$ = classElementNode::create_class_element_node($2, accessModifier::public_access_modifier); }
+                | PROTECTED_KW method_field_property_list                             { $$ = classElementNode::create_class_element_node($2, accessModifier::protected_access_modifier); }
+                | method_field_property_list                                          { $$ = classElementNode::create_class_element_node($1, accessModifier::public_access_modifier); }
 
 class_element_list: class_element                                                               { $$ = classElementNode::create_class_element_node_list_from_class_element_node($1); }
                     | class_element_list class_element                                          { $$ = classElementNode::add_class_element_node_to_class_element_node_list($1, $2); }
 
-class_decl:    class_decl_header class_element_list SEMICOLON END_KW SEMICOLON                  { $$ = classDeclNode::create_class_decl_node($1, $2); }
+class_decl:    class_decl_header class_element_list END_KW SEMICOLON                  { $$ = classDeclNode::create_class_decl_node($1, $2); }
 
 class_decl_list:    class_decl                      { $$ = classDeclNode::create_class_decl_node_list_from_class_decl_node($1); }
                     | class_decl_list class_decl    { $$ = classDeclNode::add_class_decl_node_to_class_decl_node_list($1, $2); }
