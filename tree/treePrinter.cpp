@@ -73,7 +73,8 @@ void treePrinter::printExprNode(exprNode *node)
         else if (node->type == exprType::id_type_expr)
         {
             outfile << "expr_" << node->id_node << " -> ID_" << node->id_node << ";\n";
-            outfile << "ID_" << node->id_node << " -> " << (*node->id) << ";\n";
+            outfile << "ID_" << node->id_node << " -> "
+                    << "\"" << (*node->id) << "\"_" << node->id_node << ";\n";
         }
         else if (node->type == exprType::plus_type)
         {
@@ -240,7 +241,8 @@ void treePrinter::printExprNode(exprNode *node)
         else if (node->type == exprType::function_call_type_expr)
         {
             outfile << "expr_" << node->id_node << " -> function_call_" << node->id_node << ";\n";
-            outfile << "function_call_" << node->id_node << " -> " << (*node->id) << ";\n";
+            outfile << "function_call_" << node->id_node << " -> "
+                    << "\"" << (*node->id) << "\"_" << node->id_node << ";\n";
             for (auto it = node->params->begin(); it != node->params->end(); it++)
             {
                 outfile << "function_call_" << node->id_node << " -> expr_" << (*it)->id_node << ";\n";
@@ -252,7 +254,8 @@ void treePrinter::printExprNode(exprNode *node)
             outfile << "expr_" << node->id_node << " -> method_function_call_" << node->id_node << ";\n";
             outfile << "method_function_call_" << node->id_node << " -> expr_" << node->left_operand->id_node << ";\n";
             printExprNode(node->left_operand);
-            outfile << "method_function_call_" << node->id_node << " -> " << (*node->id) << ";\n";
+            outfile << "method_function_call_" << node->id_node << " -> "
+                    << "\"" << (*node->id) << "\"_" << node->id_node << ";\n";
             for (auto it = node->params->begin(); it != node->params->end(); it++)
             {
                 outfile << "method_function_call_" << node->id_node << " -> expr_" << (*it)->id_node << ";\n";
@@ -264,7 +267,8 @@ void treePrinter::printExprNode(exprNode *node)
             outfile << "expr_" << node->id_node << " -> field_access_" << node->id_node << ";\n";
             outfile << "field_access_" << node->id_node << " -> expr_" << node->left_operand->id_node << ";\n";
             printExprNode(node->left_operand);
-            outfile << "field_access_" << node->id_node << " -> " << (*node->id) << ";\n";
+            outfile << "field_access_" << node->id_node << " -> "
+                    << "\"" << (*node->id) << "\"_" << node->id_node << ";\n";
         }
         else if (node->type == exprType::type_casting_type)
         {
@@ -306,7 +310,8 @@ void treePrinter::printExprNode(exprNode *node)
         else if (node->type == exprType::inherited_call_type)
         {
             outfile << "expr_" << node->id_node << " -> inherited_call_" << node->id_node << ";\n";
-            outfile << "inherited_call_" << node->id_node << " -> " << (*node->id) << ";\n";
+            outfile << "inherited_call_" << node->id_node << " -> "
+                    << "\"" << (*node->id) << "\"_" << node->id_node << ";\n";
             for (auto it = node->params->begin(); it != node->params->end(); it++)
             {
                 outfile << "inherited_call_" << node->id_node << " -> expr_" << (*it)->id_node << ";\n";
@@ -348,7 +353,8 @@ void treePrinter::printStmtNode(stmtNode *node)
         }
         else if (node->type == stmtType::function_call_type)
         {
-            outfile << "stmt_" << node->id_node << " -> " << (*node->id) << ";\n";
+            outfile << "stmt_" << node->id_node << " -> "
+                    << "\"" << (*node->id) << "\"_" << node->id_node << ";\n";
 
             for (auto it = node->params->begin(); it != node->params->end(); it++)
             {
@@ -361,7 +367,8 @@ void treePrinter::printStmtNode(stmtNode *node)
             outfile << "stmt_" << node->id_node << " -> expr_" << node->parent->id_node << ";\n";
             printExprNode(node->parent);
 
-            outfile << "stmt_" << node->id_node << " -> " << (*node->id) << ";\n";
+            outfile << "stmt_" << node->id_node << " -> "
+                    << "\"" << (*node->id) << "\"_" << node->id_node << ";\n";
 
             if (node->params != nullptr)
             {
@@ -584,7 +591,8 @@ void treePrinter::printTypeNode(typeNode *node)
         }
         else if (node->type == typeType::id_type)
         {
-            outfile << "type_" << node->id_node << " -> " << (*node->id) << ";\n";
+            outfile << "type_" << node->id_node << " -> "
+                    << "\"" << (*node->id) << "\"_" << node->id_node << ";\n";
         }
         else if (node->type == typeType::array_type)
         {
@@ -668,7 +676,8 @@ void treePrinter::printFunctionElementNode(functionElementNode *node)
 
     if (node != nullptr)
     {
-        outfile << "functionElement_" << node->id_node << " -> " << (*node->id) << ";\n";
+        outfile << "functionElement_" << node->id_node << " -> "
+                << "\"" << (*node->id) << "\"_" << node->id_node << ";\n";
 
         for (auto it = node->param_list_node_list->begin(); it != node->param_list_node_list->end(); it++)
         {
@@ -684,7 +693,8 @@ void treePrinter::printProcedureImplNode(procedureImplNode *node)
 
     if (node != nullptr)
     {
-        outfile << "functionImpl_" << node->id_node << " -> " << (*node->id) << ";\n";
+        outfile << "functionImpl_" << node->id_node << " -> "
+                << "\"" << (*node->id) << "\"_" << node->id_node << ";\n";
 
         if (node->parentId != nullptr)
         {
@@ -722,7 +732,8 @@ void treePrinter::printFunctionImplNode(functionImplNode *node)
     if (node != nullptr)
     {
 
-        outfile << "functionImpl_" << node->id_node << " -> " << (*node->id) << ";\n";
+        outfile << "functionImpl_" << node->id_node << " -> "
+                << "\"" << (*node->id) << "\"_" << node->id_node << ";\n";
 
         if (node->parentId != nullptr)
         {
@@ -761,7 +772,8 @@ void treePrinter::printClassDeclHeaderNode(classDeclHeaderNode *node)
 
     if (node != nullptr)
     {
-        outfile << "classDeclHeader_" << node->id_node << " -> " << (*node->id) << ";\n";
+        outfile << "classDeclHeader_" << node->id_node << " -> "
+                << "\"" << (*node->id) << "\"_" << node->id_node << ";\n";
         outfile << "classDeclHeader_" << node->id_node << " -> parent_" << node->id_node << ";\n";
         outfile << "parent_" << node->id_node << " -> " << node->parentId << ";\n";
     }
@@ -789,7 +801,8 @@ void treePrinter::printPropertyDeclNode(propertyDeclNode *node)
 
     if (node != nullptr)
     {
-        outfile << "propertyDecl_" << node->id_node << " -> " << (*node->id) << ";\n";
+        outfile << "propertyDecl_" << node->id_node << " -> "
+                << "\"" << (*node->id) << "\"_" << node->id_node << ";\n";
         outfile << "propertyDecl_" << node->id_node << " -> type_" << node->type->id_node << ";\n";
         printTypeNode(node->type);
         outfile << "propertyDecl_" << node->id_node << " -> read_" << node->id_node << ";\n";
@@ -805,7 +818,8 @@ void treePrinter::printMethodFunctionDeclNode(methodFunctionDeclNode *node)
 
     if (node != nullptr)
     {
-        outfile << "methodFunctionDecl_" << node->id_node << " -> " << (*node->id) << ";\n";
+        outfile << "methodFunctionDecl_" << node->id_node << " -> "
+                << "\"" << (*node->id) << "\"_" << node->id_node << ";\n";
         for (auto it = node->param_list_node_list->begin(); it != node->param_list_node_list->end(); it++)
         {
             outfile << "methodFunctionDecl_" << node->id_node << " -> paramList_" << (*it)->id_node << ";\n";
@@ -878,7 +892,8 @@ void treePrinter::printConstructorDeclNode(constructorDeclNode *node)
 
     if (node != nullptr)
     {
-        outfile << "constructorDecl_" << node->id_node << " -> " << (*node->id) << ";\n";
+        outfile << "constructorDecl_" << node->id_node << " -> "
+                << "\"" << (*node->id) << "\"_" << node->id_node << ";\n";
         for (auto it = node->param_list_node_list->begin(); it != node->param_list_node_list->end(); it++)
         {
             outfile << "constructorDecl_" << node->id_node << " -> paramList_" << (*it)->id_node << ";\n";
@@ -909,7 +924,8 @@ void treePrinter::printConstructorImplNode(constructorImplNode *node)
 
     if (node != nullptr)
     {
-        outfile << "constructorImpl_" << node->id_node << " -> " << (*node->id) << ";\n";
+        outfile << "constructorImpl_" << node->id_node << " -> "
+                << "\"" << (*node->id) << "\"_" << node->id_node << ";\n";
         outfile << "constructorImpl_" << node->id_node << " -> parent_" << node->id_node << ";\n";
         outfile << "parent_" << node->id_node << " -> " << node->parent_id << ";\n";
         outfile << "constructorImpl_" << node->id_node << " -> functionElement_" << node->function_element->id_node << ";\n";
@@ -930,7 +946,8 @@ void treePrinter::printDestructorDeclNode(destructorDeclNode *node)
 
     if (node != nullptr)
     {
-        outfile << "destructorDecl_" << node->id_node << " -> " << (*node->id) << ";\n";
+        outfile << "destructorDecl_" << node->id_node << " -> "
+                << "\"" << (*node->id) << "\"_" << node->id_node << ";\n";
         if (node->has_override)
         {
             outfile << "destructorDecl_" << node->id_node << " -> override_" << node->id_node << ";\n";
@@ -944,7 +961,8 @@ void treePrinter::printDestructorImplNode(destructorImplNode *node)
 
     if (node != nullptr)
     {
-        outfile << "destructorImpl_" << node->id_node << " -> " << (*node->id) << ";\n";
+        outfile << "destructorImpl_" << node->id_node << " -> "
+                << "\"" << (*node->id) << "\"_" << node->id_node << ";\n";
         outfile << "destructorImpl_" << node->id_node << " -> parent_" << node->id_node << ";\n";
         outfile << "parent_" << node->id_node << " -> " << node->parent_id << ";\n";
         outfile << "destructorImpl_" << node->id_node << " -> stmt_" << node->stmt_node->id_node << ";\n";
@@ -1079,7 +1097,8 @@ void treePrinter::printEnumDeclNode(enumDeclNode *node)
 
     if (node != nullptr)
     {
-        outfile << "enumDecl_" << node->id_node << " -> " << (*node->id) << ";\n";
+        outfile << "enumDecl_" << node->id_node << " -> "
+                << "\"" << (*node->id) << "\"_" << node->id_node << ";\n";
 
         for (auto it = node->param_list->begin(); it != node->param_list->end(); it++)
         {
@@ -1095,7 +1114,8 @@ void treePrinter::printEnumParamNode(enumParamNode *node)
 
     if (node != nullptr)
     {
-        outfile << "enumParam_" << node->id_node << " -> " << (*node->id) << ";\n";
+        outfile << "enumParam_" << node->id_node << " -> "
+                << "\"" << (*node->id) << "\"_" << node->id_node << ";\n";
 
         if (node->value != nullptr)
         {
@@ -1194,7 +1214,8 @@ void treePrinter::printStartSymbolNode(startSymbolNode *node)
     if (node != nullptr)
     {
         if (node->id != nullptr)
-            outfile << "startSymbol -> " << (*node->id) << ";\n";
+            outfile << "startSymbol -> "
+                    << "\"" << (*node->id) << "\"_" << node->id_node << ";\n";
         if (node->stmt_block != nullptr)
         {
             outfile << "startSymbol -> stmtBlock_" << node->stmt_block->id_node << ";\n";
