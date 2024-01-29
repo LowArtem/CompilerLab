@@ -350,6 +350,18 @@ void treePrinter::printStmtNode(stmtNode *node)
                 printExprNode(*it);
             }
         }
+        else if (node->type == stmtType::method_function_call_type_stmt)
+        {
+            outfile << "stmt_" << node->id_node << " -> parent_" << node->id_node << ";\n";
+            outfile << "parent_" << node->id_node << " -> " << node->parent_id << ";\n";
+            outfile << "stmt_" << node->id_node << " -> " << node->id << ";\n";
+
+            for (auto it = node->params->begin(); it != node->params->end(); it++)
+            {
+                outfile << "stmt_" << node->id_node << " -> expr_" << (*it)->id_node << ";\n";
+                printExprNode(*it);
+            }
+        }
         else if (node->type == stmtType::inherited_type)
         {
             outfile << "stmt_" << node->id_node << " -> inherited_" << node->id_node << ";\n";
