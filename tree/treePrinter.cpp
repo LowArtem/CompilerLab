@@ -21,7 +21,8 @@ void treePrinter::printTree(startSymbolNode *root)
 
 void treePrinter::printLiteralNode(literalNode *node)
 {
-    printf("Node ID: %s", node->id_node);
+    printf("Node name: %s", typeid(node).name());
+
     if (node != nullptr)
     {
         if (node->type == literalType::int_type)
@@ -55,7 +56,8 @@ void treePrinter::printLiteralNode(literalNode *node)
 
 void treePrinter::printExprNode(exprNode *node)
 {
-    printf("Node ID: %s", node->id_node);
+    printf("Node name: %s", typeid(node).name());
+
     if (node != nullptr)
     {
         if (node->type == exprType::literal_node_type)
@@ -333,7 +335,8 @@ void treePrinter::printExprNode(exprNode *node)
 
 void treePrinter::printStmtNode(stmtNode *node)
 {
-    printf("Node ID: %s", node->id_node);
+    printf("Node name: %s", typeid(node).name());
+
     if (node != nullptr)
     {
         if (node->type == stmtType::assign_type)
@@ -414,7 +417,8 @@ void treePrinter::printStmtNode(stmtNode *node)
 
 void treePrinter::printIfStmtNode(ifStmtNode *node)
 {
-    printf("Node ID: %s", node->id_node);
+    printf("Node name: %s", typeid(node).name());
+
     if (node != nullptr)
     {
         outfile << "ifStmt_" << node->id_node << " -> expr_" << node->condition->id_node << ";\n";
@@ -433,7 +437,8 @@ void treePrinter::printIfStmtNode(ifStmtNode *node)
 
 void treePrinter::printStmtBlockNode(stmtBlockNode *node)
 {
-    printf("Node ID: %s", node->id_node);
+    printf("Node name: %s", typeid(node).name());
+
     if (node != nullptr)
     {
         for (auto it = node->stmt_list->begin(); it != node->stmt_list->end(); it++)
@@ -446,7 +451,8 @@ void treePrinter::printStmtBlockNode(stmtBlockNode *node)
 
 void treePrinter::printRepeatStmtNode(repeatStmtNode *node)
 {
-    printf("Node ID: %s", node->id_node);
+    printf("Node name: %s", typeid(node).name());
+
     if (node != nullptr)
     {
         for (auto it = node->body->begin(); it != node->body->end(); it++)
@@ -462,7 +468,8 @@ void treePrinter::printRepeatStmtNode(repeatStmtNode *node)
 
 void treePrinter::printCaseStmtNode(caseStmtNode *node)
 {
-    printf("Node ID: %s", node->id_node);
+    printf("Node name: %s", typeid(node).name());
+
     if (node != nullptr)
     {
         outfile << "caseStmt_" << node->id_node << " -> expr_" << node->selector_expression->id_node << ";\n";
@@ -483,7 +490,8 @@ void treePrinter::printCaseStmtNode(caseStmtNode *node)
 
 void treePrinter::printCaseElementNode(caseElementNode *node)
 {
-    printf("Node ID: %s", node->id_node);
+    printf("Node name: %s", typeid(node).name());
+
     if (node != nullptr)
     {
         for (auto it = node->condition->begin(); it != node->condition->end(); it++)
@@ -498,7 +506,8 @@ void treePrinter::printCaseElementNode(caseElementNode *node)
 
 void treePrinter::printParamListNode(paramListNode *node)
 {
-    printf("Node ID: %s", node->id_node);
+    printf("Node name: %s", typeid(node).name());
+
     if (node != nullptr)
     {
         for (auto it = node->var_decl_list->begin(); it != node->var_decl_list->end(); it++)
@@ -511,7 +520,8 @@ void treePrinter::printParamListNode(paramListNode *node)
 
 void treePrinter::printVarDeclNode(varDeclNode *node)
 {
-    printf("Node ID: %s", node->id_node);
+    printf("Node name: %s", typeid(node).name());
+
     if (node != nullptr)
     {
         for (auto it = node->id_list->begin(); it != node->id_list->end(); it++)
@@ -532,7 +542,8 @@ void treePrinter::printVarDeclNode(varDeclNode *node)
 
 void treePrinter::printTypeNode(typeNode *node)
 {
-    printf("Node ID: %s", node->id_node);
+    printf("Node name: %s", typeid(node).name());
+
     if (node != nullptr)
     {
         if (node->type == typeType::simple_type)
@@ -587,7 +598,8 @@ void treePrinter::printTypeNode(typeNode *node)
 
 void treePrinter::printArrayDimensionNode(arrayDimensionNode *node)
 {
-    printf("Node ID: %s", node->id_node);
+    printf("Node name: %s", typeid(node).name());
+
     if (node != nullptr)
     {
         outfile << "arrayDimension_" << node->id_node << " -> literal_" << node->left_operand->id_node << ";\n";
@@ -599,7 +611,8 @@ void treePrinter::printArrayDimensionNode(arrayDimensionNode *node)
 
 void treePrinter::printWithStmtNode(withStmtNode *node)
 {
-    printf("Node ID: %s", node->id_node);
+    printf("Node name: %s", typeid(node).name());
+
     if (node != nullptr)
     {
         for (auto it = node->id_list->begin(); it != node->id_list->end(); it++)
@@ -615,7 +628,8 @@ void treePrinter::printWithStmtNode(withStmtNode *node)
 
 void treePrinter::printForStmtNode(forStmtNode *node)
 {
-    printf("Node ID: %s", node->id_node);
+    printf("Node name: %s", typeid(node).name());
+
     if (node != nullptr)
     {
         outfile << "forStmt_" << node->id_node << " -> expr_" << node->id->id_node << ";\n";
@@ -631,7 +645,8 @@ void treePrinter::printForStmtNode(forStmtNode *node)
 
 void treePrinter::printWhileStmtNode(whileStmtNode *node)
 {
-    printf("Node ID: %s", node->id_node);
+    printf("Node name: %s", typeid(node).name());
+
     if (node != nullptr)
     {
         outfile << "whileStmt_" << node->id_node << " -> expr_" << node->condition->id_node << ";\n";
@@ -643,7 +658,8 @@ void treePrinter::printWhileStmtNode(whileStmtNode *node)
 
 void treePrinter::printFunctionElementNode(functionElementNode *node)
 {
-    printf("Node ID: %s", node->id_node);
+    printf("Node name: %s", typeid(node).name());
+
     if (node != nullptr)
     {
         outfile << "functionElement_" << node->id_node << " -> " << node->id << ";\n";
@@ -658,7 +674,8 @@ void treePrinter::printFunctionElementNode(functionElementNode *node)
 
 void treePrinter::printProcedureImplNode(procedureImplNode *node)
 {
-    printf("Node ID: %s", node->id_node);
+    printf("Node name: %s", typeid(node).name());
+
     if (node != nullptr)
     {
         outfile << "functionImpl_" << node->id_node << " -> " << node->id << ";\n";
@@ -694,7 +711,8 @@ void treePrinter::printProcedureImplNode(procedureImplNode *node)
 
 void treePrinter::printFunctionImplNode(functionImplNode *node)
 {
-    printf("Node ID: %s", node->id_node);
+    printf("Node name: %s", typeid(node).name());
+
     if (node != nullptr)
     {
 
@@ -733,7 +751,8 @@ void treePrinter::printFunctionImplNode(functionImplNode *node)
 
 void treePrinter::printClassDeclHeaderNode(classDeclHeaderNode *node)
 {
-    printf("Node ID: %s", node->id_node);
+    printf("Node name: %s", typeid(node).name());
+
     if (node != nullptr)
     {
         outfile << "classDeclHeader_" << node->id_node << " -> " << node->id << ";\n";
@@ -744,7 +763,8 @@ void treePrinter::printClassDeclHeaderNode(classDeclHeaderNode *node)
 
 void treePrinter::printClassDeclNode(classDeclNode *node)
 {
-    printf("Node ID: %s", node->id_node);
+    printf("Node name: %s", typeid(node).name());
+
     if (node != nullptr)
     {
         outfile << "classDecl_" << node->id_node << " -> classDeclHeader_" << node->classDeclHeader->id_node << ";\n";
@@ -759,7 +779,8 @@ void treePrinter::printClassDeclNode(classDeclNode *node)
 
 void treePrinter::printPropertyDeclNode(propertyDeclNode *node)
 {
-    printf("Node ID: %s", node->id_node);
+    printf("Node name: %s", typeid(node).name());
+
     if (node != nullptr)
     {
         outfile << "propertyDecl_" << node->id_node << " -> " << node->id << ";\n";
@@ -774,7 +795,8 @@ void treePrinter::printPropertyDeclNode(propertyDeclNode *node)
 
 void treePrinter::printMethodFunctionDeclNode(methodFunctionDeclNode *node)
 {
-    printf("Node ID: %s", node->id_node);
+    printf("Node name: %s", typeid(node).name());
+
     if (node != nullptr)
     {
         outfile << "methodFunctionDecl_" << node->id_node << " -> " << node->id << ";\n";
@@ -790,7 +812,8 @@ void treePrinter::printMethodFunctionDeclNode(methodFunctionDeclNode *node)
 
 void treePrinter::printMethodFunctionDeclWithModifierNode(methodFunctionDeclWithModifierNode *node)
 {
-    printf("Node ID: %s", node->id_node);
+    printf("Node name: %s", typeid(node).name());
+
     if (node != nullptr)
     {
         outfile << "methodFunctionDeclWithModifier_" << node->id_node << " -> methodFunctionDecl_" << node->functionDeclNode->id_node << ";\n";
@@ -816,7 +839,8 @@ void treePrinter::printMethodFunctionDeclWithModifierNode(methodFunctionDeclWith
 
 void treePrinter::printMethodProcedureDeclWithModifierNode(methodProcedureDeclWithModifierNode *node)
 {
-    printf("Node ID: %s", node->id_node);
+    printf("Node name: %s", typeid(node).name());
+
     if (node != nullptr)
     {
         outfile << "methodProcedureDeclWithModifier_" << node->id_node << " -> functionElement_" << node->function_element->id_node << ";\n";
@@ -844,7 +868,8 @@ void treePrinter::printMethodProcedureDeclWithModifierNode(methodProcedureDeclWi
 
 void treePrinter::printConstructorDeclNode(constructorDeclNode *node)
 {
-    printf("Node ID: %s", node->id_node);
+    printf("Node name: %s", typeid(node).name());
+
     if (node != nullptr)
     {
         outfile << "constructorDecl_" << node->id_node << " -> " << node->id << ";\n";
@@ -858,7 +883,8 @@ void treePrinter::printConstructorDeclNode(constructorDeclNode *node)
 
 void treePrinter::printConstructorDeclWithModifierNoNode(constructorDeclWithModifierNoNode *node)
 {
-    printf("Node ID: %s", node->id_node);
+    printf("Node name: %s", typeid(node).name());
+
     if (node != nullptr)
     {
         outfile << "constructorDeclWithModifierNo_" << node->id_node << " -> constructorDecl_" << node->constructor_decl_node->id_node << ";\n";
@@ -873,7 +899,8 @@ void treePrinter::printConstructorDeclWithModifierNoNode(constructorDeclWithModi
 
 void treePrinter::printConstructorImplNode(constructorImplNode *node)
 {
-    printf("Node ID: %s", node->id_node);
+    printf("Node name: %s", typeid(node).name());
+
     if (node != nullptr)
     {
         outfile << "constructorImpl_" << node->id_node << " -> " << node->id << ";\n";
@@ -893,7 +920,8 @@ void treePrinter::printConstructorImplNode(constructorImplNode *node)
 
 void treePrinter::printDestructorDeclNode(destructorDeclNode *node)
 {
-    printf("Node ID: %s", node->id_node);
+    printf("Node name: %s", typeid(node).name());
+
     if (node != nullptr)
     {
         outfile << "destructorDecl_" << node->id_node << " -> " << node->id << ";\n";
@@ -906,7 +934,8 @@ void treePrinter::printDestructorDeclNode(destructorDeclNode *node)
 
 void treePrinter::printDestructorImplNode(destructorImplNode *node)
 {
-    printf("Node ID: %s", node->id_node);
+    printf("Node name: %s", typeid(node).name());
+
     if (node != nullptr)
     {
         outfile << "destructorImpl_" << node->id_node << " -> " << node->id << ";\n";
@@ -924,7 +953,8 @@ void treePrinter::printDestructorImplNode(destructorImplNode *node)
 
 void treePrinter::printMethodDeclNode(methodDeclNode *node)
 {
-    printf("Node ID: %s", node->id_node);
+    printf("Node name: %s", typeid(node).name());
+
     if (node != nullptr)
     {
         if (node->method_function_decl_with_modifier_node != nullptr)
@@ -942,7 +972,8 @@ void treePrinter::printMethodDeclNode(methodDeclNode *node)
 
 void treePrinter::printMethodFieldPropertyNode(methodFieldPropertyNode *node)
 {
-    printf("Node ID: %s", node->id_node);
+    printf("Node name: %s", typeid(node).name());
+
     if (node != nullptr)
     {
         if (node->method_decl_node != nullptr)
@@ -975,7 +1006,7 @@ void treePrinter::printMethodFieldPropertyNode(methodFieldPropertyNode *node)
 
 void treePrinter::printClassElementNode(classElementNode *node)
 {
-    printf("Node ID: %s", node->id_node);
+    printf("Node name: %s", typeid(node).name());
 
     if (node != nullptr)
     {
@@ -1008,7 +1039,8 @@ void treePrinter::printClassElementNode(classElementNode *node)
 
 void treePrinter::printSectionNode(sectionNode *node)
 {
-    printf("Node ID: %s", node->id_node);
+    printf("Node name: %s", typeid(node).name());
+
     if (node != nullptr)
     {
         if (node->type == sectionType::var_decl_sect)
@@ -1037,7 +1069,8 @@ void treePrinter::printSectionNode(sectionNode *node)
 
 void treePrinter::printEnumDeclNode(enumDeclNode *node)
 {
-    printf("Node ID: %s", node->id_node);
+    printf("Node name: %s", typeid(node).name());
+
     if (node != nullptr)
     {
         outfile << "enumDecl_" << node->id_node << " -> " << node->id << ";\n";
@@ -1052,7 +1085,8 @@ void treePrinter::printEnumDeclNode(enumDeclNode *node)
 
 void treePrinter::printEnumParamNode(enumParamNode *node)
 {
-    printf("Node ID: %s", node->id_node);
+    printf("Node name: %s", typeid(node).name());
+
     if (node != nullptr)
     {
         outfile << "enumParam_" << node->id_node << " -> " << node->id << ";\n";
@@ -1067,7 +1101,8 @@ void treePrinter::printEnumParamNode(enumParamNode *node)
 
 void treePrinter::printFieldDeclNode(fieldDeclNode *node)
 {
-    printf("Node ID: %s", node->id_node);
+    printf("Node name: %s", typeid(node).name());
+
     if (node != nullptr)
     {
         if (node->var_decl_node != nullptr)
@@ -1098,7 +1133,8 @@ void treePrinter::printFieldDeclNode(fieldDeclNode *node)
 
 void treePrinter::printImplementationElementNode(implementationElementNode *node)
 {
-    printf("Node ID: %s", node->id_node);
+    printf("Node name: %s", typeid(node).name());
+
     if (node != nullptr)
     {
         if (node->type == implementationElementType::constructor_impl_type && node->constructor_impl_node != nullptr)
@@ -1126,7 +1162,8 @@ void treePrinter::printImplementationElementNode(implementationElementNode *node
 
 void treePrinter::printTypeSectNode(typeSectNode *node)
 {
-    printf("Node ID: %s", node->id_node);
+    printf("Node name: %s", typeid(node).name());
+
     if (node != nullptr)
     {
         if (node->type == typeSectType::class_decl_type && node->class_decl_node_list != nullptr)
@@ -1146,7 +1183,8 @@ void treePrinter::printTypeSectNode(typeSectNode *node)
 
 void treePrinter::printStartSymbolNode(startSymbolNode *node)
 {
-    printf("Node ID: %s", node->id_node);
+    printf("Node name: %s", typeid(node).name());
+
     if (node != nullptr)
     {
         if (node->id != nullptr)
