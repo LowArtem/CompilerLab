@@ -36,11 +36,11 @@ stmtNode *stmtNode::create_stmt_node_from_function_call(string *id, list<exprNod
     return res;
 }
 
-stmtNode * stmtNode::create_stmt_node_from_method_function_call(string *parent_id, string *id, list<exprNode *> *params)
+stmtNode * stmtNode::create_stmt_node_from_method_function_call(exprNode *parent, string *id, list<exprNode *> *params)
 {
     stmtNode *res = new stmtNode();
     res->type = stmtType::method_function_call_type_stmt;
-    res->parent_id = parent_id;
+    res->parent = parent;
     res->id = id;
     res->params = params;
     return res;

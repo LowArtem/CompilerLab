@@ -50,7 +50,7 @@ public:
     whileStmtNode *while_stmt;
     forStmtNode *for_stmt;
     withStmtNode *with_stmt;
-    string *parent_id;
+    exprNode *parent;
 
     stmtNode();
 
@@ -62,7 +62,7 @@ public:
 
     static stmtNode *create_stmt_node_from_function_call(string *id, list<exprNode *> *params);
 
-    static stmtNode *create_stmt_node_from_method_function_call(string *parent_id, string *id, list<exprNode *> *params);
+    static stmtNode *create_stmt_node_from_method_function_call(exprNode *parent, string *id, list<exprNode *> *params);
 
     static stmtNode *create_stmt_node_from_inherited_call();
 
