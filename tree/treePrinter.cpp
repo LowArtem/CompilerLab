@@ -1193,7 +1193,7 @@ void treePrinter::printStartSymbolNode(startSymbolNode *node)
 
     if (node != nullptr)
     {
-        if ((*node->id) != nullptr)
+        if (node->id != nullptr)
             outfile << "startSymbol -> " << (*node->id) << ";\n";
         if (node->stmt_block != nullptr)
         {
