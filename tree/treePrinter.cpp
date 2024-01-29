@@ -759,8 +759,11 @@ void treePrinter::printFunctionImplNode(functionImplNode *node)
         {
             for (auto it = node->var_decl_node_list->begin(); it != node->var_decl_node_list->end(); it++)
             {
-                outfile << "functionImpl_" << node->id_node << " -> varDecl_" << (*it)->id_node << ";\n";
-                printVarDeclNode(*it);
+                if (*it != nullptr)
+                {
+                    outfile << "functionImpl_" << node->id_node << " -> varDecl_" << (*it)->id_node << ";\n";
+                    printVarDeclNode(*it);
+                }
             }
         }
 
