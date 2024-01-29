@@ -68,7 +68,8 @@ void treePrinter::printExprNode(exprNode *node)
         else if (node->type == exprType::string_type)
         {
             outfile << "expr_" << node->id_node << " -> stringType_" << node->id_node << ";\n";
-            outfile << "stringType_" << node->id_node << " -> " << (*node->string_value) << ";\n";
+            outfile << "stringType_" << node->id_node << " -> "
+                    << "\"" << (*node->string_value) << "\"_" << node->id_node << ";\n";
         }
         else if (node->type == exprType::id_type_expr)
         {
