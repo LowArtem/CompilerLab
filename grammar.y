@@ -281,10 +281,12 @@ sect_list:      section                         { $$ = sectionNode::create_secti
                 | sect_list section   { $$ = sectionNode::add_section_node_to_section_node_list($1, $2); }
 
 start_symbol:   PROGRAM_KW ID SEMICOLON stmt_block DOT                          {
+                                                                                    printf("Ultra END.");
                                                                                     root = startSymbolNode::create_start_symbol_node($2, $4, NULL);
                                                                                     $$ =  root;
                                                                                 }
                 | PROGRAM_KW ID SEMICOLON sect_list stmt_block DOT              {
+                                                                                    printf("Ultra END.");
                                                                                     root = startSymbolNode::create_start_symbol_node($2, $5, $4);
                                                                                     $$ = root;
                                                                                 }

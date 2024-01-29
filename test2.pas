@@ -80,7 +80,7 @@ begin
     0: writeln('privateField is zero');
     1: writeln('privateField is one');
   else
-    writeln('privateField is some other value');
+    writeln('privateField is some other value')
   end;
 
   // Арифметические операции
@@ -99,5 +99,5 @@ begin
 
   // Работа с массивами
   arr[3] := arr[3] + arr[4];
-  writeln('Sum of arr[3] and arr[4]: ', arr[3]);
+  writeln('Sum of arr[3] and arr[4]: ', arr[3])
 end.

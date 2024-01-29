@@ -42,7 +42,7 @@ div                 { return DIV_KW; }
 do                  { return DO_KW; }
 downto              { return DOWNTO_KW; }
 else                { printf("else"); return ELSE_KW; }
-end                 { return END_KW; }
+end                 { printf("end"); return END_KW; }
 excep               { printf("ERROR: unexpected symbol: \"%s\"", yytext); }
 exports             { printf("ERROR: unexpected symbol: \"%s\"", yytext); }
 finally             { printf("ERROR: unexpected symbol: \"%s\"", yytext); }
