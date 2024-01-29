@@ -536,7 +536,7 @@ void treePrinter::printVarDeclNode(varDeclNode *node)
 {
     printf("Node name: %s\n", typeid(node).name());
 
-    if (node != nullptr)
+    if (node != nullptr && node->id_list != nullptr)
     {
         for (auto it = node->id_list->begin(); it != node->id_list->end(); it++)
         {
