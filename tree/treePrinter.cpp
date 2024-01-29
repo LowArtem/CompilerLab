@@ -28,12 +28,12 @@ void treePrinter::printLiteralNode(literalNode *node)
         if (node->type == literalType::int_type)
         {
             outfile << "literal_" << node->id_node << " -> intType_" << node->id_node << ";\n";
-            outfile << "intType_" << node->id_node << " -> " << node->int_value << ";\n";
+            outfile << "intType_" << node->id_node << " -> " << node->int_value << "_" << node->id_node << ";\n";
         }
         else if (node->type == literalType::real_type)
         {
             outfile << "literal_" << node->id_node << " -> realType_" << node->id_node << ";\n";
-            outfile << "realType_" << node->id_node << " -> " << node->real_value << ";\n";
+            outfile << "realType_" << node->id_node << " -> " << node->real_value << "_" << node->id_node << ";\n";
         }
         else if (node->type == literalType::boolean_type)
         {
@@ -49,7 +49,7 @@ void treePrinter::printLiteralNode(literalNode *node)
         }
         else if (node->type == literalType::char_type)
         {
-            outfile << "literal_" << node->id_node << " -> " << node->char_value << ";\n";
+            outfile << "literal_" << node->id_node << " -> " << node->char_value << "_" << node->id_node << ";\n";
         }
     }
 }
@@ -367,7 +367,8 @@ void treePrinter::printStmtNode(stmtNode *node)
             {
                 for (auto it = node->params->begin(); it != node->params->end(); ++it)
                 {
-                    if (*it != nullptr) {
+                    if (*it != nullptr)
+                    {
                         outfile << "stmt_" << node->id_node << " -> expr_" << (*it)->id_node << ";\n";
                         printExprNode(*it);
                     }
