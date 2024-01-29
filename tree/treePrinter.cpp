@@ -545,6 +545,7 @@ void treePrinter::printVarDeclNode(varDeclNode *node)
         }
 
         outfile << "varDecl_" << node->id_node << " -> type_" << node->type->id_node << ";\n";
+        printTypeNode(node->type);
 
         if (node->expr != nullptr)
         {
