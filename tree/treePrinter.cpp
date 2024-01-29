@@ -540,8 +540,11 @@ void treePrinter::printVarDeclNode(varDeclNode *node)
     {
         for (auto it = node->id_list->begin(); it != node->id_list->end(); it++)
         {
-            outfile << "varDecl_" << node->id_node << " -> expr_" << (*it)->id_node << ";\n";
-            printExprNode(*it);
+            if (*it != nullptr)
+            {
+                outfile << "varDecl_" << node->id_node << " -> expr_" << (*it)->id_node << ";\n";
+                printExprNode(*it);
+            }
         }
 
         outfile << "varDecl_" << node->id_node << " -> type_" << node->type->id_node << ";\n";
