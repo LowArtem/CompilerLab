@@ -1,41 +1,42 @@
 
 program Example;
 
-type
-  TMyClass = class
-  private
-    privateField: Integer;
-  protected
-    protectedField: String;
-  public
-    constructor Create;
-    destructor Destroy; override;
-    procedure MyProcedure;
-    function MyFunction(a: Integer): String;
-    property MyProperty: Integer read privateField write privateField;
-  end;
+// type
+//   TMyClass = class
+//   private
+//     privateField: Integer;
+//   protected
+//     newField: Integer;
+//     protectedField: String;
+//   public
+//     constructor Create;
+//     destructor Destroy; override;
+//     procedure MyProcedure;
+//     function MyFunction(a: Integer): String;
+//     property MyProperty: Integer read privateField write privateField;
+//   end;
 
-constructor TMyClass.Create;
-begin
-  privateField := 0;
-  protectedField := 'Default';
-end;
+// constructor TMyClass.Create;
+// begin
+//   privateField := 0;
+//   protectedField := 'Default';
+// end;
 
-destructor TMyClass.Destroy;
-begin
-  // Дополнительные действия при уничтожении объекта
-  inherited Destroy;
-end;
+// destructor TMyClass.Destroy;
+// begin
+//   // Дополнительные действия при уничтожении объекта
+//   inherited Destroy;
+// end;
 
-procedure TMyClass.MyProcedure;
-begin
-  writeln('Executing procedure...');
-end;
+// procedure TMyClass.MyProcedure;
+// begin
+//   writeln('Executing procedure...');
+// end;
 
-function TMyClass.MyFunction(a: Integer): String;
-begin
-  Result := 'Result: ' + IntToStr(a);
-end;
+// function TMyClass.MyFunction(a: Integer): String;
+// begin
+//   Result := 'Result: ' + IntToStr(a);
+// end;
 
 var
   i: Integer;
@@ -43,6 +44,9 @@ var
   str1, str2: String;
 
 begin
+  i := 1;
+  str1 := 'Test string';
+
   // Блок условия
   if privateField = 0 then
     writeln('privateField is zero')
@@ -68,7 +72,7 @@ begin
   until Length(str1) > 0;
 
   // Вызов процедуры и функции
-  TMyClass.MyProcedure;
+  TMyClass.MyProcedure();
   writeln(TMyClass.MyFunction(42));
 
   // Блок case

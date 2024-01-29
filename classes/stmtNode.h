@@ -20,6 +20,7 @@ enum stmtType
 {
     assign_type,
     function_call_type,
+    method_function_call_type_stmt,
     inherited_type,
     stmt_block_type,
     if_type,
@@ -49,6 +50,7 @@ public:
     whileStmtNode *while_stmt;
     forStmtNode *for_stmt;
     withStmtNode *with_stmt;
+    string *parent_id;
 
     stmtNode();
 
@@ -59,6 +61,8 @@ public:
     static stmtNode *create_stmt_node_from_assignment(exprNode *left_operand, exprNode *right_operand);
 
     static stmtNode *create_stmt_node_from_function_call(string *id, list<exprNode *> *params);
+
+    static stmtNode *create_stmt_node_from_method_function_call(string *parent_id, string *id, list<exprNode *> *params);
 
     static stmtNode *create_stmt_node_from_inherited_call();
 

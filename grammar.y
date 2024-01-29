@@ -278,14 +278,14 @@ section:        var_decl_sect           { $$ = sectionNode::create_section_node_
                 | implementation_sect   { $$ = sectionNode::create_section_node_from_implementation_sect($1); }
 
 sect_list:      section                         { $$ = sectionNode::create_section_node_list_from_section_node($1); }
-                | sect_list SEMICOLON section   { $$ = sectionNode::add_section_node_to_section_node_list($1, $3); }
+                | sect_list section   { $$ = sectionNode::add_section_node_to_section_node_list($1, $2); }
 
 start_symbol:   PROGRAM_KW ID SEMICOLON stmt_block DOT                          {
                                                                                     root = startSymbolNode::create_start_symbol_node($2, $4, NULL);
                                                                                     $$ =  root;
                                                                                 }
-                | PROGRAM_KW ID SEMICOLON sect_list SEMICOLON stmt_block DOT    {
-                                                                                    root = startSymbolNode::create_start_symbol_node($2, $6, $4);
+                | PROGRAM_KW ID SEMICOLON sect_list stmt_block DOT              {
+                                                                                    root = startSymbolNode::create_start_symbol_node($2, $5, $4);
                                                                                     $$ = root;
                                                                                 }
 
@@ -315,8 +315,8 @@ type:           simple_type             { $$ = typeNode::create_type_node_from_s
                 | ARRAY_KW OPEN_SQUARE_BRACKET array_dimension_list CLOSE_SQUARE_BRACKET OF_KW type { $$ = typeNode::create_type_node_from_array_with_dimension($3, $6); }
 
 expr:           literal                       { $$ = exprNode::create_expr_node_from_literal_node($1); }
-                | STRING                      { $$ = exprNode::create_expr_node_from_string($1); }
-                | ID                          { $$ = exprNode::create_expr_node_from_id($1); }
+                | STRING                      { printf("String: %s\n", $1->c_str()); $$ = exprNode::create_expr_node_from_string($1); }
+                | ID                          { printf("ID: %s\n", $1->c_str()); $$ = exprNode::create_expr_node_from_id($1); }
                 | expr PLUS expr              { $$ = exprNode::create_expr_node_from_binary_operation(exprType::plus_type, $1, $3); }
                 | expr MINUS expr             { $$ = exprNode::create_expr_node_from_binary_operation(exprType::minus_type, $1, $3); }
                 | expr MULTIPLICATION expr    { $$ = exprNode::create_expr_node_from_binary_operation(exprType::multiplication_type, $1, $3); }
@@ -358,6 +358,7 @@ expr_list_E:    expr_list                   { $$ = $1; }
 
 stmt:           expr ASSIGNMENT expr                            { $$ = stmtNode::create_stmt_node_from_assignment($1, $3); }
                 | ID OPEN_BRACKET expr_list_E CLOSE_BRACKET     { $$ = stmtNode::create_stmt_node_from_function_call($1, $3); }
+                | expr DOT ID OPEN_BRACKET expr_list_E CLOSE_BRACKET { $$ = stmtNode::create_stmt_node_from_method_function_call($1, $3, $5); }
                 | INHERITED_KW                                  { $$ = stmtNode::create_stmt_node_from_inherited_call(); }
                 | stmt_block                                    { $$ = stmtNode::create_stmt_node_from_stmt_block($1); }
                 | if_stmt                                       { $$ = stmtNode::create_stmt_node_from_if_stmt($1); }
@@ -608,5 +609,5 @@ with_stmt:  WITH_KW id_list DO_KW stmt      { $$ = withStmtNode::create_with_stm
 %%
 
 void yyerror(char* str) {
-        fprintf(stderr, "ERROR: %s\n", str);
+        fprintf(stderr, "\nParser Error: %s\n", str);
 }
