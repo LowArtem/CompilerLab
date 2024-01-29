@@ -2,8 +2,6 @@
 
 using namespace std;
 
-startSymbolNode *root;
-
 treePrinter::treePrinter()
 {
 }
@@ -352,8 +350,9 @@ void treePrinter::printStmtNode(stmtNode *node)
         }
         else if (node->type == stmtType::method_function_call_type_stmt)
         {
-            outfile << "stmt_" << node->id_node << " -> parent_" << node->id_node << ";\n";
-            outfile << "parent_" << node->id_node << " -> " << node->parent << ";\n";
+            outfile << "stmt_" << node->id_node << " -> expr_" << node->parent->id << ";\n";
+            printExprNode(node->parent);
+
             outfile << "stmt_" << node->id_node << " -> " << node->id << ";\n";
 
             for (auto it = node->params->begin(); it != node->params->end(); it++)
